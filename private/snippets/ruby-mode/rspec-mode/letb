@@ -1,0 +1,8 @@
+# -*- mode: rspec-mode -*-
+# name: let block let(...) do ... end
+# key: letb
+# --
+
+let(:$1) do
+  $2
+end

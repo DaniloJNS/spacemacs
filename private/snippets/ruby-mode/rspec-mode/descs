@@ -1,0 +1,8 @@
+# -*- mode: rspec-mode -*-
+# name: spec describe (string)
+# key: descs
+# --
+
+RSpec.describe '$1' do
+  $2
+end

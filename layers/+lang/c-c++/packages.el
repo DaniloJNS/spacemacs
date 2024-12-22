@@ -66,15 +66,15 @@
   (use-package gendoxy
     :defer t
     :init (dolist (mode c-c++-modes)
-              (spacemacs/declare-prefix-for-mode mode "mi" "insert")
-              (spacemacs/set-leader-keys-for-major-mode mode
-                "ih" 'gendoxy-header
-                "id" 'gendoxy-tag
-                "iD" 'gendoxy-tag-header
-                "ig" 'gendoxy-group
-                "iG" 'gendoxy-group-header
-                "is" 'gendoxy-group-start
-                "ie" 'gendoxy-group-end))))
+            (spacemacs/declare-prefix-for-mode mode "mi" "insert")
+            (spacemacs/set-leader-keys-for-major-mode mode
+              "ih" 'gendoxy-header
+              "id" 'gendoxy-tag
+              "iD" 'gendoxy-tag-header
+              "ig" 'gendoxy-group
+              "iG" 'gendoxy-group-header
+              "is" 'gendoxy-group-start
+              "ie" 'gendoxy-group-end))))
 
 (defun c-c++/init-cc-mode ()
   (use-package cc-mode
@@ -109,7 +109,12 @@
 
 (defun c-c++/post-init-company ()
   (add-hook 'c-mode-local-vars-hook #'spacemacs//c-c++-setup-company)
-  (add-hook 'c++-mode-local-vars-hook #'spacemacs//c-c++-setup-company))
+  (add-hook 'c++-mode-local-vars-hook #'spacemacs//c-c++-setup-company)
+
+  (spacemacs|add-company-backends
+    :backends  company-capf
+    :modes c-mode-common)
+  )
 
 (defun c-c++/init-company-c-headers ()
   (use-package company-c-headers

@@ -31,12 +31,14 @@
                 :fetcher github
                 :repo "emacs-tree-sitter/ts-fold"))))
 
+
 (defun tree-sitter/init-tree-sitter ()
   (use-package tree-sitter
     :init
     (when tree-sitter-syntax-highlight-enable
       (add-hook 'tree-sitter-after-on-hook #'spacemacs//tree-sitter-hl-maybe))
     :config
+    (add-to-list 'tree-sitter-major-mode-language-alist '(lisp-data-mode . elisp))
     (global-tree-sitter-mode)))
 
 (defun tree-sitter/init-tree-sitter-langs ()
@@ -54,7 +56,9 @@
     :init
     (when tree-sitter-fold-enable
       (if tree-sitter-fold-indicators-enable
-          (progn
-            (setq ts-fold-indicators-priority 0)
-            (add-hook 'tree-sitter-after-on-hook #'ts-fold-indicators-mode))
-        (global-ts-fold-mode)))))
+          ;; (progn
+          ;;   (setq ts-fold-indicators-priority 0)
+          ;; ISSUE: This mode degrades buffer scrolling performance when active
+          ;; TODO: Investigate why this mode is slow
+          ;; (add-hook 'tree-sitter-after-on-hook #'ts-fold-indicators-mode))
+          (global-ts-fold-mode)))))

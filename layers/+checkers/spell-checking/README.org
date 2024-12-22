@@ -11,6 +11,7 @@
   - [[#disabling-by-default][Disabling by default]]
   - [[#enabling-auto-dictionary-mode][Enabling auto-dictionary-mode]]
   - [[#enabling-multi-dictionary-support-with-hunspell][Enabling multi-dictionary support with hunspell]]
+  - [[#adding-new-dictionaries-to-hunspell][Adding new dictionaries to hunspell]]
   - [[#enable-auto-completion-popup][Enable auto-completion popup]]
 - [[#key-bindings][Key bindings]]
   - [[#spell-checking-transient-state][Spell Checking Transient-state]]
@@ -110,6 +111,21 @@ file:
 
 One caveat is you need quite modern ispell.el for above to work. It's been
 tested with version coming from Emacs 25.2 repository.
+
+** Adding new dictionaries to hunspell
+Access the libreoffice dictionary repository via the link https://cgit.freedesktop.org/libreoffice/dictionaries/tree, look for the directory of the language you are looking for on this page and enter it.
+look for two files one with suffix .aff and .dicc click on plain on the left side and copy the link in your browser's search bar. And use the following ~wget~ command to download both.
+You should place them in one of ~hunspell~'s search directories, you can get the list of these directories by the command ~hunspell -D~. Create a new directory for your language within the directory
+with the same name where it was stored in the libreoffice repository. Example added a dictionary for Brazilian Portuguese.
+#+begin_src shell
+  mkdir -p ~/Library/Spelling
+  cd ~/Library/Spelling
+  mkdir pt_BR && cd pt_BR
+  wget -O pt_BR.aff https://cgit.freedesktop.org/libreoffice/dictionaries/plain/pt_BR/pt_BR.aff
+  wget -O pt_BR.dic https://cgit.freedesktop.org/libreoffice/dictionaries/plain/pt_BR/pt_BR.dic
+#+end_src
+
+OR try install via AUR for Arch Linux, by example, the grammar via freedesktop for pt BR is broken. In this case, was used ~hunspell-pt-br~.
 
 ** Enable auto-completion popup
 To enable auto-completion popup when the point is idle on a misspelled word

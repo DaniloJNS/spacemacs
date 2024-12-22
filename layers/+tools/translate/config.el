@@ -28,3 +28,4 @@ Currently support `posframe' and `buffer'.")
 (defvar translate/word-render 'posframe
   "Word render for displaying translate result.
 Currently support `posframe' and `buffer'.")
+

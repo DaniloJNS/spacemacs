@@ -1,0 +1,8 @@
+# -*- mode: rspec-mode -*-
+# name: describe scenario (string)
+# key: desc
+# --
+
+describe '$1' do
+  $2
+end

@@ -78,6 +78,9 @@
   (spacemacs/add-to-hooks #'add-node-modules-path '(ruby-mode-hook)))
 
 (defun ruby/post-init-company ()
+  (spacemacs|add-company-backends
+    :backends (company-dabbrev-code company-capf)
+    :modes ruby-mode enh-ruby-mode)
   (add-hook 'ruby-mode-local-vars-hook #'spacemacs//ruby-setup-company))
 
 (defun ruby/post-init-counsel-gtags nil)

@@ -31,7 +31,8 @@
     ('company-cmake
      (spacemacs|add-company-backends
        :backends company-cmake
-       :modes cmake-mode))))
+       :modes cmake-mode)))
+  )
 
 (defun spacemacs//cmake-setup-backend ()
   "Conditionally setup cmake backend."

@@ -1,0 +1,8 @@
+# -*- mode: rspec-mode -*-
+# name: before { ... }
+# key: bef
+# --
+
+before do
+  $1
+end

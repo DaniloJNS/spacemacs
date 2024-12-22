@@ -112,9 +112,9 @@
 
     (with-eval-after-load 'evil
       (define-key evil-motion-state-map (kbd "*")
-        'spacemacs/enter-ahs-forward)
+                  'spacemacs/enter-ahs-forward)
       (define-key evil-motion-state-map (kbd "#")
-        'spacemacs/enter-ahs-backward))
+                  'spacemacs/enter-ahs-backward))
 
     (spacemacs/set-leader-keys
       "sh" 'spacemacs/symbol-highlight
@@ -295,9 +295,10 @@
       (add-to-list 'golden-ratio-extra-commands f))
 
     ;; golden-ratio-exclude-buffer-names
-    (dolist (n '(" *NeoTree*"
+    (dolist (n '("*NeoTree*"
                  "*LV*"
-                 " *which-key*"))
+                 " *which-key*"
+                 "*Treemacs*"))
       (add-to-list 'golden-ratio-exclude-buffer-names n))
 
     ;; golden-ratio-inhibit-functions

@@ -1,0 +1,986 @@
+
+Tue Oct 22 10:11:01 2024 - code-review--build-buffer - (wrong-type-argument listp file-error)
+
+Tue Oct 22 10:25:30 2024 - code-review-github-errback - ((error http 422 ((message . "Unprocessable Entity") (errors "You need to leave a comment indicating the requested changes.") (documentation_url . "https://docs.github.com/rest/pulls/reviews#create-a-review-for-a-pull-request") (status . "422"))) (("Date" . "Tue, 22 Oct 2024 13:25:30 GMT") ("Content-Type" . "application/json; charset=utf-8") ("Content-Length" . "224") ("X-OAuth-Scopes" . "repo, user") ("github-authentication-token-expiration" . "2024-11-01 11:04:57 UTC") ("X-GitHub-Media-Type" . "github.v3; format=json") ("x-github-api-version-selected" . "2022-11-28") ("X-RateLimit-Limit" . "5000") ("X-RateLimit-Remaining" . "4994") ("X-RateLimit-Reset" . "1729606261") ("X-RateLimit-Used" . "6") ("X-RateLimit-Resource" . "core") ("Access-Control-Expose-Headers" . "ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset") ("Access-Control-Allow-Origin" . "*") ("Strict-Transport-Security" . "max-age=31536000; includeSubdomains; preload") ("X-Frame-Options" . "deny") ("X-Content-Type-Options" . "nosniff") ("X-XSS-Protection" . "0") ("Referrer-Policy" . "origin-when-cross-origin, strict-origin-when-cross-origin") ("Content-Security-Policy" . "default-src 'none'") ("Vary" . "Accept-Encoding, Accept, X-Requested-With") ("Server" . "github.com") ("X-GitHub-Request-Id" . "8F6C:19417:14B72B0:15D37C8:6717A7C9")) (:error (error http 422 ((message . "Unprocessable Entity") (errors "You need to leave a comment indicating the requested changes.") (documentation_url . "https://docs.github.com/rest/pulls/reviews#create-a-review-for-a-pull-request") (status . "422"))) :peer (:certificates ((:version 3 :serial-number "00:8b:dc:0f:ff:54:77:2f:aa:d1:73:27:3f:23:36:2a:af" :issuer "C=GB,ST=Greater Manchester,L=Salford,O=Sectigo Limited,CN=Sectigo ECC Domain Validation Secure Server CA" :valid-from "2024-03-07" :valid-to "2025-03-07" :subject "CN=*.github.com" :public-key-algorithm "EC/ECDSA" :certificate-security-level "High" :signature-algorithm "ECDSA-SHA256" :public-key-id "sha1:fb:8b:0b:4c:d5:2d:b0:43:ab:06:95:d1:92:74:16:d3:ee:ac:2e:88" :certificate-id "sha1:0d:f6:ec:50:fa:ed:ae:6e:13:af:82:94:52:f7:11:1b:0a:cf:7c:20" :pem "-----BEGIN CERTIFICATE-----
+MIIEojCCBEigAwIBAgIRAIvcD/9Udy+q0XMnPyM2Kq8wCgYIKoZIzj0EAwIwgY8x
+CzAJBgNVBAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNV
+BAcTB1NhbGZvcmQxGDAWBgNVBAoTD1NlY3RpZ28gTGltaXRlZDE3MDUGA1UEAxMu
+U2VjdGlnbyBFQ0MgRG9tYWluIFZhbGlkYXRpb24gU2VjdXJlIFNlcnZlciBDQTAe
+Fw0yNDAzMDcwMDAwMDBaFw0yNTAzMDcyMzU5NTlaMBcxFTATBgNVBAMMDCouZ2l0
+aHViLmNvbTBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABHADGElEmwEKQTOjCTeZ
+EQ+YFacbykIKQ+I0OI2NQqjTnlj+3zpJ/j8XYiau+kL+Wz5r97U8Q+qZYaDQ2A6I
+bzKjggL6MIIC9jAfBgNVHSMEGDAWgBT2hQo7EYbhBH0Oqgss0u7MZHt7rjAdBgNV
+HQ4EFgQULNWfMkiYavm5W71lUenpddcgsZYwDgYDVR0PAQH/BAQDAgeAMAwGA1Ud
+EwEB/wQCMAAwHQYDVR0lBBYwFAYIKwYBBQUHAwEGCCsGAQUFBwMCMEkGA1UdIARC
+MEAwNAYLKwYBBAGyMQECAgcwJTAjBggrBgEFBQcCARYXaHR0cHM6Ly9zZWN0aWdv
+LmNvbS9DUFMwCAYGZ4EMAQIBMIGEBggrBgEFBQcBAQR4MHYwTwYIKwYBBQUHMAKG
+Q2h0dHA6Ly9jcnQuc2VjdGlnby5jb20vU2VjdGlnb0VDQ0RvbWFpblZhbGlkYXRp
+b25TZWN1cmVTZXJ2ZXJDQS5jcnQwIwYIKwYBBQUHMAGGF2h0dHA6Ly9vY3NwLnNl
+Y3RpZ28uY29tMIIBfgYKKwYBBAHWeQIEAgSCAW4EggFqAWgAdQDPEVbu1S58r/OH
+W9lpLpvpGnFnSrAX7KwB0lt3zsw7CAAAAY4WRSJBAAAEAwBGMEQCIEn9RPTj/mWa
+DNJYWLd5adwMh7lQLd0H4U687S0Vgw+IAiAWGZTh1I6KUlgK6RI2mF1Q+xxZvOIg
+8FYfjyZYiosoewB3AKLjCuRF772tm3447Udnd1PXgluElNcrXhssxLlQpEfnAAAB
+jhZFIbkAAAQDAEgwRgIhALcwnByZOMSyk9PPja2cXaA5/xwHG3n9zTUeVnErWwcS
+AiEA5+cybN+U4jFHP/uWSLhtrysqmW+SUJnFxS2HNgjr25QAdgBOdaMnXJoQwzhb
+bNTfP1LrHfDgjhuNacCx+mSxYpo53wAAAY4WRSG4AAAEAwBHMEUCIQD630D/OUY5
+I0wDRYh6rvYhIaFYSHArqdPkP7vtRZa4EgIgOVY+ffcboNA/3MVjV4HbPJcFPntP
+uh2wvdD4mlcFFkEwIwYDVR0RBBwwGoIMKi5naXRodWIuY29tggpnaXRodWIuY29t
+MAoGCCqGSM49BAMCA0gAMEUCIQC4ntULeA2fj3hbPy2Ho1aUiJLU/qZe568a8//X
+5PNAOAIgbK6eh8zyKr7uYc1/1qRMeDrvekcpOGOFnOHd3aOXVqc=
+-----END CERTIFICATE-----
+") (:version 3 :serial-number "00:f3:64:4e:6b:6e:00:50:23:7e:09:46:bd:7b:e1:f5:1d" :issuer "C=US,ST=New Jersey,L=Jersey City,O=The USERTRUST Network,CN=USERTrust ECC Certification Authority" :valid-from "2018-11-02" :valid-to "2030-12-31" :subject "C=GB,ST=Greater Manchester,L=Salford,O=Sectigo Limited,CN=Sectigo ECC Domain Validation Secure Server CA" :public-key-algorithm "EC/ECDSA" :certificate-security-level "High" :signature-algorithm "ECDSA-SHA384" :public-key-id "sha1:66:0f:03:01:16:1a:b0:36:92:16:3a:73:48:14:f1:8b:dc:17:25:47" :certificate-id "sha1:e8:49:90:cb:9b:f8:e3:ab:0b:ca:e8:a6:49:cb:30:fe:4d:c4:d7:67" :pem "-----BEGIN CERTIFICATE-----
+MIIDqDCCAy6gAwIBAgIRAPNkTmtuAFAjfglGvXvh9R0wCgYIKoZIzj0EAwMwgYgx
+CzAJBgNVBAYTAlVTMRMwEQYDVQQIEwpOZXcgSmVyc2V5MRQwEgYDVQQHEwtKZXJz
+ZXkgQ2l0eTEeMBwGA1UEChMVVGhlIFVTRVJUUlVTVCBOZXR3b3JrMS4wLAYDVQQD
+EyVVU0VSVHJ1c3QgRUNDIENlcnRpZmljYXRpb24gQXV0aG9yaXR5MB4XDTE4MTEw
+MjAwMDAwMFoXDTMwMTIzMTIzNTk1OVowgY8xCzAJBgNVBAYTAkdCMRswGQYDVQQI
+ExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGDAWBgNVBAoT
+D1NlY3RpZ28gTGltaXRlZDE3MDUGA1UEAxMuU2VjdGlnbyBFQ0MgRG9tYWluIFZh
+bGlkYXRpb24gU2VjdXJlIFNlcnZlciBDQTBZMBMGByqGSM49AgEGCCqGSM49AwEH
+A0IABHkYk8qfbZ5sVwAjBTcLXw9YWsTef1Wj6R7W2SUKiKAgSh16TwUwimNJE4xk
+IQeV/To14UrOkPAY9z2vaKb71EijggFuMIIBajAfBgNVHSMEGDAWgBQ64QmG1M8Z
+wpZ2dEl23OA1xmNjmjAdBgNVHQ4EFgQU9oUKOxGG4QR9DqoLLNLuzGR7e64wDgYD
+VR0PAQH/BAQDAgGGMBIGA1UdEwEB/wQIMAYBAf8CAQAwHQYDVR0lBBYwFAYIKwYB
+BQUHAwEGCCsGAQUFBwMCMBsGA1UdIAQUMBIwBgYEVR0gADAIBgZngQwBAgEwUAYD
+VR0fBEkwRzBFoEOgQYY/aHR0cDovL2NybC51c2VydHJ1c3QuY29tL1VTRVJUcnVz
+dEVDQ0NlcnRpZmljYXRpb25BdXRob3JpdHkuY3JsMHYGCCsGAQUFBwEBBGowaDA/
+BggrBgEFBQcwAoYzaHR0cDovL2NydC51c2VydHJ1c3QuY29tL1VTRVJUcnVzdEVD
+Q0FkZFRydXN0Q0EuY3J0MCUGCCsGAQUFBzABhhlodHRwOi8vb2NzcC51c2VydHJ1
+c3QuY29tMAoGCCqGSM49BAMDA2gAMGUCMEvnx3FcsVwJbZpCYF9z6fDWJtS1UVRs
+cS0chWBNKPFNpvDKdrdKRe+oAkr2jU+ubgIxAODheSr2XhcA7oz9HmedGdMhlrd9
+4ToKFbZl+/OnFFzqnvOhcjHvClECEQcKmc8fmA==
+-----END CERTIFICATE-----
+") (:version 3 :serial-number "56:67:1d:04:ea:4f:99:4c:6f:10:81:47:59:d2:75:94" :issuer "C=GB,ST=Greater Manchester,L=Salford,O=Comodo CA Limited,CN=AAA Certificate Services" :valid-from "2019-03-12" :valid-to "2028-12-31" :subject "C=US,ST=New Jersey,L=Jersey City,O=The USERTRUST Network,CN=USERTrust ECC Certification Authority" :public-key-algorithm "EC/ECDSA" :certificate-security-level "Ultra" :signature-algorithm "RSA-SHA384" :public-key-id "sha1:a2:af:24:0a:da:e8:67:79:c8:a8:50:b3:c7:46:ee:d9:f7:1b:16:78" :certificate-id "sha1:ca:77:88:c3:2d:a1:e4:b7:86:3a:4f:b5:7d:00:b5:5d:da:cb:c7:f9" :pem "-----BEGIN CERTIFICATE-----
+MIID0zCCArugAwIBAgIQVmcdBOpPmUxvEIFHWdJ1lDANBgkqhkiG9w0BAQwFADB7
+MQswCQYDVQQGEwJHQjEbMBkGA1UECAwSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYD
+VQQHDAdTYWxmb3JkMRowGAYDVQQKDBFDb21vZG8gQ0EgTGltaXRlZDEhMB8GA1UE
+AwwYQUFBIENlcnRpZmljYXRlIFNlcnZpY2VzMB4XDTE5MDMxMjAwMDAwMFoXDTI4
+MTIzMTIzNTk1OVowgYgxCzAJBgNVBAYTAlVTMRMwEQYDVQQIEwpOZXcgSmVyc2V5
+MRQwEgYDVQQHEwtKZXJzZXkgQ2l0eTEeMBwGA1UEChMVVGhlIFVTRVJUUlVTVCBO
+ZXR3b3JrMS4wLAYDVQQDEyVVU0VSVHJ1c3QgRUNDIENlcnRpZmljYXRpb24gQXV0
+aG9yaXR5MHYwEAYHKoZIzj0CAQYFK4EEACIDYgAEGqxUWqn5aCPnetUkb1PGWthL
+q8bVttHmc3Gu3ZzWDGH926CJA7gFFOxXzu5dP+Ihs8731Ip54KODfi2X0GHE8Znc
+JZFjq38wo7Rw4sehM5zzvy5cU7Ffs30yf4o043l5o4HyMIHvMB8GA1UdIwQYMBaA
+FKARCiM+lvEH7OKvKe+CpX/QMKS0MB0GA1UdDgQWBBQ64QmG1M8ZwpZ2dEl23OA1
+xmNjmjAOBgNVHQ8BAf8EBAMCAYYwDwYDVR0TAQH/BAUwAwEB/zARBgNVHSAECjAI
+MAYGBFUdIAAwQwYDVR0fBDwwOjA4oDagNIYyaHR0cDovL2NybC5jb21vZG9jYS5j
+b20vQUFBQ2VydGlmaWNhdGVTZXJ2aWNlcy5jcmwwNAYIKwYBBQUHAQEEKDAmMCQG
+CCsGAQUFBzABhhhodHRwOi8vb2NzcC5jb21vZG9jYS5jb20wDQYJKoZIhvcNAQEM
+BQADggEBABns652JLCALBIAdGN5CmXKZFjK9Dpx1WywV4ilAbe7/ctvbq5AfjJXy
+ij0IckKJUAfiORVsAYfZFhr1wHUrxeZWEQff2Ji8fJ8ZOd+LygBkc7xGEJuTI42+
+FsMuCIKchjN0djsoTI0DQoWz4rIjQtUfenVqGtF8qmchxDM6OW1TyaLtYiKou+JV
+bJlsQ2uRl9EMC5MCHdK8aXdJ5htN978UeAOwproLtOGFfy/cQjutdAFI3tZs4RmY
+CV4Ks2dH/hzg1cEo70qLRDEmBDeNiXQ2Lu+lIg+DdEmSx/cQwgwp+7e9un/jX9Wf
+8qn0dNW44bOwgeThpWOjzOoEeJBuv/c=
+-----END CERTIFICATE-----
+")) :certificate (:version 3 :serial-number "00:8b:dc:0f:ff:54:77:2f:aa:d1:73:27:3f:23:36:2a:af" :issuer "C=GB,ST=Greater Manchester,L=Salford,O=Sectigo Limited,CN=Sectigo ECC Domain Validation Secure Server CA" :valid-from "2024-03-07" :valid-to "2025-03-07" :subject "CN=*.github.com" :public-key-algorithm "EC/ECDSA" :certificate-security-level "High" :signature-algorithm "ECDSA-SHA256" :public-key-id "sha1:fb:8b:0b:4c:d5:2d:b0:43:ab:06:95:d1:92:74:16:d3:ee:ac:2e:88" :certificate-id "sha1:0d:f6:ec:50:fa:ed:ae:6e:13:af:82:94:52:f7:11:1b:0a:cf:7c:20" :pem "-----BEGIN CERTIFICATE-----
+MIIEojCCBEigAwIBAgIRAIvcD/9Udy+q0XMnPyM2Kq8wCgYIKoZIzj0EAwIwgY8x
+CzAJBgNVBAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNV
+BAcTB1NhbGZvcmQxGDAWBgNVBAoTD1NlY3RpZ28gTGltaXRlZDE3MDUGA1UEAxMu
+U2VjdGlnbyBFQ0MgRG9tYWluIFZhbGlkYXRpb24gU2VjdXJlIFNlcnZlciBDQTAe
+Fw0yNDAzMDcwMDAwMDBaFw0yNTAzMDcyMzU5NTlaMBcxFTATBgNVBAMMDCouZ2l0
+aHViLmNvbTBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABHADGElEmwEKQTOjCTeZ
+EQ+YFacbykIKQ+I0OI2NQqjTnlj+3zpJ/j8XYiau+kL+Wz5r97U8Q+qZYaDQ2A6I
+bzKjggL6MIIC9jAfBgNVHSMEGDAWgBT2hQo7EYbhBH0Oqgss0u7MZHt7rjAdBgNV
+HQ4EFgQULNWfMkiYavm5W71lUenpddcgsZYwDgYDVR0PAQH/BAQDAgeAMAwGA1Ud
+EwEB/wQCMAAwHQYDVR0lBBYwFAYIKwYBBQUHAwEGCCsGAQUFBwMCMEkGA1UdIARC
+MEAwNAYLKwYBBAGyMQECAgcwJTAjBggrBgEFBQcCARYXaHR0cHM6Ly9zZWN0aWdv
+LmNvbS9DUFMwCAYGZ4EMAQIBMIGEBggrBgEFBQcBAQR4MHYwTwYIKwYBBQUHMAKG
+Q2h0dHA6Ly9jcnQuc2VjdGlnby5jb20vU2VjdGlnb0VDQ0RvbWFpblZhbGlkYXRp
+b25TZWN1cmVTZXJ2ZXJDQS5jcnQwIwYIKwYBBQUHMAGGF2h0dHA6Ly9vY3NwLnNl
+Y3RpZ28uY29tMIIBfgYKKwYBBAHWeQIEAgSCAW4EggFqAWgAdQDPEVbu1S58r/OH
+W9lpLpvpGnFnSrAX7KwB0lt3zsw7CAAAAY4WRSJBAAAEAwBGMEQCIEn9RPTj/mWa
+DNJYWLd5adwMh7lQLd0H4U687S0Vgw+IAiAWGZTh1I6KUlgK6RI2mF1Q+xxZvOIg
+8FYfjyZYiosoewB3AKLjCuRF772tm3447Udnd1PXgluElNcrXhssxLlQpEfnAAAB
+jhZFIbkAAAQDAEgwRgIhALcwnByZOMSyk9PPja2cXaA5/xwHG3n9zTUeVnErWwcS
+AiEA5+cybN+U4jFHP/uWSLhtrysqmW+SUJnFxS2HNgjr25QAdgBOdaMnXJoQwzhb
+bNTfP1LrHfDgjhuNacCx+mSxYpo53wAAAY4WRSG4AAAEAwBHMEUCIQD630D/OUY5
+I0wDRYh6rvYhIaFYSHArqdPkP7vtRZa4EgIgOVY+ffcboNA/3MVjV4HbPJcFPntP
+uh2wvdD4mlcFFkEwIwYDVR0RBBwwGoIMKi5naXRodWIuY29tggpnaXRodWIuY29t
+MAoGCCqGSM49BAMCA0gAMEUCIQC4ntULeA2fj3hbPy2Ho1aUiJLU/qZe568a8//X
+5PNAOAIgbK6eh8zyKr7uYc1/1qRMeDrvekcpOGOFnOHd3aOXVqc=
+-----END CERTIFICATE-----
+") :key-exchange "ECDHE-RSA" :protocol "TLS1.3" :cipher "AES-128-GCM" :mac "AEAD" :encrypt-then-mac nil)) #s(ghub--req #s(url "https" nil nil "api.github.com" nil "/repos/youse-seguradora/pricing-engine/pulls/2259/reviews" nil nil t nil t t) nil nil "POST" #[0 "\302\305=\203 \306\307\303\301\242\"B\304\242B\207\310\303\302\301\242\300$\304\242B\207" [nil ("DaniloJNS") forge "api.github.com" ((("Content-Type" . "application/json"))) basic "Authorization" ghub--basic-auth ghub--auth] 5] ghub--handle-response nil t nil #<buffer *Code Review*> #[128 "\303\304\300\305\303#\210\304\300\306\307 #\210\310\300!\210\311
+\312\313#)\207" [#s(#s(eieio--class code-review-github-repo nil (#s(eieio--class code-review-db-pullreq nil (#s(eieio--class closql-object nil nil [#s(cl-slot-descriptor closql-database nil t nil)] #s(hash-table size 65 test eq rehash-size 1.5 rehash-threshold 0.8125 data (closql-database 1)) (code-review-db-pullreq code-review-db-comment code-review-db-path code-review-db-buffer forge-object) ((:closql-database . closql-database)) [#s(cl-slot-descriptor closql-order-by nil t nil) #s(cl-slot-descriptor closql-foreign-key nil t nil) #s(cl-slot-descriptor closql-primary-key nil t nil) #s(cl-slot-descriptor closql-table nil t nil) #s(cl-slot-descriptor closql-class-suffix nil t nil) #s(cl-slot-descriptor closql-class-prefix nil t nil)] [nil nil nil nil nil nil] #s(#9 nil) (:custom-groups nil :abstract t))) [#s(cl-slot-descriptor closql-database nil t nil) #s(cl-slot-descriptor id 'eieio--unbound t nil) #s(cl-slot-descriptor base-ref-name nil t nil) #s(cl-slot-descriptor head-ref-name nil t nil) #s(cl-slot-descriptor finished nil t nil) #s(cl-slot-descriptor finished-at nil t nil) #s(cl-slot-descriptor saved nil t nil) #s(cl-slot-descriptor saved-at nil t nil) #s(cl-slot-descriptor raw-infos nil t nil) #s(cl-slot-descriptor raw-diff nil t nil) #s(cl-slot-descriptor raw-comments nil t nil) #s(cl-slot-descriptor owner 'eieio--unbound t nil) #s(cl-slot-descriptor repo 'eieio--unbound t nil) #s(cl-slot-descriptor number 'eieio--unbound t nil) #s(cl-slot-descriptor description nil t nil) #s(cl-slot-descriptor title nil t nil) #s(cl-slot-descriptor host nil t nil) #s(cl-slot-descriptor sha nil t nil) #s(cl-slot-descriptor feedback nil t nil) #s(cl-slot-descriptor state nil t nil) #s(cl-slot-descriptor replies nil t nil) #s(cl-slot-descriptor review nil t nil) #s(cl-slot-descriptor labels nil t nil) #s(cl-slot-descriptor merge nil t nil) #s(cl-slot-descriptor milestones nil t nil) #s(cl-slot-descriptor projects nil t nil) #s(cl-slot-descriptor reviewers nil t nil) #s(cl-slot-descriptor assignees nil t nil) #s(cl-slot-descriptor linked-issues nil t nil) #s(cl-slot-descriptor buffer 'eieio--unbound t ((:closql-class . code-review-db-buffer)))] #s(hash-table size 65 test eq rehash-size 1.5 rehash-threshold 0.8125 data (closql-database 1 id 2 base-ref-name 3 head-ref-name 4 finished 5 finished-at 6 saved 7 saved-at 8 raw-infos 9 raw-diff 10 raw-comments 11 owner 12 repo 13 number 14 description 15 title 16 host 17 sha 18 feedback 19 state 20 replies 21 review 22 labels 23 merge 24 milestones 25 projects 26 reviewers 27 assignees 28 linked-issues 29 buffer 30)) (code-review-bitbucket-repo code-review-gitlab-repo code-review-github-repo) ((:closql-database . closql-database) (:id . id) (:owner . owner) (:repo . repo) (:number . number)) [#s(cl-slot-descriptor closql-class-prefix "code-review-" t nil) #s(cl-slot-descriptor closql-class-suffix nil t nil) #s(cl-slot-descriptor closql-table 'pullreq t nil) #s(cl-slot-descriptor closql-primary-key 'id t nil) #s(cl-slot-descriptor closql-foreign-key nil t nil) #s(cl-slot-descriptor closql-order-by [(desc number)] t nil)] ["code-review-" nil pullreq id nil [(desc number)]] #s(#7 nil eieio--unbound nil nil nil nil nil nil nil nil nil eieio--unbound eieio--unbound eieio--unbound nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil eieio--unbound) (:custom-groups nil :abstract t))) [#s(cl-slot-descriptor closql-database nil t nil) #s(cl-slot-descriptor id 'eieio--unbound t nil) #s(cl-slot-descriptor base-ref-name nil t nil) #s(cl-slot-descriptor head-ref-name nil t nil) #s(cl-slot-descriptor finished nil t nil) #s(cl-slot-descriptor finished-at nil t nil) #s(cl-slot-descriptor saved nil t nil) #s(cl-slot-descriptor saved-at nil t nil) #s(cl-slot-descriptor raw-infos nil t nil) #s(cl-slot-descriptor raw-diff nil t nil) #s(cl-slot-descriptor raw-comments nil t nil) #s(cl-slot-descriptor owner 'eieio--unbound t nil) #s(cl-slot-descriptor repo 'eieio--unbound t nil) #s(cl-slot-descriptor number 'eieio--unbound t nil) #s(cl-slot-descriptor description nil t nil) #s(cl-slot-descriptor title nil t nil) #s(cl-slot-descriptor host nil t nil) #s(cl-slot-descriptor sha nil t nil) #s(cl-slot-descriptor feedback nil t nil) #s(cl-slot-descriptor state nil t nil) #s(cl-slot-descriptor replies nil t nil) #s(cl-slot-descriptor review nil t nil) #s(cl-slot-descriptor labels nil t nil) #s(cl-slot-descriptor merge nil t nil) #s(cl-slot-descriptor milestones nil t nil) #s(cl-slot-descriptor projects nil t nil) #s(cl-slot-descriptor reviewers nil t nil) #s(cl-slot-descriptor assignees nil t nil) #s(cl-slot-descriptor linked-issues nil t nil) #s(cl-slot-descriptor buffer 'eieio--unbound t ((:closql-class . code-review-db-buffer))) #s(cl-slot-descriptor callback nil t nil)] #s(hash-table size 65 test eq rehash-size 1.5 rehash-threshold 0.8125 data (closql-database 1 id 2 base-ref-name 3 head-ref-name 4 finished 5 finished-at 6 saved 7 saved-at 8 raw-infos 9 raw-diff 10 raw-comments 11 owner 12 repo 13 number 14 description 15 title 16 host 17 sha 18 feedback 19 state 20 replies 21 review 22 labels 23 merge 24 milestones 25 projects 26 reviewers 27 assignees 28 linked-issues 29 buffer 30 callback 31)) nil ((:closql-database . closql-database) (:id . id) (:owner . owner) (:repo . repo) (:number . number)) [#s(cl-slot-descriptor closql-order-by [(desc number)] t nil) #s(cl-slot-descriptor closql-foreign-key nil t nil) #s(cl-slot-descriptor closql-primary-key 'id t nil) #s(cl-slot-descriptor closql-table 'pullreq t nil) #s(cl-slot-descriptor closql-class-suffix nil t nil) #s(cl-slot-descriptor closql-class-prefix "code-review-" t nil)] [[(desc number)] nil id pullreq nil "code-review-"] #s(#5 nil eieio--unbound nil nil nil nil nil nil nil nil nil eieio--unbound eieio--unbound eieio--unbound nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil eieio--unbound nil) (:custom-groups nil)) #s(code-review-db-database #s(emacsql-sqlite-builtin-connection #<sqlite db=0x5a343d3ba400 name=/home/danilo/.emacs.d/code-review-db-file.sqlite> nil #<finalizer> "/home/danilo/.emacs.d/code-review-db-file.sqlite")) "493d7e80-73e0-4025-9feb-2081c837cac1" "master" "sfi-3101-renewal-subproduct-payd" nil nil nil nil ((id . "PR_kwDOAxbiL85_BM-i") (author (login . "lmpereirayouse") (url . "https://github.com/lmpereirayouse")) (headRefOid . "be00ed3984f5ff614e5ef4c8b122d86e4c04c383") (baseRefName . "master") (headRefName . "sfi-3101-renewal-subproduct-payd") (isDraft) (databaseId . 2131021730) (number . 2259) (createdAt . "2024-10-17T21:01:13Z") (updatedAt . "2024-10-22T12:50:44Z") (latestOpinionatedReviews (nodes)) (reviewRequests (nodes ((asCodeOwner) (requestedReviewer (__typename . "User") (login . "joao-henrique-rebase") (name . "João Henrique") (url . "https://github.com/joao-henrique-rebase"))) ((asCodeOwner) (requestedReviewer (__typename . "User") (login . "caduaraujo") (name . "Carlos Eduardo de Araujo") (url . "https://github.com/caduaraujo"))) ((asCodeOwner) (requestedReviewer (__typename . "User") (login . "le-santos") (name . "Leandro Quinterio") (url . "https://github.com/le-santos"))) ((asCodeOwner) (requestedReviewer (__typename . "User") (login . "ueslei-pereira-rebase") (name . "Ueslei Neves") (url . "https://github.com/ueslei-pereira-rebase"))) ((asCodeOwner) (requestedReviewer (__typename . "User") (login . "rflgentil-youse") (name . "Rafael Gentil Mendes") (url . "https://github.com/rflgentil-youse"))) ((asCodeOwner) (requestedReviewer (__typename . "User") (login . "matheus-souza-youse") (name) (url . "https://github.com/matheus-souza-youse"))) ((asCodeOwner) (requestedReviewer (__typename . "User") (login . "MarceloDCYouse") (name . "Marcelo Dias do Carmo") (url . "https://github.com/MarceloDCYouse"))))) (files (nodes ((path . "README.md") (additions . 11) (deletions . 5)) ((path . "app/controllers/v3/pricings_controller.rb") (additions . 12) (deletions . 3)) ((path . "app/models/pricing_from_calculator.rb") (additions . 7) (deletions . 1)) ((path . "app/params/bra/auto_params.rb") (additions . 11) (deletions . 0)) ((path . "docker-compose.yml") (additions . 3) (deletions . 4)) ((path . "spec/models/pricing_from_calculator_spec.rb") (additions . 34) (deletions . 1)) ((path . "spec/params/bra/auto_params_spec.rb") (additions . 29) (deletions . 0)))) (milestone) (labels (nodes)) (assignees (nodes ((name . "Leandro Pereira") (login . "lmpereirayouse") (url . "https://github.com/lmpereirayouse")))) (projectCards (nodes)) (suggestedReviewers ((reviewer (name . "Danilo Nascimento") (login . "DaniloJNS"))) ((reviewer (name . "Larissa Nogueira") (login . "nc-larissa"))) ((reviewer (name . "Matheus M. Almeida") (login . "matheusma37")))) (commits (totalCount . 1) (nodes ((commit (abbreviatedOid . "be00ed3") (message . "feat: return the renewal_adjustment_percent for the factor") (statusCheckRollup (state . "SUCCESS") (contexts (nodes ((startedAt . "2024-10-21T15:11:58Z") (completedAt . "2024-10-21T15:15:38Z") (name . "build-and-deploy") (text) (title . "Workflow: build-and-deploy") (summary . "[View CircleCI workflow](https://app.circleci.com/pipelines/github/youse-seguradora/pricing-engine/5843/workflows/2908e27a-ca4c-4889-8e35-b576bc6cb6f8?utm_campaign=vcs-integration-link&utm_medium=referral&utm_source=github-checks-link&utm_content=summary)
+
+* [unit-test](https://app.circleci.com/pipelines/github/youse-seguradora/pricing-engine/5843/workflows/2908e27a-ca4c-4889-8e35-b576bc6cb6f8/jobs/27405?utm_campaign=vcs-integration-link&utm_medium=referral&utm_source=github-checks-link&utm_content=summary) - Success
+* [security-test](https://app.circleci.com/pipelines/github/youse-seguradora/pricing-engine/5843/workflows/2908e27a-ca4c-4889-8e35-b576bc6cb6f8/jobs/27404?utm_campaign=vcs-integration-link&utm_medium=referral&utm_source=github-checks-link&utm_content=summary) - Success") (status . "COMPLETED") (conclusion . "SUCCESS") (detailsUrl . "https://app.circleci.com/pipelines/github/youse-seguradora/pricing-engine/5843/workflows/2908e27a-ca4c-4889-8e35-b576bc6cb6f8?utm_campaign=vcs-integration-link&utm_medium=referral&utm_source=github-checks-link&utm_content=bottom") (checkSuite (app (id . "MDM6QXBwMTgwMDE=") (name . "CircleCI Checks") (description . "See the status of your CircleCI workflows under the Pull Request Checks tab in the GitHub UI. With checks enabled, users will now be able to go to the Checks tab in GitHub to view the full hierarchy and status of CircleCI builds.
+
+*Note* - You cannot enable GitHub Checks for CircleCI from the GitHub UI, you must log into CircleCI and enable checks for your organization. You must have admin privileges for your organization to enable checks.") (slug . "circleci-checks") (logoUrl . "https://avatars.githubusercontent.com/in/18001?u=88c56396cb128e9558f57e1ab5649f51fdc81980&v=4")) (workflowRun))) ((startedAt . "2024-10-21T15:11:41Z") (completedAt . "2024-10-21T15:11:58Z") (name . "setup-workflow") (text) (title . "Workflow: setup-workflow") (summary . "[View CircleCI workflow](https://app.circleci.com/pipelines/github/youse-seguradora/pricing-engine/5843/workflows/79b1a1d8-d47e-472b-ae28-6358926afcfa?utm_campaign=vcs-integration-link&utm_medium=referral&utm_source=github-checks-link&utm_content=summary)
+
+* [path-filtering/filter](https://app.circleci.com/pipelines/github/youse-seguradora/pricing-engine/5843/workflows/79b1a1d8-d47e-472b-ae28-6358926afcfa/jobs/27403?utm_campaign=vcs-integration-link&utm_medium=referral&utm_source=github-checks-link&utm_content=summary) - Success") (status . "COMPLETED") (conclusion . "SUCCESS") (detailsUrl . "https://app.circleci.com/pipelines/github/youse-seguradora/pricing-engine/5843/workflows/79b1a1d8-d47e-472b-ae28-6358926afcfa?utm_campaign=vcs-integration-link&utm_medium=referral&utm_source=github-checks-link&utm_content=bottom") (checkSuite (app (id . "MDM6QXBwMTgwMDE=") (name . "CircleCI Checks") (description . "See the status of your CircleCI workflows under the Pull Request Checks tab in the GitHub UI. With checks enabled, users will now be able to go to the Checks tab in GitHub to view the full hierarchy and status of CircleCI builds.
+
+*Note* - You cannot enable GitHub Checks for CircleCI from the GitHub UI, you must log into CircleCI and enable checks for your organization. You must have admin privileges for your organization to enable checks.") (slug . "circleci-checks") (logoUrl . "https://avatars.githubusercontent.com/in/18001?u=88c56396cb128e9558f57e1ab5649f51fdc81980&v=4")) (workflowRun)))))))))) (title . "[SFI-3101] Return the renewal_adjustment_percent saved on the factor") (state . "OPEN") (bodyHTML . "<h3 dir=\"auto\">Description</h3>
+<p dir=\"auto\">When we apply endorsement on payd, we need to use the same factors used on the moment of calculation of renewal.</p>
+<p dir=\"auto\">Goals:<br>
+Return the renewal_adjustment_percent<br>
+Store on the table pricing_coverages the factor for renewal_adjustment_percent</p>") (bodyText . "Description
+When we apply endorsement on payd, we need to use the same factors used on the moment of calculation of renewal.
+Goals:
+Return the renewal_adjustment_percent
+Store on the table pricing_coverages the factor for renewal_adjustment_percent") (reactions (nodes)) (comments (nodes)) (reviews (nodes ((typename . "PullRequestReview") (author (login . "DaniloJNS")) (bodyHTML . "") (state . "COMMENTED") (createdAt . "2024-10-18T20:45:28Z") (databaseId . 2378941073) (updatedAt . "2024-10-18T20:45:28Z") (comments (nodes ((createdAt . "2024-10-18T20:45:28Z") (updatedAt . "2024-10-18T20:45:28Z") (bodyHTML . "  <div class=\"my-2 border rounded-2 js-suggested-changes-blob diff-view js-check-bidi\" id=\"\">
+    <div class=\"f6 p-2 lh-condensed border-bottom d-flex\">
+      <div class=\"flex-auto flex-items-center color-fg-muted\">
+        Suggested change
+      </div>
+    </div>
+    <div itemprop=\"text\" class=\"blob-wrapper data file\" style=\"margin: 0; border: none; overflow-y: visible; overflow-x: auto;\">
+      <table class=\"d-table tab-size mb-0 width-full\" data-paste-markdown-skip=\"\">
+          <tbody><tr class=\"border-0\">
+            <td class=\"blob-num blob-num-deletion text-right border-0 px-2 py-1 lh-default blob-num-hidden\" data-line-number=\"·\"></td>
+            <td class=\"border-0 px-2 py-1 blob-code-inner blob-code-deletion js-blob-code-deletion blob-code-marker-deletion\">        <span class=\"pl-s1\">factors_references</span> <span class=\"pl-c1\">=</span> <span class=\"pl-v\">PricingCoverage</span><span class=\"pl-kos\">.</span><span class=\"pl-en\">where</span><span class=\"pl-kos\">(</span><span class=\"pl-pds x x-first\">pricing_id</span><span class=\"x\">: </span><span class=\"pl-en x\">raw_params</span><span class=\"pl-kos x\">[</span><span class=\"pl-s x\">'pricing_reference'</span><span class=\"pl-kos x x-last\">]</span><span class=\"pl-kos\">)</span></td>
+          </tr>
+          <tr class=\"border-0\">
+            <td class=\"blob-num blob-num-deletion text-right border-0 px-2 py-1 lh-default blob-num-hidden\" data-line-number=\"·\"></td>
+            <td class=\"border-0 px-2 py-1 blob-code-inner blob-code-deletion js-blob-code-deletion blob-code-marker-deletion\">                                            <span class=\"pl-kos\">.</span><span class=\"pl-en x x-first\">where</span><span class=\"pl-kos x\">(</span><span class=\"x\"> </span><span class=\"pl-s\"><span class=\"x\">\"factors @&gt; '[{</span><span class=\"pl-cce x\">\\\"</span><span class=\"x\">param_name</span><span class=\"pl-cce x\">\\\"</span><span class=\"x\">:</span><span class=\"pl-cce x\">\\\"</span><span class=\"pl-s1\"><span class=\"pl-kos x\">#{</span><span class=\"pl-en x\">param_name</span><span class=\"pl-kos x\">}</span></span><span class=\"pl-cce x\">\\\"</span><span class=\"x x-last\">}]'::jsonb\"</span></span><span class=\"pl-kos\">)</span></td>
+          </tr>
+          <tr class=\"border-0\">
+            <td class=\"blob-num blob-num-addition text-right border-0 px-2 py-1 lh-default blob-num-hidden\" data-line-number=\"·\"></td>
+            <td class=\"border-0 px-2 py-1 blob-code-inner blob-code-addition js-blob-code-addition blob-code-marker-addition\">        <span class=\"pl-s1\">factors_references</span> <span class=\"pl-c1\">=</span> <span class=\"pl-v\">PricingCoverage</span><span class=\"pl-kos\">.</span><span class=\"pl-en\">where</span><span class=\"pl-kos\">(</span><span class=\"x x-first\"> </span><span class=\"pl-s\"><span class=\"x\">\"factors @&gt; '[{</span><span class=\"pl-cce x\">\\\"</span><span class=\"x\">param_name</span><span class=\"pl-cce x\">\\\"</span><span class=\"x\">:</span><span class=\"pl-cce x\">\\\"</span><span class=\"pl-s1\"><span class=\"pl-kos x\">#{</span><span class=\"pl-en x\">param_name</span><span class=\"pl-kos x\">}</span></span><span class=\"pl-cce x\">\\\"</span><span class=\"x x-last\">}]'::jsonb\"</span></span><span class=\"pl-kos\">)</span></td>
+          </tr>
+          <tr class=\"border-0\">
+            <td class=\"blob-num blob-num-addition text-right border-0 px-2 py-1 lh-default blob-num-hidden\" data-line-number=\"·\"></td>
+            <td class=\"border-0 px-2 py-1 blob-code-inner blob-code-addition js-blob-code-addition blob-code-marker-addition\">                                            <span class=\"pl-kos\">.</span><span class=\"pl-en x x-first\">find_by</span><span class=\"pl-kos x\">(</span><span class=\"pl-pds x\">pricing_id</span><span class=\"x\">: </span><span class=\"pl-en x\">raw_params</span><span class=\"pl-kos x\">[</span><span class=\"pl-s x\">'pricing_reference'</span><span class=\"pl-kos x x-last\">]</span><span class=\"pl-kos\">)</span></td>
+          </tr>
+      </tbody></table>
+    </div>
+    <div class=\"js-apply-changes\"></div>
+  </div>
+
+<p dir=\"auto\">We just need a record from this table, I think we can do that... WDYT?</p>") (originalPosition . 10) (diffHunk . "@@ -52,6 +52,19 @@ class AutoParams < InsuranceParams
+       vehicle.recovered_code
+     end
+ 
++    custom_param :renewal_adjustment_percent do
++      if raw_params['renewal_adjustment_percent'].present?
++       raw_params['renewal_adjustment_percent']
++      elsif raw_params['subproduct'] == 'payd' && raw_params['endorsement'].present?
++        param_name = 'renewal_adjustment_percent'
++        factors_references = PricingCoverage.where(pricing_id: raw_params['pricing_reference'])
++                                            .where( \"factors @> '[{\\\"param_name\\\":\\\"#{param_name}\\\"}]'::jsonb\")") (position) (outdated . t) (path . "app/params/bra/auto_params.rb") (databaseId . 1807001342) (reactions (nodes ((id . "REA_lATOAxbiL85rtKb-zhAe5W4") (content . "THUMBS_UP")))))))) ((typename . "PullRequestReview") (author (login . "lmpereirayouse")) (bodyHTML . "") (state . "COMMENTED") (createdAt . "2024-10-22T12:49:41Z") (databaseId . 2385102999) (updatedAt . "2024-10-22T12:49:41Z") (comments (nodes ((createdAt . "2024-10-22T12:49:41Z") (updatedAt . "2024-10-22T12:49:41Z") (bodyHTML . "<p dir=\"auto\">applied.</p>") (originalPosition . 10) (diffHunk . "@@ -52,6 +52,19 @@ class AutoParams < InsuranceParams
+       vehicle.recovered_code
+     end
+ 
++    custom_param :renewal_adjustment_percent do
++      if raw_params['renewal_adjustment_percent'].present?
++       raw_params['renewal_adjustment_percent']
++      elsif raw_params['subproduct'] == 'payd' && raw_params['endorsement'].present?
++        param_name = 'renewal_adjustment_percent'
++        factors_references = PricingCoverage.where(pricing_id: raw_params['pricing_reference'])
++                                            .where( \"factors @> '[{\\\"param_name\\\":\\\"#{param_name}\\\"}]'::jsonb\")") (position) (outdated . t) (path . "app/params/bra/auto_params.rb") (databaseId . 1810664620) (reactions (nodes))))))))) "diff --git README.md README.md
+index a7f7eadbda..e885665477 100644
+--- README.md
++++ README.md
+@@ -2,14 +2,14 @@
+ <div>
+    <a href=\"https://github.com/rubocop/rubocop\">
+        <img align=\"center\" alt=\"rubocop_style_icon\" src=\"https://img.shields.io/badge/code_style-rubocop-brightgreen.svg\">
+-   </a> 
++   </a>
+     <a href=\"https://app.circleci.com/pipelines/github/youse-seguradora/pricing-engine\">
+        <img align=\"center\" alt=\"rubocop_style_icon\" src=\"https://img.shields.io/badge/cicleCI%20-orange\">
+-   </a> 
++   </a>
+ </div>
+ 
+ ## 📋 Descrição
+- O microserviço _Pricing-engine_ faz parte do ecossistema Youse. 
++ O microserviço _Pricing-engine_ faz parte do ecossistema Youse.
+ É responsável pelo manuseio de todos os produtos (seguros)
+ e especificações, como LMIs de coberturas e elegibilidades para assistências. É também
+ responsável por entregar todas as solicitações de preços, aplicado ao negócio, desenhando
+@@ -28,7 +28,7 @@ regras para cada Seguro, suas coberturas e suas assistências.
+ Para configurar a aplicação local use o comando:
+ 
+ ```bash
+-  bin/setup  
++  bin/setup
+ ```
+ 
+ Para rodar os testes local use o comando :
+@@ -87,6 +87,12 @@ Com a configuração acima concluída, você poderá executar algumas rakes obri
+  bundle install
+ ```
+ 
++# MacOS - erro ao executar o projeto
++```
++export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
++export DISABLE_SPRING=true
++```
++
+ #### 🐳 Usando Docker
+ Certifique-se de ter o Docker e o Docker Compose instalados no seu sistema.
+ 
+@@ -118,7 +124,7 @@ Basta executar o script abaixo para enviar o branch atual para QA:
+    git push origin qa
+ ```
+ 
+-## 📝 Documentação 
++## 📝 Documentação
+ Nesta seção voce irá encontrar itens que podem te ajudar a ter maior entendimento sobre o projeto, como:
+ 
+ - [O que é um preço? / Como calcular um preço?](./docs/price.md)
+diff --git app/controllers/v3/pricings_controller.rb app/controllers/v3/pricings_controller.rb
+index 3f3bc3b3ec..1e1ad50c52 100644
+--- app/controllers/v3/pricings_controller.rb
++++ app/controllers/v3/pricings_controller.rb
+@@ -48,9 +48,18 @@ def pricing_reference
+     end
+ 
+     def product_params_class
+-      \"#{current_country_code}/#{current_product}_params\".camelize.constantize
+-    rescue NameError
+-      raise Pricing::InvalidProduct
++      klass_params = ActiveSupport::HashWithIndifferentAccess.new(
++        bra: {
++          auto: ::BRA::AutoParams,
++          home: ::BRA::HomeParams,
++          life: ::BRA::LifeParams
++        }
++      )
++      klass_params.dig(current_country_code,current_product) || raise_invalid_product
++    end
++
++    def raise_invalid_product
++      raise ::Pricing::InvalidProduct
+     end
+ 
+     def custom_fipe_compensation_factor
+diff --git app/models/pricing_from_calculator.rb app/models/pricing_from_calculator.rb
+index 35185f9803..1346a97676 100644
+--- app/models/pricing_from_calculator.rb
++++ app/models/pricing_from_calculator.rb
+@@ -12,6 +12,9 @@ class PricingFromCalculator
+       'taxes_multiplicative'
+     ],
+     auto: [],
++    auto_payd:[
++      'renewal_adjustment_percent'
++    ],
+     home: []
+   }.freeze
+ 
+@@ -131,7 +134,10 @@ def pricing_coverages_parameters(coverage_calculator)
+   end
+ 
+   def factors_allowed_to_storage(factors)
+-    Array(factors).select { |factor| factor[:param_name].in?(FACTORS_TO_PERSIST[pricing.product]) }
++    factor_name_with_subproduct = FACTORS_TO_PERSIST[\"#{pricing.product}_#{calculator.params.subproduct}\".to_sym]
++    Array(factors).select {
++      |factor| factor[:param_name].in?(FACTORS_TO_PERSIST[pricing.product]) ||
++      calculator.params.subproduct.present? && factor[:param_name].in?(factor_name_with_subproduct) }
+   end
+ 
+   ##
+diff --git app/params/bra/auto_params.rb app/params/bra/auto_params.rb
+index ee09f46a3d..e94581e67b 100644
+--- app/params/bra/auto_params.rb
++++ app/params/bra/auto_params.rb
+@@ -52,6 +52,17 @@ class AutoParams < InsuranceParams
+       vehicle.recovered_code
+     end
+ 
++    custom_param :renewal_adjustment_percent do
++      if raw_params['renewal_adjustment_percent'].present?
++       raw_params['renewal_adjustment_percent']
++      elsif raw_params['subproduct'] == 'payd' && raw_params['endorsement'].present?
++        param_name = 'renewal_adjustment_percent'
++        factors_reference = PricingCoverage.where(pricing_id: raw_params['pricing_reference'])
++                                            .find_by( \"factors @> '[{\\\"param_name\\\":\\\"#{param_name}\\\"}]'::jsonb\")
++        factors_reference.factors.first[:param_value] if factors_reference
++      end
++    end
++
+     custom_param :tracker_charge do
+       tracker = raw_params.dig('vehicle', 'tracker') || false
+       contract_duration = raw_params['contract_duration'].presence
+diff --git docker-compose.yml docker-compose.yml
+index b63dd6c78b..dd750e0944 100644
+--- docker-compose.yml
++++ docker-compose.yml
+@@ -1,5 +1,4 @@
+ ---
+-version: '3.8'
+ x-default-depends-options: &depends_options
+   condition: service_healthy
+   restart: true
+@@ -8,7 +7,7 @@ services:
+     image: redis:5.0.6-alpine3.10
+     hostname: redis
+     ports:
+-      - 6379
++      - 6376:6379
+     healthcheck:
+       test: [\"CMD-SHELL\", \"redis-cli ping | grep PONG\"]
+       interval: 1s
+@@ -23,7 +22,7 @@ services:
+       POSTGRES_USER: postgres
+       POSTGRES_DB: postgres
+     ports:
+-      - 5432
++      - 5432:5432
+     healthcheck:
+       test: [\"CMD-SHELL\", \"sh -c 'pg_isready -U $(POSTGRES_USER) -d $(POSTGRES_DB)'\"]
+       interval: 10s
+@@ -36,7 +35,7 @@ services:
+     image: rabbitmq:3.11-management-alpine
+     hostname: rabbitmq
+     ports:
+-      - 5672
++      - 5672:5672
+     healthcheck:
+       test: rabbitmq-diagnostics -q ping
+       interval: 30s
+diff --git spec/models/pricing_from_calculator_spec.rb spec/models/pricing_from_calculator_spec.rb
+index 99eda5f8d5..675f4b8109 100644
+--- spec/models/pricing_from_calculator_spec.rb
++++ spec/models/pricing_from_calculator_spec.rb
+@@ -25,13 +25,14 @@
+                coverage_calculator
+              ],
+              member_get_member_discount: 10.0,
+-             params: BRA::AutoParams.new({ vehicle: { code: '003287520060' }, country_code: 'bra' }))
++             params: calculator_params)
+     end
+ 
+     let(:coverage_calculator) { OpenStruct.new(coverage_params:, factors: coverage_factors) }
+     let(:coverage_params) { OpenStruct.new(selected_lmi: 888, selected_deductible: 999, deductible_type: 'reduced') }
+     let(:pricing) { BRA::Auto::Pricing.new }
+     let(:coverage_factors) { [] }
++    let(:calculator_params) { BRA::AutoParams.new({ vehicle: { code: '003287520060' }, country_code: 'bra' }) }
+ 
+     before do
+       stub_request(:get, \"#{ENV['SUPPORT_SERVICE_API_URL']}/vehicles/003287520060?brand_new=false\")
+@@ -90,6 +91,38 @@
+         end
+       end
+ 
++      context 'when the product auto and the subproduct is payd' do
++        let(:calculator_params) do
++          BRA::AutoParams.new({ subproduct: 'payd', vehicle: { code: '003287520060' }, country_code: 'bra' })
++        end
++
++        let(:coverage_factors) do
++          [{
++            param_name: 'renewal_adjustment_percent',
++            param_value: -65,
++            factor: 1.65,
++            factor_type: 'discount_multiplicative'
++          }]
++        end
++
++        it 'the factor renewal_adjustment_percent should be persisted' do
++          subject.execute
++
++          expect(pricing.pricing_coverages.map(&:factors)).to match_array(
++            [
++              [
++                {
++                  factor: 1.65,
++                  factor_type: 'discount_multiplicative',
++                  param_name: 'renewal_adjustment_percent',
++                  param_value: -65
++                }
++              ]
++            ]
++          )
++        end
++      end
++
+       context 'when the price is for the type of home insurance' do
+         let(:pricing) { BRA::Home::Pricing.new }
+ 
+diff --git spec/params/bra/auto_params_spec.rb spec/params/bra/auto_params_spec.rb
+index 72dc9d38e8..babf2099b5 100644
+--- spec/params/bra/auto_params_spec.rb
++++ spec/params/bra/auto_params_spec.rb
+@@ -219,6 +219,7 @@
+       expect(legacy_params[:driver_cpf]).to eq params[:driver][:document_number]
+       expect(legacy_params[:cross_sell_additional_product]).to eq 'home_2.0'
+       expect(legacy_params[:engine_version]).to eq '2'
++      expect(legacy_params[:renewal_adjustment_percent]).to eq nil
+     end
+   end
+ 
+@@ -480,4 +481,32 @@
+       it { expect(params.ab_test_elast_vehicle_age_0001).to eq('test_5') }
+     end
+   end
++
++  context 'when the product is AUTO' do
++    context 'when parameters have subproduct \"payd\" and endorsement true' do
++      before do
++        pricing = pricings(:bra_auto_pricing_with_auto_completo)
++        factors = [factor: 1, param_name: 'renewal_adjustment_percent', factor_type: 'base', param_value: '10' ]
++        PricingCoverage.create!(pricing:, factors:, coverage_id: ActiveRecord::FixtureSet.identify(:bra_auto_fire_fragment, :uuid))
++        raw_params.merge!(subproduct:, endorsement:, pricing_reference: pricing)
++      end
++      let(:subproduct) { 'payd' }
++      let(:endorsement) { 'true' }
++
++      it \"should return renewal_adjustment_percent value\" do
++        expect(params.renewal_adjustment_percent).to eq('10')
++      end
++    end
++
++    context 'when renewal_adjustment_percent exists' do
++      before do
++        raw_params.merge!(renewal_adjustment_percent:)
++      end
++      let(:renewal_adjustment_percent) { 99 }
++
++      it 'should return the same value value' do
++        expect(params.renewal_adjustment_percent).to eq(99)
++      end
++    end
++  end
+ end" (((typename . "PullRequestReview") (author (login . "DaniloJNS")) (bodyHTML . "") (state . "COMMENTED") (createdAt . "2024-10-18T20:45:28Z") (databaseId . 2378941073) (updatedAt . "2024-10-18T20:45:28Z") (comments (nodes ((createdAt . "2024-10-18T20:45:28Z") (updatedAt . "2024-10-18T20:45:28Z") (bodyHTML . "  <div class=\"my-2 border rounded-2 js-suggested-changes-blob diff-view js-check-bidi\" id=\"\">
+    <div class=\"f6 p-2 lh-condensed border-bottom d-flex\">
+      <div class=\"flex-auto flex-items-center color-fg-muted\">
+        Suggested change
+      </div>
+    </div>
+    <div itemprop=\"text\" class=\"blob-wrapper data file\" style=\"margin: 0; border: none; overflow-y: visible; overflow-x: auto;\">
+      <table class=\"d-table tab-size mb-0 width-full\" data-paste-markdown-skip=\"\">
+          <tbody><tr class=\"border-0\">
+            <td class=\"blob-num blob-num-deletion text-right border-0 px-2 py-1 lh-default blob-num-hidden\" data-line-number=\"·\"></td>
+            <td class=\"border-0 px-2 py-1 blob-code-inner blob-code-deletion js-blob-code-deletion blob-code-marker-deletion\">        <span class=\"pl-s1\">factors_references</span> <span class=\"pl-c1\">=</span> <span class=\"pl-v\">PricingCoverage</span><span class=\"pl-kos\">.</span><span class=\"pl-en\">where</span><span class=\"pl-kos\">(</span><span class=\"pl-pds x x-first\">pricing_id</span><span class=\"x\">: </span><span class=\"pl-en x\">raw_params</span><span class=\"pl-kos x\">[</span><span class=\"pl-s x\">'pricing_reference'</span><span class=\"pl-kos x x-last\">]</span><span class=\"pl-kos\">)</span></td>
+          </tr>
+          <tr class=\"border-0\">
+            <td class=\"blob-num blob-num-deletion text-right border-0 px-2 py-1 lh-default blob-num-hidden\" data-line-number=\"·\"></td>
+            <td class=\"border-0 px-2 py-1 blob-code-inner blob-code-deletion js-blob-code-deletion blob-code-marker-deletion\">                                            <span class=\"pl-kos\">.</span><span class=\"pl-en x x-first\">where</span><span class=\"pl-kos x\">(</span><span class=\"x\"> </span><span class=\"pl-s\"><span class=\"x\">\"factors @&gt; '[{</span><span class=\"pl-cce x\">\\\"</span><span class=\"x\">param_name</span><span class=\"pl-cce x\">\\\"</span><span class=\"x\">:</span><span class=\"pl-cce x\">\\\"</span><span class=\"pl-s1\"><span class=\"pl-kos x\">#{</span><span class=\"pl-en x\">param_name</span><span class=\"pl-kos x\">}</span></span><span class=\"pl-cce x\">\\\"</span><span class=\"x x-last\">}]'::jsonb\"</span></span><span class=\"pl-kos\">)</span></td>
+          </tr>
+          <tr class=\"border-0\">
+            <td class=\"blob-num blob-num-addition text-right border-0 px-2 py-1 lh-default blob-num-hidden\" data-line-number=\"·\"></td>
+            <td class=\"border-0 px-2 py-1 blob-code-inner blob-code-addition js-blob-code-addition blob-code-marker-addition\">        <span class=\"pl-s1\">factors_references</span> <span class=\"pl-c1\">=</span> <span class=\"pl-v\">PricingCoverage</span><span class=\"pl-kos\">.</span><span class=\"pl-en\">where</span><span class=\"pl-kos\">(</span><span class=\"x x-first\"> </span><span class=\"pl-s\"><span class=\"x\">\"factors @&gt; '[{</span><span class=\"pl-cce x\">\\\"</span><span class=\"x\">param_name</span><span class=\"pl-cce x\">\\\"</span><span class=\"x\">:</span><span class=\"pl-cce x\">\\\"</span><span class=\"pl-s1\"><span class=\"pl-kos x\">#{</span><span class=\"pl-en x\">param_name</span><span class=\"pl-kos x\">}</span></span><span class=\"pl-cce x\">\\\"</span><span class=\"x x-last\">}]'::jsonb\"</span></span><span class=\"pl-kos\">)</span></td>
+          </tr>
+          <tr class=\"border-0\">
+            <td class=\"blob-num blob-num-addition text-right border-0 px-2 py-1 lh-default blob-num-hidden\" data-line-number=\"·\"></td>
+            <td class=\"border-0 px-2 py-1 blob-code-inner blob-code-addition js-blob-code-addition blob-code-marker-addition\">                                            <span class=\"pl-kos\">.</span><span class=\"pl-en x x-first\">find_by</span><span class=\"pl-kos x\">(</span><span class=\"pl-pds x\">pricing_id</span><span class=\"x\">: </span><span class=\"pl-en x\">raw_params</span><span class=\"pl-kos x\">[</span><span class=\"pl-s x\">'pricing_reference'</span><span class=\"pl-kos x x-last\">]</span><span class=\"pl-kos\">)</span></td>
+          </tr>
+      </tbody></table>
+    </div>
+    <div class=\"js-apply-changes\"></div>
+  </div>
+
+<p dir=\"auto\">We just need a record from this table, I think we can do that... WDYT?</p>") (originalPosition . 10) (diffHunk . "@@ -52,6 +52,19 @@ class AutoParams < InsuranceParams
+       vehicle.recovered_code
+     end
+ 
++    custom_param :renewal_adjustment_percent do
++      if raw_params['renewal_adjustment_percent'].present?
++       raw_params['renewal_adjustment_percent']
++      elsif raw_params['subproduct'] == 'payd' && raw_params['endorsement'].present?
++        param_name = 'renewal_adjustment_percent'
++        factors_references = PricingCoverage.where(pricing_id: raw_params['pricing_reference'])
++                                            .where( \"factors @> '[{\\\"param_name\\\":\\\"#{param_name}\\\"}]'::jsonb\")") (position) (outdated . t) (path . "app/params/bra/auto_params.rb") (databaseId . 1807001342) (reactions (nodes ((id . "REA_lATOAxbiL85rtKb-zhAe5W4") (content . "THUMBS_UP")))))))) ((typename . "PullRequestReview") (author (login . "lmpereirayouse")) (bodyHTML . "") (state . "COMMENTED") (createdAt . "2024-10-22T12:49:41Z") (databaseId . 2385102999) (updatedAt . "2024-10-22T12:49:41Z") (comments (nodes ((createdAt . "2024-10-22T12:49:41Z") (updatedAt . "2024-10-22T12:49:41Z") (bodyHTML . "<p dir=\"auto\">applied.</p>") (originalPosition . 10) (diffHunk . "@@ -52,6 +52,19 @@ class AutoParams < InsuranceParams
+       vehicle.recovered_code
+     end
+ 
++    custom_param :renewal_adjustment_percent do
++      if raw_params['renewal_adjustment_percent'].present?
++       raw_params['renewal_adjustment_percent']
++      elsif raw_params['subproduct'] == 'payd' && raw_params['endorsement'].present?
++        param_name = 'renewal_adjustment_percent'
++        factors_references = PricingCoverage.where(pricing_id: raw_params['pricing_reference'])
++                                            .where( \"factors @> '[{\\\"param_name\\\":\\\"#{param_name}\\\"}]'::jsonb\")") (position) (outdated . t) (path . "app/params/bra/auto_params.rb") (databaseId . 1810664620) (reactions (nodes))))))) "youse-seguradora" "pricing-engine" "2259" "<h3 dir=\"auto\">Description</h3>
+<p dir=\"auto\">When we apply endorsement on payd, we need to use the same factors used on the moment of calculation of renewal.</p>
+<p dir=\"auto\">Goals:<br>
+Return the renewal_adjustment_percent<br>
+Store on the table pricing_coverages the factor for renewal_adjustment_percent</p>" "[SFI-3101] Return the renewal_adjustment_percent saved on the factor" nil "be00ed3984f5ff614e5ef4c8b122d86e4c04c383" nil "OPEN" nil nil nil nil ((title) (perc) (number)) nil nil (((name . "Leandro Pereira") (login . "lmpereirayouse") (url . "https://github.com/lmpereirayouse"))) nil eieio--unbound nil) code-review-section-full-refresh? code-review-buffer-name t eieio-oset finished finished-at current-time-string code-review-db-update code-review--build-buffer nil "Done submitting review"] 5 "
+
+(fn &rest _)"] code-review-github-errback nil nil))
+
+Tue Oct 22 10:25:53 2024 - code-review-github-errback - ((error http 422 ((message . "Unprocessable Entity") (errors "You need to leave a comment indicating the requested changes.") (documentation_url . "https://docs.github.com/rest/pulls/reviews#create-a-review-for-a-pull-request") (status . "422"))) (("Date" . "Tue, 22 Oct 2024 13:25:53 GMT") ("Content-Type" . "application/json; charset=utf-8") ("Content-Length" . "224") ("X-OAuth-Scopes" . "repo, user") ("github-authentication-token-expiration" . "2024-11-01 11:04:57 UTC") ("X-GitHub-Media-Type" . "github.v3; format=json") ("x-github-api-version-selected" . "2022-11-28") ("X-RateLimit-Limit" . "5000") ("X-RateLimit-Remaining" . "4993") ("X-RateLimit-Reset" . "1729606261") ("X-RateLimit-Used" . "7") ("X-RateLimit-Resource" . "core") ("Access-Control-Expose-Headers" . "ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset") ("Access-Control-Allow-Origin" . "*") ("Strict-Transport-Security" . "max-age=31536000; includeSubdomains; preload") ("X-Frame-Options" . "deny") ("X-Content-Type-Options" . "nosniff") ("X-XSS-Protection" . "0") ("Referrer-Policy" . "origin-when-cross-origin, strict-origin-when-cross-origin") ("Content-Security-Policy" . "default-src 'none'") ("Vary" . "Accept-Encoding, Accept, X-Requested-With") ("Server" . "github.com") ("X-GitHub-Request-Id" . "8F6C:19417:14B845B:15D49FE:6717A7CA")) (:error (error http 422 ((message . "Unprocessable Entity") (errors "You need to leave a comment indicating the requested changes.") (documentation_url . "https://docs.github.com/rest/pulls/reviews#create-a-review-for-a-pull-request") (status . "422"))) :peer (:certificates ((:version 3 :serial-number "00:8b:dc:0f:ff:54:77:2f:aa:d1:73:27:3f:23:36:2a:af" :issuer "C=GB,ST=Greater Manchester,L=Salford,O=Sectigo Limited,CN=Sectigo ECC Domain Validation Secure Server CA" :valid-from "2024-03-07" :valid-to "2025-03-07" :subject "CN=*.github.com" :public-key-algorithm "EC/ECDSA" :certificate-security-level "High" :signature-algorithm "ECDSA-SHA256" :public-key-id "sha1:fb:8b:0b:4c:d5:2d:b0:43:ab:06:95:d1:92:74:16:d3:ee:ac:2e:88" :certificate-id "sha1:0d:f6:ec:50:fa:ed:ae:6e:13:af:82:94:52:f7:11:1b:0a:cf:7c:20" :pem "-----BEGIN CERTIFICATE-----
+MIIEojCCBEigAwIBAgIRAIvcD/9Udy+q0XMnPyM2Kq8wCgYIKoZIzj0EAwIwgY8x
+CzAJBgNVBAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNV
+BAcTB1NhbGZvcmQxGDAWBgNVBAoTD1NlY3RpZ28gTGltaXRlZDE3MDUGA1UEAxMu
+U2VjdGlnbyBFQ0MgRG9tYWluIFZhbGlkYXRpb24gU2VjdXJlIFNlcnZlciBDQTAe
+Fw0yNDAzMDcwMDAwMDBaFw0yNTAzMDcyMzU5NTlaMBcxFTATBgNVBAMMDCouZ2l0
+aHViLmNvbTBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABHADGElEmwEKQTOjCTeZ
+EQ+YFacbykIKQ+I0OI2NQqjTnlj+3zpJ/j8XYiau+kL+Wz5r97U8Q+qZYaDQ2A6I
+bzKjggL6MIIC9jAfBgNVHSMEGDAWgBT2hQo7EYbhBH0Oqgss0u7MZHt7rjAdBgNV
+HQ4EFgQULNWfMkiYavm5W71lUenpddcgsZYwDgYDVR0PAQH/BAQDAgeAMAwGA1Ud
+EwEB/wQCMAAwHQYDVR0lBBYwFAYIKwYBBQUHAwEGCCsGAQUFBwMCMEkGA1UdIARC
+MEAwNAYLKwYBBAGyMQECAgcwJTAjBggrBgEFBQcCARYXaHR0cHM6Ly9zZWN0aWdv
+LmNvbS9DUFMwCAYGZ4EMAQIBMIGEBggrBgEFBQcBAQR4MHYwTwYIKwYBBQUHMAKG
+Q2h0dHA6Ly9jcnQuc2VjdGlnby5jb20vU2VjdGlnb0VDQ0RvbWFpblZhbGlkYXRp
+b25TZWN1cmVTZXJ2ZXJDQS5jcnQwIwYIKwYBBQUHMAGGF2h0dHA6Ly9vY3NwLnNl
+Y3RpZ28uY29tMIIBfgYKKwYBBAHWeQIEAgSCAW4EggFqAWgAdQDPEVbu1S58r/OH
+W9lpLpvpGnFnSrAX7KwB0lt3zsw7CAAAAY4WRSJBAAAEAwBGMEQCIEn9RPTj/mWa
+DNJYWLd5adwMh7lQLd0H4U687S0Vgw+IAiAWGZTh1I6KUlgK6RI2mF1Q+xxZvOIg
+8FYfjyZYiosoewB3AKLjCuRF772tm3447Udnd1PXgluElNcrXhssxLlQpEfnAAAB
+jhZFIbkAAAQDAEgwRgIhALcwnByZOMSyk9PPja2cXaA5/xwHG3n9zTUeVnErWwcS
+AiEA5+cybN+U4jFHP/uWSLhtrysqmW+SUJnFxS2HNgjr25QAdgBOdaMnXJoQwzhb
+bNTfP1LrHfDgjhuNacCx+mSxYpo53wAAAY4WRSG4AAAEAwBHMEUCIQD630D/OUY5
+I0wDRYh6rvYhIaFYSHArqdPkP7vtRZa4EgIgOVY+ffcboNA/3MVjV4HbPJcFPntP
+uh2wvdD4mlcFFkEwIwYDVR0RBBwwGoIMKi5naXRodWIuY29tggpnaXRodWIuY29t
+MAoGCCqGSM49BAMCA0gAMEUCIQC4ntULeA2fj3hbPy2Ho1aUiJLU/qZe568a8//X
+5PNAOAIgbK6eh8zyKr7uYc1/1qRMeDrvekcpOGOFnOHd3aOXVqc=
+-----END CERTIFICATE-----
+") (:version 3 :serial-number "00:f3:64:4e:6b:6e:00:50:23:7e:09:46:bd:7b:e1:f5:1d" :issuer "C=US,ST=New Jersey,L=Jersey City,O=The USERTRUST Network,CN=USERTrust ECC Certification Authority" :valid-from "2018-11-02" :valid-to "2030-12-31" :subject "C=GB,ST=Greater Manchester,L=Salford,O=Sectigo Limited,CN=Sectigo ECC Domain Validation Secure Server CA" :public-key-algorithm "EC/ECDSA" :certificate-security-level "High" :signature-algorithm "ECDSA-SHA384" :public-key-id "sha1:66:0f:03:01:16:1a:b0:36:92:16:3a:73:48:14:f1:8b:dc:17:25:47" :certificate-id "sha1:e8:49:90:cb:9b:f8:e3:ab:0b:ca:e8:a6:49:cb:30:fe:4d:c4:d7:67" :pem "-----BEGIN CERTIFICATE-----
+MIIDqDCCAy6gAwIBAgIRAPNkTmtuAFAjfglGvXvh9R0wCgYIKoZIzj0EAwMwgYgx
+CzAJBgNVBAYTAlVTMRMwEQYDVQQIEwpOZXcgSmVyc2V5MRQwEgYDVQQHEwtKZXJz
+ZXkgQ2l0eTEeMBwGA1UEChMVVGhlIFVTRVJUUlVTVCBOZXR3b3JrMS4wLAYDVQQD
+EyVVU0VSVHJ1c3QgRUNDIENlcnRpZmljYXRpb24gQXV0aG9yaXR5MB4XDTE4MTEw
+MjAwMDAwMFoXDTMwMTIzMTIzNTk1OVowgY8xCzAJBgNVBAYTAkdCMRswGQYDVQQI
+ExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGDAWBgNVBAoT
+D1NlY3RpZ28gTGltaXRlZDE3MDUGA1UEAxMuU2VjdGlnbyBFQ0MgRG9tYWluIFZh
+bGlkYXRpb24gU2VjdXJlIFNlcnZlciBDQTBZMBMGByqGSM49AgEGCCqGSM49AwEH
+A0IABHkYk8qfbZ5sVwAjBTcLXw9YWsTef1Wj6R7W2SUKiKAgSh16TwUwimNJE4xk
+IQeV/To14UrOkPAY9z2vaKb71EijggFuMIIBajAfBgNVHSMEGDAWgBQ64QmG1M8Z
+wpZ2dEl23OA1xmNjmjAdBgNVHQ4EFgQU9oUKOxGG4QR9DqoLLNLuzGR7e64wDgYD
+VR0PAQH/BAQDAgGGMBIGA1UdEwEB/wQIMAYBAf8CAQAwHQYDVR0lBBYwFAYIKwYB
+BQUHAwEGCCsGAQUFBwMCMBsGA1UdIAQUMBIwBgYEVR0gADAIBgZngQwBAgEwUAYD
+VR0fBEkwRzBFoEOgQYY/aHR0cDovL2NybC51c2VydHJ1c3QuY29tL1VTRVJUcnVz
+dEVDQ0NlcnRpZmljYXRpb25BdXRob3JpdHkuY3JsMHYGCCsGAQUFBwEBBGowaDA/
+BggrBgEFBQcwAoYzaHR0cDovL2NydC51c2VydHJ1c3QuY29tL1VTRVJUcnVzdEVD
+Q0FkZFRydXN0Q0EuY3J0MCUGCCsGAQUFBzABhhlodHRwOi8vb2NzcC51c2VydHJ1
+c3QuY29tMAoGCCqGSM49BAMDA2gAMGUCMEvnx3FcsVwJbZpCYF9z6fDWJtS1UVRs
+cS0chWBNKPFNpvDKdrdKRe+oAkr2jU+ubgIxAODheSr2XhcA7oz9HmedGdMhlrd9
+4ToKFbZl+/OnFFzqnvOhcjHvClECEQcKmc8fmA==
+-----END CERTIFICATE-----
+") (:version 3 :serial-number "56:67:1d:04:ea:4f:99:4c:6f:10:81:47:59:d2:75:94" :issuer "C=GB,ST=Greater Manchester,L=Salford,O=Comodo CA Limited,CN=AAA Certificate Services" :valid-from "2019-03-12" :valid-to "2028-12-31" :subject "C=US,ST=New Jersey,L=Jersey City,O=The USERTRUST Network,CN=USERTrust ECC Certification Authority" :public-key-algorithm "EC/ECDSA" :certificate-security-level "Ultra" :signature-algorithm "RSA-SHA384" :public-key-id "sha1:a2:af:24:0a:da:e8:67:79:c8:a8:50:b3:c7:46:ee:d9:f7:1b:16:78" :certificate-id "sha1:ca:77:88:c3:2d:a1:e4:b7:86:3a:4f:b5:7d:00:b5:5d:da:cb:c7:f9" :pem "-----BEGIN CERTIFICATE-----
+MIID0zCCArugAwIBAgIQVmcdBOpPmUxvEIFHWdJ1lDANBgkqhkiG9w0BAQwFADB7
+MQswCQYDVQQGEwJHQjEbMBkGA1UECAwSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYD
+VQQHDAdTYWxmb3JkMRowGAYDVQQKDBFDb21vZG8gQ0EgTGltaXRlZDEhMB8GA1UE
+AwwYQUFBIENlcnRpZmljYXRlIFNlcnZpY2VzMB4XDTE5MDMxMjAwMDAwMFoXDTI4
+MTIzMTIzNTk1OVowgYgxCzAJBgNVBAYTAlVTMRMwEQYDVQQIEwpOZXcgSmVyc2V5
+MRQwEgYDVQQHEwtKZXJzZXkgQ2l0eTEeMBwGA1UEChMVVGhlIFVTRVJUUlVTVCBO
+ZXR3b3JrMS4wLAYDVQQDEyVVU0VSVHJ1c3QgRUNDIENlcnRpZmljYXRpb24gQXV0
+aG9yaXR5MHYwEAYHKoZIzj0CAQYFK4EEACIDYgAEGqxUWqn5aCPnetUkb1PGWthL
+q8bVttHmc3Gu3ZzWDGH926CJA7gFFOxXzu5dP+Ihs8731Ip54KODfi2X0GHE8Znc
+JZFjq38wo7Rw4sehM5zzvy5cU7Ffs30yf4o043l5o4HyMIHvMB8GA1UdIwQYMBaA
+FKARCiM+lvEH7OKvKe+CpX/QMKS0MB0GA1UdDgQWBBQ64QmG1M8ZwpZ2dEl23OA1
+xmNjmjAOBgNVHQ8BAf8EBAMCAYYwDwYDVR0TAQH/BAUwAwEB/zARBgNVHSAECjAI
+MAYGBFUdIAAwQwYDVR0fBDwwOjA4oDagNIYyaHR0cDovL2NybC5jb21vZG9jYS5j
+b20vQUFBQ2VydGlmaWNhdGVTZXJ2aWNlcy5jcmwwNAYIKwYBBQUHAQEEKDAmMCQG
+CCsGAQUFBzABhhhodHRwOi8vb2NzcC5jb21vZG9jYS5jb20wDQYJKoZIhvcNAQEM
+BQADggEBABns652JLCALBIAdGN5CmXKZFjK9Dpx1WywV4ilAbe7/ctvbq5AfjJXy
+ij0IckKJUAfiORVsAYfZFhr1wHUrxeZWEQff2Ji8fJ8ZOd+LygBkc7xGEJuTI42+
+FsMuCIKchjN0djsoTI0DQoWz4rIjQtUfenVqGtF8qmchxDM6OW1TyaLtYiKou+JV
+bJlsQ2uRl9EMC5MCHdK8aXdJ5htN978UeAOwproLtOGFfy/cQjutdAFI3tZs4RmY
+CV4Ks2dH/hzg1cEo70qLRDEmBDeNiXQ2Lu+lIg+DdEmSx/cQwgwp+7e9un/jX9Wf
+8qn0dNW44bOwgeThpWOjzOoEeJBuv/c=
+-----END CERTIFICATE-----
+")) :certificate (:version 3 :serial-number "00:8b:dc:0f:ff:54:77:2f:aa:d1:73:27:3f:23:36:2a:af" :issuer "C=GB,ST=Greater Manchester,L=Salford,O=Sectigo Limited,CN=Sectigo ECC Domain Validation Secure Server CA" :valid-from "2024-03-07" :valid-to "2025-03-07" :subject "CN=*.github.com" :public-key-algorithm "EC/ECDSA" :certificate-security-level "High" :signature-algorithm "ECDSA-SHA256" :public-key-id "sha1:fb:8b:0b:4c:d5:2d:b0:43:ab:06:95:d1:92:74:16:d3:ee:ac:2e:88" :certificate-id "sha1:0d:f6:ec:50:fa:ed:ae:6e:13:af:82:94:52:f7:11:1b:0a:cf:7c:20" :pem "-----BEGIN CERTIFICATE-----
+MIIEojCCBEigAwIBAgIRAIvcD/9Udy+q0XMnPyM2Kq8wCgYIKoZIzj0EAwIwgY8x
+CzAJBgNVBAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNV
+BAcTB1NhbGZvcmQxGDAWBgNVBAoTD1NlY3RpZ28gTGltaXRlZDE3MDUGA1UEAxMu
+U2VjdGlnbyBFQ0MgRG9tYWluIFZhbGlkYXRpb24gU2VjdXJlIFNlcnZlciBDQTAe
+Fw0yNDAzMDcwMDAwMDBaFw0yNTAzMDcyMzU5NTlaMBcxFTATBgNVBAMMDCouZ2l0
+aHViLmNvbTBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABHADGElEmwEKQTOjCTeZ
+EQ+YFacbykIKQ+I0OI2NQqjTnlj+3zpJ/j8XYiau+kL+Wz5r97U8Q+qZYaDQ2A6I
+bzKjggL6MIIC9jAfBgNVHSMEGDAWgBT2hQo7EYbhBH0Oqgss0u7MZHt7rjAdBgNV
+HQ4EFgQULNWfMkiYavm5W71lUenpddcgsZYwDgYDVR0PAQH/BAQDAgeAMAwGA1Ud
+EwEB/wQCMAAwHQYDVR0lBBYwFAYIKwYBBQUHAwEGCCsGAQUFBwMCMEkGA1UdIARC
+MEAwNAYLKwYBBAGyMQECAgcwJTAjBggrBgEFBQcCARYXaHR0cHM6Ly9zZWN0aWdv
+LmNvbS9DUFMwCAYGZ4EMAQIBMIGEBggrBgEFBQcBAQR4MHYwTwYIKwYBBQUHMAKG
+Q2h0dHA6Ly9jcnQuc2VjdGlnby5jb20vU2VjdGlnb0VDQ0RvbWFpblZhbGlkYXRp
+b25TZWN1cmVTZXJ2ZXJDQS5jcnQwIwYIKwYBBQUHMAGGF2h0dHA6Ly9vY3NwLnNl
+Y3RpZ28uY29tMIIBfgYKKwYBBAHWeQIEAgSCAW4EggFqAWgAdQDPEVbu1S58r/OH
+W9lpLpvpGnFnSrAX7KwB0lt3zsw7CAAAAY4WRSJBAAAEAwBGMEQCIEn9RPTj/mWa
+DNJYWLd5adwMh7lQLd0H4U687S0Vgw+IAiAWGZTh1I6KUlgK6RI2mF1Q+xxZvOIg
+8FYfjyZYiosoewB3AKLjCuRF772tm3447Udnd1PXgluElNcrXhssxLlQpEfnAAAB
+jhZFIbkAAAQDAEgwRgIhALcwnByZOMSyk9PPja2cXaA5/xwHG3n9zTUeVnErWwcS
+AiEA5+cybN+U4jFHP/uWSLhtrysqmW+SUJnFxS2HNgjr25QAdgBOdaMnXJoQwzhb
+bNTfP1LrHfDgjhuNacCx+mSxYpo53wAAAY4WRSG4AAAEAwBHMEUCIQD630D/OUY5
+I0wDRYh6rvYhIaFYSHArqdPkP7vtRZa4EgIgOVY+ffcboNA/3MVjV4HbPJcFPntP
+uh2wvdD4mlcFFkEwIwYDVR0RBBwwGoIMKi5naXRodWIuY29tggpnaXRodWIuY29t
+MAoGCCqGSM49BAMCA0gAMEUCIQC4ntULeA2fj3hbPy2Ho1aUiJLU/qZe568a8//X
+5PNAOAIgbK6eh8zyKr7uYc1/1qRMeDrvekcpOGOFnOHd3aOXVqc=
+-----END CERTIFICATE-----
+") :key-exchange "ECDHE-RSA" :protocol "TLS1.3" :cipher "AES-128-GCM" :mac "AEAD" :encrypt-then-mac nil)) #s(ghub--req #s(url "https" nil nil "api.github.com" nil "/repos/youse-seguradora/pricing-engine/pulls/2259/reviews" nil nil t nil t t) nil nil "POST" #[0 "\302\305=\203 \306\307\303\301\242\"B\304\242B\207\310\303\302\301\242\300$\304\242B\207" [nil ("DaniloJNS") forge "api.github.com" ((("Content-Type" . "application/json"))) basic "Authorization" ghub--basic-auth ghub--auth] 5] ghub--handle-response nil t nil #<buffer *Code Review*> #[128 "\303\304\300\305\303#\210\304\300\306\307 #\210\310\300!\210\311
+\312\313#)\207" [#s(#s(eieio--class code-review-github-repo nil (#s(eieio--class code-review-db-pullreq nil (#s(eieio--class closql-object nil nil [#s(cl-slot-descriptor closql-database nil t nil)] #s(hash-table size 65 test eq rehash-size 1.5 rehash-threshold 0.8125 data (closql-database 1)) (code-review-db-pullreq code-review-db-comment code-review-db-path code-review-db-buffer forge-object) ((:closql-database . closql-database)) [#s(cl-slot-descriptor closql-order-by nil t nil) #s(cl-slot-descriptor closql-foreign-key nil t nil) #s(cl-slot-descriptor closql-primary-key nil t nil) #s(cl-slot-descriptor closql-table nil t nil) #s(cl-slot-descriptor closql-class-suffix nil t nil) #s(cl-slot-descriptor closql-class-prefix nil t nil)] [nil nil nil nil nil nil] #s(#9 nil) (:custom-groups nil :abstract t))) [#s(cl-slot-descriptor closql-database nil t nil) #s(cl-slot-descriptor id 'eieio--unbound t nil) #s(cl-slot-descriptor base-ref-name nil t nil) #s(cl-slot-descriptor head-ref-name nil t nil) #s(cl-slot-descriptor finished nil t nil) #s(cl-slot-descriptor finished-at nil t nil) #s(cl-slot-descriptor saved nil t nil) #s(cl-slot-descriptor saved-at nil t nil) #s(cl-slot-descriptor raw-infos nil t nil) #s(cl-slot-descriptor raw-diff nil t nil) #s(cl-slot-descriptor raw-comments nil t nil) #s(cl-slot-descriptor owner 'eieio--unbound t nil) #s(cl-slot-descriptor repo 'eieio--unbound t nil) #s(cl-slot-descriptor number 'eieio--unbound t nil) #s(cl-slot-descriptor description nil t nil) #s(cl-slot-descriptor title nil t nil) #s(cl-slot-descriptor host nil t nil) #s(cl-slot-descriptor sha nil t nil) #s(cl-slot-descriptor feedback nil t nil) #s(cl-slot-descriptor state nil t nil) #s(cl-slot-descriptor replies nil t nil) #s(cl-slot-descriptor review nil t nil) #s(cl-slot-descriptor labels nil t nil) #s(cl-slot-descriptor merge nil t nil) #s(cl-slot-descriptor milestones nil t nil) #s(cl-slot-descriptor projects nil t nil) #s(cl-slot-descriptor reviewers nil t nil) #s(cl-slot-descriptor assignees nil t nil) #s(cl-slot-descriptor linked-issues nil t nil) #s(cl-slot-descriptor buffer 'eieio--unbound t ((:closql-class . code-review-db-buffer)))] #s(hash-table size 65 test eq rehash-size 1.5 rehash-threshold 0.8125 data (closql-database 1 id 2 base-ref-name 3 head-ref-name 4 finished 5 finished-at 6 saved 7 saved-at 8 raw-infos 9 raw-diff 10 raw-comments 11 owner 12 repo 13 number 14 description 15 title 16 host 17 sha 18 feedback 19 state 20 replies 21 review 22 labels 23 merge 24 milestones 25 projects 26 reviewers 27 assignees 28 linked-issues 29 buffer 30)) (code-review-bitbucket-repo code-review-gitlab-repo code-review-github-repo) ((:closql-database . closql-database) (:id . id) (:owner . owner) (:repo . repo) (:number . number)) [#s(cl-slot-descriptor closql-class-prefix "code-review-" t nil) #s(cl-slot-descriptor closql-class-suffix nil t nil) #s(cl-slot-descriptor closql-table 'pullreq t nil) #s(cl-slot-descriptor closql-primary-key 'id t nil) #s(cl-slot-descriptor closql-foreign-key nil t nil) #s(cl-slot-descriptor closql-order-by [(desc number)] t nil)] ["code-review-" nil pullreq id nil [(desc number)]] #s(#7 nil eieio--unbound nil nil nil nil nil nil nil nil nil eieio--unbound eieio--unbound eieio--unbound nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil eieio--unbound) (:custom-groups nil :abstract t))) [#s(cl-slot-descriptor closql-database nil t nil) #s(cl-slot-descriptor id 'eieio--unbound t nil) #s(cl-slot-descriptor base-ref-name nil t nil) #s(cl-slot-descriptor head-ref-name nil t nil) #s(cl-slot-descriptor finished nil t nil) #s(cl-slot-descriptor finished-at nil t nil) #s(cl-slot-descriptor saved nil t nil) #s(cl-slot-descriptor saved-at nil t nil) #s(cl-slot-descriptor raw-infos nil t nil) #s(cl-slot-descriptor raw-diff nil t nil) #s(cl-slot-descriptor raw-comments nil t nil) #s(cl-slot-descriptor owner 'eieio--unbound t nil) #s(cl-slot-descriptor repo 'eieio--unbound t nil) #s(cl-slot-descriptor number 'eieio--unbound t nil) #s(cl-slot-descriptor description nil t nil) #s(cl-slot-descriptor title nil t nil) #s(cl-slot-descriptor host nil t nil) #s(cl-slot-descriptor sha nil t nil) #s(cl-slot-descriptor feedback nil t nil) #s(cl-slot-descriptor state nil t nil) #s(cl-slot-descriptor replies nil t nil) #s(cl-slot-descriptor review nil t nil) #s(cl-slot-descriptor labels nil t nil) #s(cl-slot-descriptor merge nil t nil) #s(cl-slot-descriptor milestones nil t nil) #s(cl-slot-descriptor projects nil t nil) #s(cl-slot-descriptor reviewers nil t nil) #s(cl-slot-descriptor assignees nil t nil) #s(cl-slot-descriptor linked-issues nil t nil) #s(cl-slot-descriptor buffer 'eieio--unbound t ((:closql-class . code-review-db-buffer))) #s(cl-slot-descriptor callback nil t nil)] #s(hash-table size 65 test eq rehash-size 1.5 rehash-threshold 0.8125 data (closql-database 1 id 2 base-ref-name 3 head-ref-name 4 finished 5 finished-at 6 saved 7 saved-at 8 raw-infos 9 raw-diff 10 raw-comments 11 owner 12 repo 13 number 14 description 15 title 16 host 17 sha 18 feedback 19 state 20 replies 21 review 22 labels 23 merge 24 milestones 25 projects 26 reviewers 27 assignees 28 linked-issues 29 buffer 30 callback 31)) nil ((:closql-database . closql-database) (:id . id) (:owner . owner) (:repo . repo) (:number . number)) [#s(cl-slot-descriptor closql-order-by [(desc number)] t nil) #s(cl-slot-descriptor closql-foreign-key nil t nil) #s(cl-slot-descriptor closql-primary-key 'id t nil) #s(cl-slot-descriptor closql-table 'pullreq t nil) #s(cl-slot-descriptor closql-class-suffix nil t nil) #s(cl-slot-descriptor closql-class-prefix "code-review-" t nil)] [[(desc number)] nil id pullreq nil "code-review-"] #s(#5 nil eieio--unbound nil nil nil nil nil nil nil nil nil eieio--unbound eieio--unbound eieio--unbound nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil eieio--unbound nil) (:custom-groups nil)) #s(code-review-db-database #s(emacsql-sqlite-builtin-connection #<sqlite db=0x5a343d3ba400 name=/home/danilo/.emacs.d/code-review-db-file.sqlite> nil #<finalizer> "/home/danilo/.emacs.d/code-review-db-file.sqlite")) "493d7e80-73e0-4025-9feb-2081c837cac1" "master" "sfi-3101-renewal-subproduct-payd" nil nil nil nil ((id . "PR_kwDOAxbiL85_BM-i") (author (login . "lmpereirayouse") (url . "https://github.com/lmpereirayouse")) (headRefOid . "be00ed3984f5ff614e5ef4c8b122d86e4c04c383") (baseRefName . "master") (headRefName . "sfi-3101-renewal-subproduct-payd") (isDraft) (databaseId . 2131021730) (number . 2259) (createdAt . "2024-10-17T21:01:13Z") (updatedAt . "2024-10-22T12:50:44Z") (latestOpinionatedReviews (nodes)) (reviewRequests (nodes ((asCodeOwner) (requestedReviewer (__typename . "User") (login . "joao-henrique-rebase") (name . "João Henrique") (url . "https://github.com/joao-henrique-rebase"))) ((asCodeOwner) (requestedReviewer (__typename . "User") (login . "caduaraujo") (name . "Carlos Eduardo de Araujo") (url . "https://github.com/caduaraujo"))) ((asCodeOwner) (requestedReviewer (__typename . "User") (login . "le-santos") (name . "Leandro Quinterio") (url . "https://github.com/le-santos"))) ((asCodeOwner) (requestedReviewer (__typename . "User") (login . "ueslei-pereira-rebase") (name . "Ueslei Neves") (url . "https://github.com/ueslei-pereira-rebase"))) ((asCodeOwner) (requestedReviewer (__typename . "User") (login . "rflgentil-youse") (name . "Rafael Gentil Mendes") (url . "https://github.com/rflgentil-youse"))) ((asCodeOwner) (requestedReviewer (__typename . "User") (login . "matheus-souza-youse") (name) (url . "https://github.com/matheus-souza-youse"))) ((asCodeOwner) (requestedReviewer (__typename . "User") (login . "MarceloDCYouse") (name . "Marcelo Dias do Carmo") (url . "https://github.com/MarceloDCYouse"))))) (files (nodes ((path . "README.md") (additions . 11) (deletions . 5)) ((path . "app/controllers/v3/pricings_controller.rb") (additions . 12) (deletions . 3)) ((path . "app/models/pricing_from_calculator.rb") (additions . 7) (deletions . 1)) ((path . "app/params/bra/auto_params.rb") (additions . 11) (deletions . 0)) ((path . "docker-compose.yml") (additions . 3) (deletions . 4)) ((path . "spec/models/pricing_from_calculator_spec.rb") (additions . 34) (deletions . 1)) ((path . "spec/params/bra/auto_params_spec.rb") (additions . 29) (deletions . 0)))) (milestone) (labels (nodes)) (assignees (nodes ((name . "Leandro Pereira") (login . "lmpereirayouse") (url . "https://github.com/lmpereirayouse")))) (projectCards (nodes)) (suggestedReviewers ((reviewer (name . "Danilo Nascimento") (login . "DaniloJNS"))) ((reviewer (name . "Larissa Nogueira") (login . "nc-larissa"))) ((reviewer (name . "Matheus M. Almeida") (login . "matheusma37")))) (commits (totalCount . 1) (nodes ((commit (abbreviatedOid . "be00ed3") (message . "feat: return the renewal_adjustment_percent for the factor") (statusCheckRollup (state . "SUCCESS") (contexts (nodes ((startedAt . "2024-10-21T15:11:58Z") (completedAt . "2024-10-21T15:15:38Z") (name . "build-and-deploy") (text) (title . "Workflow: build-and-deploy") (summary . "[View CircleCI workflow](https://app.circleci.com/pipelines/github/youse-seguradora/pricing-engine/5843/workflows/2908e27a-ca4c-4889-8e35-b576bc6cb6f8?utm_campaign=vcs-integration-link&utm_medium=referral&utm_source=github-checks-link&utm_content=summary)
+
+* [unit-test](https://app.circleci.com/pipelines/github/youse-seguradora/pricing-engine/5843/workflows/2908e27a-ca4c-4889-8e35-b576bc6cb6f8/jobs/27405?utm_campaign=vcs-integration-link&utm_medium=referral&utm_source=github-checks-link&utm_content=summary) - Success
+* [security-test](https://app.circleci.com/pipelines/github/youse-seguradora/pricing-engine/5843/workflows/2908e27a-ca4c-4889-8e35-b576bc6cb6f8/jobs/27404?utm_campaign=vcs-integration-link&utm_medium=referral&utm_source=github-checks-link&utm_content=summary) - Success") (status . "COMPLETED") (conclusion . "SUCCESS") (detailsUrl . "https://app.circleci.com/pipelines/github/youse-seguradora/pricing-engine/5843/workflows/2908e27a-ca4c-4889-8e35-b576bc6cb6f8?utm_campaign=vcs-integration-link&utm_medium=referral&utm_source=github-checks-link&utm_content=bottom") (checkSuite (app (id . "MDM6QXBwMTgwMDE=") (name . "CircleCI Checks") (description . "See the status of your CircleCI workflows under the Pull Request Checks tab in the GitHub UI. With checks enabled, users will now be able to go to the Checks tab in GitHub to view the full hierarchy and status of CircleCI builds.
+
+*Note* - You cannot enable GitHub Checks for CircleCI from the GitHub UI, you must log into CircleCI and enable checks for your organization. You must have admin privileges for your organization to enable checks.") (slug . "circleci-checks") (logoUrl . "https://avatars.githubusercontent.com/in/18001?u=88c56396cb128e9558f57e1ab5649f51fdc81980&v=4")) (workflowRun))) ((startedAt . "2024-10-21T15:11:41Z") (completedAt . "2024-10-21T15:11:58Z") (name . "setup-workflow") (text) (title . "Workflow: setup-workflow") (summary . "[View CircleCI workflow](https://app.circleci.com/pipelines/github/youse-seguradora/pricing-engine/5843/workflows/79b1a1d8-d47e-472b-ae28-6358926afcfa?utm_campaign=vcs-integration-link&utm_medium=referral&utm_source=github-checks-link&utm_content=summary)
+
+* [path-filtering/filter](https://app.circleci.com/pipelines/github/youse-seguradora/pricing-engine/5843/workflows/79b1a1d8-d47e-472b-ae28-6358926afcfa/jobs/27403?utm_campaign=vcs-integration-link&utm_medium=referral&utm_source=github-checks-link&utm_content=summary) - Success") (status . "COMPLETED") (conclusion . "SUCCESS") (detailsUrl . "https://app.circleci.com/pipelines/github/youse-seguradora/pricing-engine/5843/workflows/79b1a1d8-d47e-472b-ae28-6358926afcfa?utm_campaign=vcs-integration-link&utm_medium=referral&utm_source=github-checks-link&utm_content=bottom") (checkSuite (app (id . "MDM6QXBwMTgwMDE=") (name . "CircleCI Checks") (description . "See the status of your CircleCI workflows under the Pull Request Checks tab in the GitHub UI. With checks enabled, users will now be able to go to the Checks tab in GitHub to view the full hierarchy and status of CircleCI builds.
+
+*Note* - You cannot enable GitHub Checks for CircleCI from the GitHub UI, you must log into CircleCI and enable checks for your organization. You must have admin privileges for your organization to enable checks.") (slug . "circleci-checks") (logoUrl . "https://avatars.githubusercontent.com/in/18001?u=88c56396cb128e9558f57e1ab5649f51fdc81980&v=4")) (workflowRun)))))))))) (title . "[SFI-3101] Return the renewal_adjustment_percent saved on the factor") (state . "OPEN") (bodyHTML . "<h3 dir=\"auto\">Description</h3>
+<p dir=\"auto\">When we apply endorsement on payd, we need to use the same factors used on the moment of calculation of renewal.</p>
+<p dir=\"auto\">Goals:<br>
+Return the renewal_adjustment_percent<br>
+Store on the table pricing_coverages the factor for renewal_adjustment_percent</p>") (bodyText . "Description
+When we apply endorsement on payd, we need to use the same factors used on the moment of calculation of renewal.
+Goals:
+Return the renewal_adjustment_percent
+Store on the table pricing_coverages the factor for renewal_adjustment_percent") (reactions (nodes)) (comments (nodes)) (reviews (nodes ((typename . "PullRequestReview") (author (login . "DaniloJNS")) (bodyHTML . "") (state . "COMMENTED") (createdAt . "2024-10-18T20:45:28Z") (databaseId . 2378941073) (updatedAt . "2024-10-18T20:45:28Z") (comments (nodes ((createdAt . "2024-10-18T20:45:28Z") (updatedAt . "2024-10-18T20:45:28Z") (bodyHTML . "  <div class=\"my-2 border rounded-2 js-suggested-changes-blob diff-view js-check-bidi\" id=\"\">
+    <div class=\"f6 p-2 lh-condensed border-bottom d-flex\">
+      <div class=\"flex-auto flex-items-center color-fg-muted\">
+        Suggested change
+      </div>
+    </div>
+    <div itemprop=\"text\" class=\"blob-wrapper data file\" style=\"margin: 0; border: none; overflow-y: visible; overflow-x: auto;\">
+      <table class=\"d-table tab-size mb-0 width-full\" data-paste-markdown-skip=\"\">
+          <tbody><tr class=\"border-0\">
+            <td class=\"blob-num blob-num-deletion text-right border-0 px-2 py-1 lh-default blob-num-hidden\" data-line-number=\"·\"></td>
+            <td class=\"border-0 px-2 py-1 blob-code-inner blob-code-deletion js-blob-code-deletion blob-code-marker-deletion\">        <span class=\"pl-s1\">factors_references</span> <span class=\"pl-c1\">=</span> <span class=\"pl-v\">PricingCoverage</span><span class=\"pl-kos\">.</span><span class=\"pl-en\">where</span><span class=\"pl-kos\">(</span><span class=\"pl-pds x x-first\">pricing_id</span><span class=\"x\">: </span><span class=\"pl-en x\">raw_params</span><span class=\"pl-kos x\">[</span><span class=\"pl-s x\">'pricing_reference'</span><span class=\"pl-kos x x-last\">]</span><span class=\"pl-kos\">)</span></td>
+          </tr>
+          <tr class=\"border-0\">
+            <td class=\"blob-num blob-num-deletion text-right border-0 px-2 py-1 lh-default blob-num-hidden\" data-line-number=\"·\"></td>
+            <td class=\"border-0 px-2 py-1 blob-code-inner blob-code-deletion js-blob-code-deletion blob-code-marker-deletion\">                                            <span class=\"pl-kos\">.</span><span class=\"pl-en x x-first\">where</span><span class=\"pl-kos x\">(</span><span class=\"x\"> </span><span class=\"pl-s\"><span class=\"x\">\"factors @&gt; '[{</span><span class=\"pl-cce x\">\\\"</span><span class=\"x\">param_name</span><span class=\"pl-cce x\">\\\"</span><span class=\"x\">:</span><span class=\"pl-cce x\">\\\"</span><span class=\"pl-s1\"><span class=\"pl-kos x\">#{</span><span class=\"pl-en x\">param_name</span><span class=\"pl-kos x\">}</span></span><span class=\"pl-cce x\">\\\"</span><span class=\"x x-last\">}]'::jsonb\"</span></span><span class=\"pl-kos\">)</span></td>
+          </tr>
+          <tr class=\"border-0\">
+            <td class=\"blob-num blob-num-addition text-right border-0 px-2 py-1 lh-default blob-num-hidden\" data-line-number=\"·\"></td>
+            <td class=\"border-0 px-2 py-1 blob-code-inner blob-code-addition js-blob-code-addition blob-code-marker-addition\">        <span class=\"pl-s1\">factors_references</span> <span class=\"pl-c1\">=</span> <span class=\"pl-v\">PricingCoverage</span><span class=\"pl-kos\">.</span><span class=\"pl-en\">where</span><span class=\"pl-kos\">(</span><span class=\"x x-first\"> </span><span class=\"pl-s\"><span class=\"x\">\"factors @&gt; '[{</span><span class=\"pl-cce x\">\\\"</span><span class=\"x\">param_name</span><span class=\"pl-cce x\">\\\"</span><span class=\"x\">:</span><span class=\"pl-cce x\">\\\"</span><span class=\"pl-s1\"><span class=\"pl-kos x\">#{</span><span class=\"pl-en x\">param_name</span><span class=\"pl-kos x\">}</span></span><span class=\"pl-cce x\">\\\"</span><span class=\"x x-last\">}]'::jsonb\"</span></span><span class=\"pl-kos\">)</span></td>
+          </tr>
+          <tr class=\"border-0\">
+            <td class=\"blob-num blob-num-addition text-right border-0 px-2 py-1 lh-default blob-num-hidden\" data-line-number=\"·\"></td>
+            <td class=\"border-0 px-2 py-1 blob-code-inner blob-code-addition js-blob-code-addition blob-code-marker-addition\">                                            <span class=\"pl-kos\">.</span><span class=\"pl-en x x-first\">find_by</span><span class=\"pl-kos x\">(</span><span class=\"pl-pds x\">pricing_id</span><span class=\"x\">: </span><span class=\"pl-en x\">raw_params</span><span class=\"pl-kos x\">[</span><span class=\"pl-s x\">'pricing_reference'</span><span class=\"pl-kos x x-last\">]</span><span class=\"pl-kos\">)</span></td>
+          </tr>
+      </tbody></table>
+    </div>
+    <div class=\"js-apply-changes\"></div>
+  </div>
+
+<p dir=\"auto\">We just need a record from this table, I think we can do that... WDYT?</p>") (originalPosition . 10) (diffHunk . "@@ -52,6 +52,19 @@ class AutoParams < InsuranceParams
+       vehicle.recovered_code
+     end
+ 
++    custom_param :renewal_adjustment_percent do
++      if raw_params['renewal_adjustment_percent'].present?
++       raw_params['renewal_adjustment_percent']
++      elsif raw_params['subproduct'] == 'payd' && raw_params['endorsement'].present?
++        param_name = 'renewal_adjustment_percent'
++        factors_references = PricingCoverage.where(pricing_id: raw_params['pricing_reference'])
++                                            .where( \"factors @> '[{\\\"param_name\\\":\\\"#{param_name}\\\"}]'::jsonb\")") (position) (outdated . t) (path . "app/params/bra/auto_params.rb") (databaseId . 1807001342) (reactions (nodes ((id . "REA_lATOAxbiL85rtKb-zhAe5W4") (content . "THUMBS_UP")))))))) ((typename . "PullRequestReview") (author (login . "lmpereirayouse")) (bodyHTML . "") (state . "COMMENTED") (createdAt . "2024-10-22T12:49:41Z") (databaseId . 2385102999) (updatedAt . "2024-10-22T12:49:41Z") (comments (nodes ((createdAt . "2024-10-22T12:49:41Z") (updatedAt . "2024-10-22T12:49:41Z") (bodyHTML . "<p dir=\"auto\">applied.</p>") (originalPosition . 10) (diffHunk . "@@ -52,6 +52,19 @@ class AutoParams < InsuranceParams
+       vehicle.recovered_code
+     end
+ 
++    custom_param :renewal_adjustment_percent do
++      if raw_params['renewal_adjustment_percent'].present?
++       raw_params['renewal_adjustment_percent']
++      elsif raw_params['subproduct'] == 'payd' && raw_params['endorsement'].present?
++        param_name = 'renewal_adjustment_percent'
++        factors_references = PricingCoverage.where(pricing_id: raw_params['pricing_reference'])
++                                            .where( \"factors @> '[{\\\"param_name\\\":\\\"#{param_name}\\\"}]'::jsonb\")") (position) (outdated . t) (path . "app/params/bra/auto_params.rb") (databaseId . 1810664620) (reactions (nodes))))))))) "diff --git README.md README.md
+index a7f7eadbda..e885665477 100644
+--- README.md
++++ README.md
+@@ -2,14 +2,14 @@
+ <div>
+    <a href=\"https://github.com/rubocop/rubocop\">
+        <img align=\"center\" alt=\"rubocop_style_icon\" src=\"https://img.shields.io/badge/code_style-rubocop-brightgreen.svg\">
+-   </a> 
++   </a>
+     <a href=\"https://app.circleci.com/pipelines/github/youse-seguradora/pricing-engine\">
+        <img align=\"center\" alt=\"rubocop_style_icon\" src=\"https://img.shields.io/badge/cicleCI%20-orange\">
+-   </a> 
++   </a>
+ </div>
+ 
+ ## 📋 Descrição
+- O microserviço _Pricing-engine_ faz parte do ecossistema Youse. 
++ O microserviço _Pricing-engine_ faz parte do ecossistema Youse.
+ É responsável pelo manuseio de todos os produtos (seguros)
+ e especificações, como LMIs de coberturas e elegibilidades para assistências. É também
+ responsável por entregar todas as solicitações de preços, aplicado ao negócio, desenhando
+@@ -28,7 +28,7 @@ regras para cada Seguro, suas coberturas e suas assistências.
+ Para configurar a aplicação local use o comando:
+ 
+ ```bash
+-  bin/setup  
++  bin/setup
+ ```
+ 
+ Para rodar os testes local use o comando :
+@@ -87,6 +87,12 @@ Com a configuração acima concluída, você poderá executar algumas rakes obri
+  bundle install
+ ```
+ 
++# MacOS - erro ao executar o projeto
++```
++export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
++export DISABLE_SPRING=true
++```
++
+ #### 🐳 Usando Docker
+ Certifique-se de ter o Docker e o Docker Compose instalados no seu sistema.
+ 
+@@ -118,7 +124,7 @@ Basta executar o script abaixo para enviar o branch atual para QA:
+    git push origin qa
+ ```
+ 
+-## 📝 Documentação 
++## 📝 Documentação
+ Nesta seção voce irá encontrar itens que podem te ajudar a ter maior entendimento sobre o projeto, como:
+ 
+ - [O que é um preço? / Como calcular um preço?](./docs/price.md)
+diff --git app/controllers/v3/pricings_controller.rb app/controllers/v3/pricings_controller.rb
+index 3f3bc3b3ec..1e1ad50c52 100644
+--- app/controllers/v3/pricings_controller.rb
++++ app/controllers/v3/pricings_controller.rb
+@@ -48,9 +48,18 @@ def pricing_reference
+     end
+ 
+     def product_params_class
+-      \"#{current_country_code}/#{current_product}_params\".camelize.constantize
+-    rescue NameError
+-      raise Pricing::InvalidProduct
++      klass_params = ActiveSupport::HashWithIndifferentAccess.new(
++        bra: {
++          auto: ::BRA::AutoParams,
++          home: ::BRA::HomeParams,
++          life: ::BRA::LifeParams
++        }
++      )
++      klass_params.dig(current_country_code,current_product) || raise_invalid_product
++    end
++
++    def raise_invalid_product
++      raise ::Pricing::InvalidProduct
+     end
+ 
+     def custom_fipe_compensation_factor
+diff --git app/models/pricing_from_calculator.rb app/models/pricing_from_calculator.rb
+index 35185f9803..1346a97676 100644
+--- app/models/pricing_from_calculator.rb
++++ app/models/pricing_from_calculator.rb
+@@ -12,6 +12,9 @@ class PricingFromCalculator
+       'taxes_multiplicative'
+     ],
+     auto: [],
++    auto_payd:[
++      'renewal_adjustment_percent'
++    ],
+     home: []
+   }.freeze
+ 
+@@ -131,7 +134,10 @@ def pricing_coverages_parameters(coverage_calculator)
+   end
+ 
+   def factors_allowed_to_storage(factors)
+-    Array(factors).select { |factor| factor[:param_name].in?(FACTORS_TO_PERSIST[pricing.product]) }
++    factor_name_with_subproduct = FACTORS_TO_PERSIST[\"#{pricing.product}_#{calculator.params.subproduct}\".to_sym]
++    Array(factors).select {
++      |factor| factor[:param_name].in?(FACTORS_TO_PERSIST[pricing.product]) ||
++      calculator.params.subproduct.present? && factor[:param_name].in?(factor_name_with_subproduct) }
+   end
+ 
+   ##
+diff --git app/params/bra/auto_params.rb app/params/bra/auto_params.rb
+index ee09f46a3d..e94581e67b 100644
+--- app/params/bra/auto_params.rb
++++ app/params/bra/auto_params.rb
+@@ -52,6 +52,17 @@ class AutoParams < InsuranceParams
+       vehicle.recovered_code
+     end
+ 
++    custom_param :renewal_adjustment_percent do
++      if raw_params['renewal_adjustment_percent'].present?
++       raw_params['renewal_adjustment_percent']
++      elsif raw_params['subproduct'] == 'payd' && raw_params['endorsement'].present?
++        param_name = 'renewal_adjustment_percent'
++        factors_reference = PricingCoverage.where(pricing_id: raw_params['pricing_reference'])
++                                            .find_by( \"factors @> '[{\\\"param_name\\\":\\\"#{param_name}\\\"}]'::jsonb\")
++        factors_reference.factors.first[:param_value] if factors_reference
++      end
++    end
++
+     custom_param :tracker_charge do
+       tracker = raw_params.dig('vehicle', 'tracker') || false
+       contract_duration = raw_params['contract_duration'].presence
+diff --git docker-compose.yml docker-compose.yml
+index b63dd6c78b..dd750e0944 100644
+--- docker-compose.yml
++++ docker-compose.yml
+@@ -1,5 +1,4 @@
+ ---
+-version: '3.8'
+ x-default-depends-options: &depends_options
+   condition: service_healthy
+   restart: true
+@@ -8,7 +7,7 @@ services:
+     image: redis:5.0.6-alpine3.10
+     hostname: redis
+     ports:
+-      - 6379
++      - 6376:6379
+     healthcheck:
+       test: [\"CMD-SHELL\", \"redis-cli ping | grep PONG\"]
+       interval: 1s
+@@ -23,7 +22,7 @@ services:
+       POSTGRES_USER: postgres
+       POSTGRES_DB: postgres
+     ports:
+-      - 5432
++      - 5432:5432
+     healthcheck:
+       test: [\"CMD-SHELL\", \"sh -c 'pg_isready -U $(POSTGRES_USER) -d $(POSTGRES_DB)'\"]
+       interval: 10s
+@@ -36,7 +35,7 @@ services:
+     image: rabbitmq:3.11-management-alpine
+     hostname: rabbitmq
+     ports:
+-      - 5672
++      - 5672:5672
+     healthcheck:
+       test: rabbitmq-diagnostics -q ping
+       interval: 30s
+diff --git spec/models/pricing_from_calculator_spec.rb spec/models/pricing_from_calculator_spec.rb
+index 99eda5f8d5..675f4b8109 100644
+--- spec/models/pricing_from_calculator_spec.rb
++++ spec/models/pricing_from_calculator_spec.rb
+@@ -25,13 +25,14 @@
+                coverage_calculator
+              ],
+              member_get_member_discount: 10.0,
+-             params: BRA::AutoParams.new({ vehicle: { code: '003287520060' }, country_code: 'bra' }))
++             params: calculator_params)
+     end
+ 
+     let(:coverage_calculator) { OpenStruct.new(coverage_params:, factors: coverage_factors) }
+     let(:coverage_params) { OpenStruct.new(selected_lmi: 888, selected_deductible: 999, deductible_type: 'reduced') }
+     let(:pricing) { BRA::Auto::Pricing.new }
+     let(:coverage_factors) { [] }
++    let(:calculator_params) { BRA::AutoParams.new({ vehicle: { code: '003287520060' }, country_code: 'bra' }) }
+ 
+     before do
+       stub_request(:get, \"#{ENV['SUPPORT_SERVICE_API_URL']}/vehicles/003287520060?brand_new=false\")
+@@ -90,6 +91,38 @@
+         end
+       end
+ 
++      context 'when the product auto and the subproduct is payd' do
++        let(:calculator_params) do
++          BRA::AutoParams.new({ subproduct: 'payd', vehicle: { code: '003287520060' }, country_code: 'bra' })
++        end
++
++        let(:coverage_factors) do
++          [{
++            param_name: 'renewal_adjustment_percent',
++            param_value: -65,
++            factor: 1.65,
++            factor_type: 'discount_multiplicative'
++          }]
++        end
++
++        it 'the factor renewal_adjustment_percent should be persisted' do
++          subject.execute
++
++          expect(pricing.pricing_coverages.map(&:factors)).to match_array(
++            [
++              [
++                {
++                  factor: 1.65,
++                  factor_type: 'discount_multiplicative',
++                  param_name: 'renewal_adjustment_percent',
++                  param_value: -65
++                }
++              ]
++            ]
++          )
++        end
++      end
++
+       context 'when the price is for the type of home insurance' do
+         let(:pricing) { BRA::Home::Pricing.new }
+ 
+diff --git spec/params/bra/auto_params_spec.rb spec/params/bra/auto_params_spec.rb
+index 72dc9d38e8..babf2099b5 100644
+--- spec/params/bra/auto_params_spec.rb
++++ spec/params/bra/auto_params_spec.rb
+@@ -219,6 +219,7 @@
+       expect(legacy_params[:driver_cpf]).to eq params[:driver][:document_number]
+       expect(legacy_params[:cross_sell_additional_product]).to eq 'home_2.0'
+       expect(legacy_params[:engine_version]).to eq '2'
++      expect(legacy_params[:renewal_adjustment_percent]).to eq nil
+     end
+   end
+ 
+@@ -480,4 +481,32 @@
+       it { expect(params.ab_test_elast_vehicle_age_0001).to eq('test_5') }
+     end
+   end
++
++  context 'when the product is AUTO' do
++    context 'when parameters have subproduct \"payd\" and endorsement true' do
++      before do
++        pricing = pricings(:bra_auto_pricing_with_auto_completo)
++        factors = [factor: 1, param_name: 'renewal_adjustment_percent', factor_type: 'base', param_value: '10' ]
++        PricingCoverage.create!(pricing:, factors:, coverage_id: ActiveRecord::FixtureSet.identify(:bra_auto_fire_fragment, :uuid))
++        raw_params.merge!(subproduct:, endorsement:, pricing_reference: pricing)
++      end
++      let(:subproduct) { 'payd' }
++      let(:endorsement) { 'true' }
++
++      it \"should return renewal_adjustment_percent value\" do
++        expect(params.renewal_adjustment_percent).to eq('10')
++      end
++    end
++
++    context 'when renewal_adjustment_percent exists' do
++      before do
++        raw_params.merge!(renewal_adjustment_percent:)
++      end
++      let(:renewal_adjustment_percent) { 99 }
++
++      it 'should return the same value value' do
++        expect(params.renewal_adjustment_percent).to eq(99)
++      end
++    end
++  end
+ end" (((typename . "PullRequestReview") (author (login . "DaniloJNS")) (bodyHTML . "") (state . "COMMENTED") (createdAt . "2024-10-18T20:45:28Z") (databaseId . 2378941073) (updatedAt . "2024-10-18T20:45:28Z") (comments (nodes ((createdAt . "2024-10-18T20:45:28Z") (updatedAt . "2024-10-18T20:45:28Z") (bodyHTML . "  <div class=\"my-2 border rounded-2 js-suggested-changes-blob diff-view js-check-bidi\" id=\"\">
+    <div class=\"f6 p-2 lh-condensed border-bottom d-flex\">
+      <div class=\"flex-auto flex-items-center color-fg-muted\">
+        Suggested change
+      </div>
+    </div>
+    <div itemprop=\"text\" class=\"blob-wrapper data file\" style=\"margin: 0; border: none; overflow-y: visible; overflow-x: auto;\">
+      <table class=\"d-table tab-size mb-0 width-full\" data-paste-markdown-skip=\"\">
+          <tbody><tr class=\"border-0\">
+            <td class=\"blob-num blob-num-deletion text-right border-0 px-2 py-1 lh-default blob-num-hidden\" data-line-number=\"·\"></td>
+            <td class=\"border-0 px-2 py-1 blob-code-inner blob-code-deletion js-blob-code-deletion blob-code-marker-deletion\">        <span class=\"pl-s1\">factors_references</span> <span class=\"pl-c1\">=</span> <span class=\"pl-v\">PricingCoverage</span><span class=\"pl-kos\">.</span><span class=\"pl-en\">where</span><span class=\"pl-kos\">(</span><span class=\"pl-pds x x-first\">pricing_id</span><span class=\"x\">: </span><span class=\"pl-en x\">raw_params</span><span class=\"pl-kos x\">[</span><span class=\"pl-s x\">'pricing_reference'</span><span class=\"pl-kos x x-last\">]</span><span class=\"pl-kos\">)</span></td>
+          </tr>
+          <tr class=\"border-0\">
+            <td class=\"blob-num blob-num-deletion text-right border-0 px-2 py-1 lh-default blob-num-hidden\" data-line-number=\"·\"></td>
+            <td class=\"border-0 px-2 py-1 blob-code-inner blob-code-deletion js-blob-code-deletion blob-code-marker-deletion\">                                            <span class=\"pl-kos\">.</span><span class=\"pl-en x x-first\">where</span><span class=\"pl-kos x\">(</span><span class=\"x\"> </span><span class=\"pl-s\"><span class=\"x\">\"factors @&gt; '[{</span><span class=\"pl-cce x\">\\\"</span><span class=\"x\">param_name</span><span class=\"pl-cce x\">\\\"</span><span class=\"x\">:</span><span class=\"pl-cce x\">\\\"</span><span class=\"pl-s1\"><span class=\"pl-kos x\">#{</span><span class=\"pl-en x\">param_name</span><span class=\"pl-kos x\">}</span></span><span class=\"pl-cce x\">\\\"</span><span class=\"x x-last\">}]'::jsonb\"</span></span><span class=\"pl-kos\">)</span></td>
+          </tr>
+          <tr class=\"border-0\">
+            <td class=\"blob-num blob-num-addition text-right border-0 px-2 py-1 lh-default blob-num-hidden\" data-line-number=\"·\"></td>
+            <td class=\"border-0 px-2 py-1 blob-code-inner blob-code-addition js-blob-code-addition blob-code-marker-addition\">        <span class=\"pl-s1\">factors_references</span> <span class=\"pl-c1\">=</span> <span class=\"pl-v\">PricingCoverage</span><span class=\"pl-kos\">.</span><span class=\"pl-en\">where</span><span class=\"pl-kos\">(</span><span class=\"x x-first\"> </span><span class=\"pl-s\"><span class=\"x\">\"factors @&gt; '[{</span><span class=\"pl-cce x\">\\\"</span><span class=\"x\">param_name</span><span class=\"pl-cce x\">\\\"</span><span class=\"x\">:</span><span class=\"pl-cce x\">\\\"</span><span class=\"pl-s1\"><span class=\"pl-kos x\">#{</span><span class=\"pl-en x\">param_name</span><span class=\"pl-kos x\">}</span></span><span class=\"pl-cce x\">\\\"</span><span class=\"x x-last\">}]'::jsonb\"</span></span><span class=\"pl-kos\">)</span></td>
+          </tr>
+          <tr class=\"border-0\">
+            <td class=\"blob-num blob-num-addition text-right border-0 px-2 py-1 lh-default blob-num-hidden\" data-line-number=\"·\"></td>
+            <td class=\"border-0 px-2 py-1 blob-code-inner blob-code-addition js-blob-code-addition blob-code-marker-addition\">                                            <span class=\"pl-kos\">.</span><span class=\"pl-en x x-first\">find_by</span><span class=\"pl-kos x\">(</span><span class=\"pl-pds x\">pricing_id</span><span class=\"x\">: </span><span class=\"pl-en x\">raw_params</span><span class=\"pl-kos x\">[</span><span class=\"pl-s x\">'pricing_reference'</span><span class=\"pl-kos x x-last\">]</span><span class=\"pl-kos\">)</span></td>
+          </tr>
+      </tbody></table>
+    </div>
+    <div class=\"js-apply-changes\"></div>
+  </div>
+
+<p dir=\"auto\">We just need a record from this table, I think we can do that... WDYT?</p>") (originalPosition . 10) (diffHunk . "@@ -52,6 +52,19 @@ class AutoParams < InsuranceParams
+       vehicle.recovered_code
+     end
+ 
++    custom_param :renewal_adjustment_percent do
++      if raw_params['renewal_adjustment_percent'].present?
++       raw_params['renewal_adjustment_percent']
++      elsif raw_params['subproduct'] == 'payd' && raw_params['endorsement'].present?
++        param_name = 'renewal_adjustment_percent'
++        factors_references = PricingCoverage.where(pricing_id: raw_params['pricing_reference'])
++                                            .where( \"factors @> '[{\\\"param_name\\\":\\\"#{param_name}\\\"}]'::jsonb\")") (position) (outdated . t) (path . "app/params/bra/auto_params.rb") (databaseId . 1807001342) (reactions (nodes ((id . "REA_lATOAxbiL85rtKb-zhAe5W4") (content . "THUMBS_UP")))))))) ((typename . "PullRequestReview") (author (login . "lmpereirayouse")) (bodyHTML . "") (state . "COMMENTED") (createdAt . "2024-10-22T12:49:41Z") (databaseId . 2385102999) (updatedAt . "2024-10-22T12:49:41Z") (comments (nodes ((createdAt . "2024-10-22T12:49:41Z") (updatedAt . "2024-10-22T12:49:41Z") (bodyHTML . "<p dir=\"auto\">applied.</p>") (originalPosition . 10) (diffHunk . "@@ -52,6 +52,19 @@ class AutoParams < InsuranceParams
+       vehicle.recovered_code
+     end
+ 
++    custom_param :renewal_adjustment_percent do
++      if raw_params['renewal_adjustment_percent'].present?
++       raw_params['renewal_adjustment_percent']
++      elsif raw_params['subproduct'] == 'payd' && raw_params['endorsement'].present?
++        param_name = 'renewal_adjustment_percent'
++        factors_references = PricingCoverage.where(pricing_id: raw_params['pricing_reference'])
++                                            .where( \"factors @> '[{\\\"param_name\\\":\\\"#{param_name}\\\"}]'::jsonb\")") (position) (outdated . t) (path . "app/params/bra/auto_params.rb") (databaseId . 1810664620) (reactions (nodes))))))) "youse-seguradora" "pricing-engine" "2259" "<h3 dir=\"auto\">Description</h3>
+<p dir=\"auto\">When we apply endorsement on payd, we need to use the same factors used on the moment of calculation of renewal.</p>
+<p dir=\"auto\">Goals:<br>
+Return the renewal_adjustment_percent<br>
+Store on the table pricing_coverages the factor for renewal_adjustment_percent</p>" "[SFI-3101] Return the renewal_adjustment_percent saved on the factor" nil "be00ed3984f5ff614e5ef4c8b122d86e4c04c383" nil "OPEN" nil nil nil nil ((title) (perc) (number)) nil nil (((name . "Leandro Pereira") (login . "lmpereirayouse") (url . "https://github.com/lmpereirayouse"))) nil eieio--unbound nil) code-review-section-full-refresh? code-review-buffer-name t eieio-oset finished finished-at current-time-string code-review-db-update code-review--build-buffer nil "Done submitting review"] 5 "
+
+(fn &rest _)"] code-review-github-errback nil nil))
+
+Tue Oct 22 11:34:26 2024 - code-review--build-buffer - (wrong-type-argument listp file-error)
+
+Mon Nov 18 22:00:57 2024 - code-review--build-buffer - (wrong-type-argument listp file-error)

@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: expectation (object)
+# key: exp
+# --
+
+expect($1).to $2

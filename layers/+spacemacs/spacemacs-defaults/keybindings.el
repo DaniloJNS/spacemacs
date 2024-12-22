@@ -99,7 +99,7 @@
         "xj"  "justification"
         "xl"  "lines"
         "xR"  "Randomize"
-        "xt"  "transpose"
+        "xt"  "transpose/translate"
         "xw"  "words"
         "z"   "zoom"))
 (apply #'spacemacs/declare-prefix spacemacs/key-binding-prefixes)
@@ -676,13 +676,13 @@ respond to this toggle."
   "wo"  'other-frame
   "wr"  'spacemacs/rotate-windows-forward
   "wR"  'spacemacs/rotate-windows-backward
-  "ws"  'split-window-below
-  "wS"  'split-window-below-and-focus
+  "wS"  'split-window-below
+  "ws"  'split-window-below-and-focus
   "w-"  'split-window-below
   "wU"  'winner-redo
   "wu"  'winner-undo
-  "wv"  'split-window-right
-  "wV"  'split-window-right-and-focus
+  "wE"  'split-window-right
+  "we"  'split-window-right-and-focus
   "ww"  'other-window
   "wx"  'kill-buffer-and-window
   "w/"  'split-window-right

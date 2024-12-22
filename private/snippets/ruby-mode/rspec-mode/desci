@@ -1,0 +1,12 @@
+# -*- mode: rspec-mode -*-
+# name: init spec file
+# key: desci
+# --
+
+# frozen_string_literal: true
+
+require 'rails_helper'
+
+RSpec.describe $1 do
+  $2
+end

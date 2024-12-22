@@ -1,0 +1,6 @@
+# -*- mode: rspec-mode -*-
+# name: allow receive | allow(...).to receive 
+# key: allr
+# --
+
+allow($1).to receive($2)

@@ -75,7 +75,27 @@
      "h" #'lsp-ui-peek--select-prev-file
      "j" #'lsp-ui-peek--select-next
      "k" #'lsp-ui-peek--select-prev
-     "l" #'lsp-ui-peek--select-next-file)))
+     "l" #'lsp-ui-peek--select-next-file)
+    ;; My Custom configs
+    ;; diagnostics
+    (setq lsp-ui-sideline-show-diagnostics t)
+    (setq lsp-ui-sideline-show-hover t)
+    ;; docs
+    (setq lsp-ui-doc-enable t)
+    (setq lsp-ui-doc-position "top")
+    (setq lsp-ui-doc-side "right")
+    (setq lsp-ui-doc-delay 0.2)
+    (setq lsp-ui-doc-show-with-cursor nil)
+    (setq lsp-ui-doc-show-with-mouse t)
+    ;; imenu
+    (setq lsp-ui-imenu-kind-position "top")
+    (setq lsp-ui-imenu-buffer-position "right")
+    (setq lsp-ui-imenu-window-width 0)
+    (setq lsp-ui-imenu-window-fix-width nil)
+    (setq lsp-ui-imenu--custom-mode-line-format nil)
+    (setq lsp-ui-imenu-auto-refresh t)
+    (setq lsp-ui-imenu-auto-refresh-delay 5.0)
+    ))
 
 (defun lsp/init-helm-lsp ()
   (use-package helm-lsp :defer t))

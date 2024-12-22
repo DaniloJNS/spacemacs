@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: subject with custom name
+# key: subjc
+# --
+
+subject(:$1) { $2 }

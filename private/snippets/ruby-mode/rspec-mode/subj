@@ -1,0 +1,6 @@
+# -*- mode: rspec-mode -*-
+# name: subject
+# key: subj
+# --
+
+subject { $1 }

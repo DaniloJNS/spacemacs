@@ -53,7 +53,11 @@
             :variables company-go-show-annotation t)))
 
 (defun go/post-init-company ()
-  (add-hook 'go-mode-local-vars-hook #'spacemacs//go-setup-company))
+  (spacemacs|add-company-backends
+    :backends (company-capf company-dabbrev-code)
+    :modes go-mode)
+  ;; (add-hook 'go-mode-local-vars-hook #'spacemacs//go-setup-company)
+  )
 
 (defun go/pre-init-dap-mode ()
   (when (eq go-backend 'lsp)

@@ -552,11 +552,11 @@ Run PROJECT-ACTION on project."
      :mode-line helm-read-file-name-mode-line-string
      :keymap (let ((map (make-sparse-keymap)))
                (define-key map
-                 (kbd "C-d") (lambda () (interactive)
-                                 (helm-exit-and-execute-action
-                                  (lambda (project)
-                                    (spacemacs||switch-project-persp project
-                                      (dired project))))))
+                           (kbd "C-d") (lambda () (interactive)
+                                         (helm-exit-and-execute-action
+                                          (lambda (project)
+                                            (spacemacs||switch-project-persp project
+                                              (dired project))))))
                map)
      :action `(("Switch to Project Perspective" .
                 spacemacs//helm-persp-switch-project-action)
@@ -739,13 +739,23 @@ Otherwise create it at the next free slot."
     (eyebrowse-switch-to-window-config slot)
     (message "Workspace %s created" slot)))
 
+(defun spacemacs/new-workspace (buffer-p &optional slot)
+  "Create a new workspace, showing the Spacemacs home buffer.
+If a optional SLOT (number) was provided,
+then create the new workspace at that slot.
+Otherwise create it at the next free slot."
+  (let* ((eyebrowse-new-workspace buffer-p)
+         (slot (or slot (spacemacs//workspace-next-free-slot))))
+    (eyebrowse-switch-to-window-config slot)
+    (message "Workspace %s created" slot)))
+
 (defun spacemacs/single-win-workspace ()
   "Create a new single window workspace,
 showing the Spacemacs home buffer."
   (interactive)
-  (spacemacs/new-workspace))
+  (spacemacs/new-workspace 'spacemacs/home))
 
-(defun spacemacs/workspace-switch-or-create (slot)
+(defun spacemacs/workspace-switch-or-create (slot &optional buffer)
   "Given a workspace SLOT number.
 If SLOT is current, show a message.
 If SLOT exists, switch to it.
@@ -756,7 +766,11 @@ Otherwise create a new workspace at the next free slot."
     (cond (slot-current-p (message "Already on Workspace: %s" slot))
           (slot-exists-p (eyebrowse-switch-to-window-config slot)
                          (message "Workspace switched to: %s" slot))
-          (t (spacemacs/new-workspace slot)))))
+          (t (spacemacs/new-workspace 'spacemacs/home slot)))))
+
+(defun spacemacs/eyebrowse-switch-to-new-window-config ()
+  (interactive)
+  (spacemacs/new-workspace (spacemacs/copy-buffer-name)))
 
 (defun spacemacs/eyebrowse-switch-to-window-config-0 ()
   (interactive)
@@ -988,9 +1002,9 @@ Accepts a list of VARIABLE, DEFAULT-VALUE pairs.
                                           spacemacs--layout-local-variables))))
     ;; save the current layout
     (spacemacs-ht-set! spacemacs--layout-local-map
-             (spacemacs//current-layout-name)
-             (--map (cons it (symbol-value it))
-                    layout-local-vars))
+                       (spacemacs//current-layout-name)
+                       (--map (cons it (symbol-value it))
+                              layout-local-vars))
     ;; load the default values into the new layout
     (--each layout-local-vars
       (set it (alist-get it spacemacs--layout-local-variables)))

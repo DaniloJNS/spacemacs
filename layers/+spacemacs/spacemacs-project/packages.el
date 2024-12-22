@@ -95,4 +95,8 @@
       "pv" 'projectile-vc)
     :config
     (projectile-mode)
+    Do you mean: ;; O rastreamento automatico de projetos conhecidos sobrecarrega o scrolling das sugestoes de conclusoes do company ;; provocando tornando bem lento.?
+
+    ;; Automatic tracking of known projects supercharges the scrolling of company completion suggestions
+    ;; provoking making it very slow.ile-track-known-projects-automatically nil)
     (spacemacs|hide-lighter projectile-mode)))

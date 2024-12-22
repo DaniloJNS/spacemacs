@@ -1,0 +1,8 @@
+# -*- mode: rspec-mode -*-
+# name: context (string)
+# key: con
+# --
+
+context '$1' do
+ $2
+end

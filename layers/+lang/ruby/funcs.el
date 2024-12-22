@@ -49,120 +49,122 @@
 (defun spacemacs//ruby-setup-lsp ()
   "Setup Ruby lsp."
   (if (configuration-layer/layer-used-p 'lsp)
-      (lsp-deferred)
-    (message "`lsp' layer is not installed, please add `lsp' layer to your dotfile.")))
+      (progn
+        (lsp-deferred)
+        (add-to-list 'lsp-solargraph-library-directories "~/.bundle")
+        (message "`lsp' layer is not installed, please add `lsp' layer to your dotfile."))))
 
-(defun spacemacs//ruby-setup-lsp-dap ()
-  "Setup DAP integration."
-  (require 'dap-ruby))
+  (defun spacemacs//ruby-setup-lsp-dap ()
+    "Setup DAP integration."
+    (require 'dap-ruby))
 
-
-;; robe
+  
+  ;; robe
 
-(defun spacemacs//ruby-setup-robe ()
-  (robe-mode))
+  (defun spacemacs//ruby-setup-robe ()
+    (robe-mode))
 
-(defun spacemacs//ruby-setup-robe-company ()
-  "Setup robe auto-completion."
-  (when (configuration-layer/package-used-p 'robe)
-    (spacemacs|add-company-backends
-      :backends company-robe
-      :modes ruby-mode enh-ruby-mode))
-  (with-eval-after-load 'company-dabbrev-code
-    (dolist (mode '(ruby-mode enh-ruby-mode))
-      (add-to-list 'company-dabbrev-code-modes mode))))
+  (defun spacemacs//ruby-setup-robe-company ()
+    "Setup robe auto-completion."
+    (when (configuration-layer/package-used-p 'robe)
+      (spacemacs|add-company-backends
+        :backends company-robe
+        :modes ruby-mode enh-ruby-mode))
+    (with-eval-after-load 'company-dabbrev-code
+      (dolist (mode '(ruby-mode enh-ruby-mode))
+        (add-to-list 'company-dabbrev-code-modes mode))))
 
-
-;; version manager
+  
+  ;; version manager
 
-(defun spacemacs//ruby-setup-version-manager ()
-  "Setup ruby version manager."
-  (when (eq ruby-version-manager 'rbenv)
-    (spacemacs//enable-rbenv)))
+  (defun spacemacs//ruby-setup-version-manager ()
+    "Setup ruby version manager."
+    (when (eq ruby-version-manager 'rbenv)
+      (spacemacs//enable-rbenv)))
 
-
-;; rbenv
+  
+  ;; rbenv
 
-(defun spacemacs//enable-rbenv ()
-  "Enable rbenv, use .ruby-version if exists."
-  (require 'rbenv)
-  (let ((version-file-path (rbenv--locate-file ".ruby-version")))
-    (global-rbenv-mode)
-    ;; try to use the ruby defined in .ruby-version
-    (if version-file-path
-        (progn
-          (rbenv-use (rbenv--read-version-from-file
-                      version-file-path))
-          (message (concat "[rbenv] Using ruby version "
-                           "from .ruby-version file.")))
-      (message "[rbenv] Using the currently activated ruby."))))
+  (defun spacemacs//enable-rbenv ()
+    "Enable rbenv, use .ruby-version if exists."
+    (require 'rbenv)
+    (let ((version-file-path (rbenv--locate-file ".ruby-version")))
+      (global-rbenv-mode)
+      ;; try to use the ruby defined in .ruby-version
+      (if version-file-path
+          (progn
+            (rbenv-use (rbenv--read-version-from-file
+                        version-file-path))
+            (message (concat "[rbenv] Using ruby version "
+                             "from .ruby-version file.")))
+        (message "[rbenv] Using the currently activated ruby."))))
 
-
-;; rspec
+  
+  ;; rspec
 
-(defun spacemacs//ruby-enable-rspec-mode ()
-  "Conditionally enable `rspec-mode'"
-  (when (eq 'rspec ruby-test-runner)
-    (rspec-enable-appropriate-mode)))
+  (defun spacemacs//ruby-enable-rspec-mode ()
+    "Conditionally enable `rspec-mode'"
+    (when (eq 'rspec ruby-test-runner)
+      (rspec-enable-appropriate-mode)))
 
-(defun ruby/rspec-verify-directory (dir)
-  "Launch tests in DIR directory.
+  (defun ruby/rspec-verify-directory (dir)
+    "Launch tests in DIR directory.
 Called interactively it prompts for a directory."
-  (interactive "Drspec directory: ")
-  (rspec-run-single-file dir (rspec-core-options)))
+    (interactive "Drspec directory: ")
+    (rspec-run-single-file dir (rspec-core-options)))
 
-(defun spacemacs//inf-ruby-auto-enter ()
-  "Automatically enters inf-ruby-mode in ruby modes' debugger breakpoints."
-  (add-hook 'compilation-filter-hook 'inf-ruby-auto-enter nil t))
+  (defun spacemacs//inf-ruby-auto-enter ()
+    "Automatically enters inf-ruby-mode in ruby modes' debugger breakpoints."
+    (add-hook 'compilation-filter-hook 'inf-ruby-auto-enter nil t))
 
-
-;; ruby-test
+  
+  ;; ruby-test
 
-(defun spacemacs//ruby-enable-ruby-test-mode ()
-  "Conditionally enable `ruby-test-mode'"
-  (when (eq 'ruby-test ruby-test-runner)
-    (ruby-test-mode)))
+  (defun spacemacs//ruby-enable-ruby-test-mode ()
+    "Conditionally enable `ruby-test-mode'"
+    (when (eq 'ruby-test ruby-test-runner)
+      (ruby-test-mode)))
 
-
-;; minitest
+  
+  ;; minitest
 
-(defun spacemacs//ruby-enable-minitest-mode ()
-  "Conditionally enable `minitest-mode'"
-  (when (eq 'minitest ruby-test-runner)
-    (minitest-enable-appropriate-mode)))
+  (defun spacemacs//ruby-enable-minitest-mode ()
+    "Conditionally enable `minitest-mode'"
+    (when (eq 'minitest ruby-test-runner)
+      (minitest-enable-appropriate-mode)))
 
-
-;; highlight debugger keywords
+  
+  ;; highlight debugger keywords
 
-(defun spacemacs/ruby-maybe-highlight-debugger-keywords ()
-  "Highlight break point lines."
-  (interactive)
-  (when ruby-highlight-debugger-keywords
-    (highlight-lines-matching-regexp "^\s*byebug")
-    (highlight-lines-matching-regexp "^\s*binding.irb")
-    (highlight-lines-matching-regexp "^\s*binding.pry")))
+  (defun spacemacs/ruby-maybe-highlight-debugger-keywords ()
+    "Highlight break point lines."
+    (interactive)
+    (when ruby-highlight-debugger-keywords
+      (highlight-lines-matching-regexp "^\s*byebug")
+      (highlight-lines-matching-regexp "^\s*binding.irb")
+      (highlight-lines-matching-regexp "^\s*binding.pry")))
 
-
-;; Insert text
+  
+  ;; Insert text
 
-(defun spacemacs/ruby-insert-frozen-string-literal-comment ()
-  (interactive)
-  (save-excursion
-    (goto-char (point-min))
-    (insert "# frozen_string_literal: true\n")))
+  (defun spacemacs/ruby-insert-frozen-string-literal-comment ()
+    (interactive)
+    (save-excursion
+      (goto-char (point-min))
+      (insert "# frozen_string_literal: true\n")))
 
-(defun spacemacs/ruby-insert-shebang ()
-  (interactive)
-  (save-excursion
-    (goto-char (point-min))
-    (insert "#!/usr/bin/env ruby\n")))
+  (defun spacemacs/ruby-insert-shebang ()
+    (interactive)
+    (save-excursion
+      (goto-char (point-min))
+      (insert "#!/usr/bin/env ruby\n")))
 
-
-;; Prettier
+  
+  ;; Prettier
 
-(defun spacemacs/ruby-format ()
-  (interactive)
-  (call-interactively 'prettier-js))
+  (defun spacemacs/ruby-format ()
+    (interactive)
+    (call-interactively 'prettier-js))
 
-(defun spacemacs/ruby-fmt-before-save-hook ()
-  (add-hook 'before-save-hook 'spacemacs/ruby-format t t))
+  (defun spacemacs/ruby-fmt-before-save-hook ()
+    (add-hook 'before-save-hook 'spacemacs/ruby-format t t))

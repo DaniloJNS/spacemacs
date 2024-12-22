@@ -1,0 +1,6 @@
+# -*- mode: rspec-mode -*-
+# name: expectation block expect { .. }.to
+# key: expb
+# --
+
+expect { $1 }.to

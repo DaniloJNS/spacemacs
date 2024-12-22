@@ -45,7 +45,7 @@ of package [[https://github.com/rayw000/translate-mode][translate-mode]] and [[h
 You need to set language pairs to make online translation work.
 
 #+BEGIN_SRC emacs-lisp
-  (translate :variables gts-translate-list '(("en" "zh") ("en" "fr")))
+  (translate :variables gt-langs '(en fr))
 #+END_SRC
 
 ** Highlighting

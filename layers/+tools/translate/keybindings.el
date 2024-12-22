@@ -1,4 +1,4 @@
-;;; funcs.el --- Semantic Layer functions File for Spacemacs
+;;; keybindings.el --- Semantic Layer functions File for Spacemacs
 ;;
 ;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
 ;;
@@ -26,4 +26,10 @@
   "atTw" 'translate/translate-word-at-point
   "atTf" 'translate-open-reference-file
   "atTb" 'translate-select-reference-buffer
-  "atTh" 'translate-toggle-highlight)
+  "atTh" 'translate-toggle-highlight
+  "xtd" 'translate//soft-gt-do-translate
+  "xtr" 'translate//translate-and-replcace-text
+  "xtR" 'translate//translate-and-replcace-text-inverse
+  "xtc" 'translate//gt-reset-last-target
+  "xs" 'gt-go-setup
+  "xc" 'gt-delete-render-overlays)

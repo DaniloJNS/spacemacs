@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: allow(...).to receive(...).and_return(...)
+# key: allrr
+# --
+
+allow($1).to receive($2).and_return($3)

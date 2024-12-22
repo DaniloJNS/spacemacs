@@ -29,6 +29,7 @@
     evil-org
     evil-surround
     gnuplot
+    org-roam
     (helm-org-rifle :toggle (configuration-layer/layer-used-p 'helm))
     htmlize
     ;; ob, org, org-agenda and org-contacts are installed by `org-contrib'
@@ -846,7 +847,13 @@ Headline^^            Visit entry^^               Filter^^                    Da
 
 (defun org/pre-init-ox-twbs ()
   (spacemacs|use-package-add-hook org :post-config (require 'ox-twbs)))
-(defun org/init-ox-twbs ())
+(defun org/init-ox-twbs ()
+  (setq org-publish-project-alist
+        '(("org-notes"
+           :base-directory "~/org/"
+           :publishing-directory "~/public_html/"
+           :publishing-function org-twbs-publish-to-html
+           :with-sub-superscript nil))))
 
 (defun org/pre-init-ox-gfm ()
   (spacemacs|use-package-add-hook org :post-config (require 'ox-gfm)))

@@ -43,12 +43,12 @@
       "\n
  Go to^^^^^^                         Actions^^^^
  ─────^^^^^^───────────────────────  ───────^^^^───────────────────────
- [_0_.._9_]^^     nth/new workspace  [_c_/_C_] clone workspace
- [_C-0_.._C-9_]^^ nth/new workspace  [_s_/_S_] single window workspace
- [_<tab>_]^^^^    last workspace     [_d_]^^   close current workspace
- [_n_/_C-l_]^^    next workspace     [_R_]^^   rename current workspace
- [_N_/_p_/_C-h_]  prev workspace     [_?_]^^   toggle help
- [_w_]^^^^        another workspace
+ [_0_.._9_]^^     nth/new workspace  [_o_]^^   new workspace with current buffer
+ [_C-0_.._C-9_]^^ nth/new workspace  [_c_/_C_] clone workspace
+ [_<tab>_]^^^^    last workspace     [_s_/_S_] single window workspace
+ [_n_/_C-l_]^^    next workspace     [_d_]^^   close current workspace
+ [_N_/_p_/_C-h_]  prev workspace     [_R_]^^   rename current workspace
+ [_w_]^^^^        another workspace  [_?_]^^   toggle help
  [_l_]^^^^        layouts TS")
 
     (spacemacs|define-transient-state workspaces
@@ -85,6 +85,7 @@
       ("C" spacemacs/clone-workspace)
       ("C-h" eyebrowse-prev-window-config)
       ("C-l" eyebrowse-next-window-config)
+      ("o" spacemacs/eyebrowse-switch-to-new-window-config)
       ("d" spacemacs/eyebrowse-close-window-config)
       ("l" spacemacs/layouts-transient-state/body :exit t)
       ("n" eyebrowse-next-window-config)
