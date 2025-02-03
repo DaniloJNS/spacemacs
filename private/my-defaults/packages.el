@@ -135,6 +135,10 @@ Each entry is either:
                                       :unnarrowed t))))
 
 (defun my-defaults/pre-init-org ()
+  ;; Sets the maximum width that each line must have in a paragraph when adjusted by org-fill-paragraph
+  (add-hook 'org-mode-hook
+            (lambda ()
+              (setq-local fill-column 160)))
   ;; Configure TODO behavior
   ;; When using a hierarchical TODO, that is, a task that is linked to several subtasks (children),
   ;; it prevents this task from being moved to completed until all of its children are completed.
@@ -193,61 +197,106 @@ Each entry is either:
              :empty-lines 0)
             )
           )
-    ;; Sets the maximum width that each line must have in a paragraph when adjusted by org-fill-paragraph
-    (add-hook 'org-mode-hook
-              (lambda ()
-                (setq-local fill-column 160))))
 
-  (setq org-tag-alist '(;; Ticket types
-                        (:startgroup . nil)
-                        ("@bug" . ?b)
-                        ("@feature" . ?u)
-                        ("@spike" . ?j)
-                        (:endgroup . nil)
+    (setq org-tag-alist '(;; Ticket types
+                          (:startgroup . nil)
+                          ("@bug" . ?b)
+                          ("@feature" . ?u)
+                          ("@spike" . ?j)
+                          (:endgroup . nil)
 
-                        ;; Ticket flags
-                        ("@write_future_ticket" . ?w)
-                        ("@emergency" . ?e)
-                        ("@research" . ?r)
+                          ;; Ticket flags
+                          ("@write_future_ticket" . ?w)
+                          ("@emergency" . ?e)
+                          ("@research" . ?r)
 
-                        ;; Meeting types
-                        (:startgroup . nil)
-                        ("big_sprint_review" . ?i)
-                        ("cents_sprint_retro" . ?n)
-                        ("dsu" . ?d)
-                        ("grooming" . ?g)
-                        ("sprint_retro" . ?s)
-                        (:endgroup . nil)
+                          ;; Meeting types
+                          (:startgroup . nil)
+                          ("big_sprint_review" . ?i)
+                          ("cents_sprint_retro" . ?n)
+                          ("dsu" . ?d)
+                          ("grooming" . ?g)
+                          ("sprint_retro" . ?s)
+                          (:endgroup . nil)
 
-                        ;; Code TODOs tags
-                        ("QA" . ?q)
-                        ("backend" . ?k)
-                        ("broken_code" . ?c)
-                        ("frontend" . ?f)
+                          ;; Code TODOs tags
+                          ("QA" . ?q)
+                          ("backend" . ?k)
+                          ("broken_code" . ?c)
+                          ("frontend" . ?f)
 
-                        ;; Special tags
-                        ("CRITICAL" . ?x)
-                        ("obstacle" . ?o)
+                          ;; Special tags
+                          ("CRITICAL" . ?x)
+                          ("obstacle" . ?o)
 
-                        ;; Meeting tags
-                        ("HR" . ?h)
-                        ("general" . ?l)
-                        ("meeting" . ?m)
-                        ("misc" . ?z)
-                        ("planning" . ?p)
+                          ;; Meeting tags
+                          ("HR" . ?h)
+                          ("general" . ?l)
+                          ("meeting" . ?m)
+                          ("misc" . ?z)
+                          ("planning" . ?p)
 
-                        ;; Work Log Tags
-                        ("accomplishment" . ?a)
-                        ))
-  ;; Must do this so the agenda knows where to look for my files
-  (setq org-agenda-files '("~/org" "~/Documentos/org-roam" "~/.org-jira"))
+                          ;; Work Log Tags
+                          ("accomplishment" . ?a)
+                          ))
+    ;; Must do this so the agenda knows where to look for my files
+    (setq org-agenda-files '("~/org" "~/Documentos/org-roam" "~/.org-jira"))
 
-  (setq org-jira-custom-jqls '(
-                               (:jql "project = 'SFI' and assignee = currentUser() and status NOT IN ('CONCLUÍDO', 'Cancelado') ORDER BY created DESC"
-                                     :limit 10
-                                     :filename "squad-tasks")
-                               (:jql "project = 'Chapter Backend' AND assignee = currentUser() AND status NOT IN (CONCLUÍDO, Cancelado, '✅ DONE', '❌ CANCELED') ORDER BY created DESC"
-                                     :limit 10
-                                     :filename "chapter-backend-tasks")
-                               ))
+    (setq org-jira-custom-jqls '(
+                                 (:jql "project = 'SFI' and assignee = currentUser() and status NOT IN ('CONCLUÍDO', 'Cancelado') ORDER BY created DESC"
+                                       :limit 10
+                                       :filename "squad-tasks")
+                                 (:jql "project = 'Chapter Backend' AND assignee = currentUser() AND status NOT IN (CONCLUÍDO, Cancelado, '✅ DONE', '❌ CANCELED') ORDER BY created DESC"
+                                       :limit 10
+                                       :filename "chapter-backend-tasks")
+                                 ))
+
+    ;; Allow refile to create parent tasks with confirmation
+    (setq org-refile-allow-creating-parent-nodes (quote confirm))
+
+    ;; Refile settings
+    ;; Exclude DONE state tasks from refile targets
+    (defun my-defaults/verify-refile-target ()
+      "Exclude todo keywords with a done state from refile targets"
+      (not (member (nth 2 (org-heading-components)) org-done-keywords)))
+    (setq org-refile-target-verify-function 'my-defaults/verify-refile-target)
+
+    ;; TODO Define exclusive tags from agenda view (they should be tags that indicate tasks that are blocked) and add them to the function
+    (defun my-defaults/org-auto-exclude-function (tag)
+      "Automatic task exclusion in the agenda views with org-agenda-filter-by-tag"
+      (message "Will be rececived tag %s" tag)
+      (and (cond
+            ((string= tag "@bug")
+             t)
+            ((string= tag "farm")
+             t))
+           (concat "-" tag)))
+
+    (setq org-agenda-auto-exclude-function 'my-defaults/org-auto-exclude-function)
+
+    ;; Resume clocking task when emacs is restarted
+    (org-clock-persistence-insinuate)
+    ;; Show lot of clocking history so it's easy to pick items off the C-F11 list
+    (setq org-clock-history-length 23)
+    ;; Resume clocking task on clock-in if the clock is open
+    (setq org-clock-in-resume t)
+    ;; Change tasks to NEXT when clocking in
+    (setq org-clock-in-switch-to-state 'bh/clock-in-to-next)
+    ;; Separate drawers for clocking and logs
+    (setq org-drawers (quote ("PROPERTIES" "LOGBOOK")))
+    ;; Save clock data and state changes and notes in the LOGBOOK drawer
+    (setq org-clock-into-drawer t)
+    ;; Sometimes I change tasks I'm clocking quickly - this removes clocked tasks with 0:00 duration
+    (setq org-clock-out-remove-zero-time-clocks t)
+    ;; Clock out when moving task to a done state
+    (setq org-clock-out-when-done t)
+    ;; Save the running clock and all clock history when exiting Emacs, load it on startup
+    (setq org-clock-persist t)
+    ;; Do not prompt to resume an active clock
+    (setq org-clock-persist-query-resume nil)
+    ;; Enable auto clock resolution for finding open clocks
+    (setq org-clock-auto-clock-resolution (quote when-no-clock-is-running))
+    ;; Include current clocking task in clock reports
+    (setq org-clock-report-include-clocking-task t)
+    )
   )
