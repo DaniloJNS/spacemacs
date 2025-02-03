@@ -142,7 +142,9 @@ It runs `tabulated-list-revert-hook', then calls `tabulated-list-print'."
 ;; ---------------------------------------------------------------------------
 
 ;; important for golden-ratio to better work
-(setq window-combination-resize t)
+;; WARN: Activating this option can cause impaired behaviors by changing the width of a window. In some cases, the resignation of a set of 3 or more windows with zoom package may be disproportionate.
+;; For some reason still unknown, when this option is active, the resignation of neighboring windows to the selected does not happen. While this no problem is not solved we have kept it disabled
+(setq window-combination-resize nil)
 ;; Show column number in mode line
 (setq column-number-mode t)
 
