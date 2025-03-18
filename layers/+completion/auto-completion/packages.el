@@ -105,9 +105,6 @@
           company-dabbrev-other-buffers t
           company-dabbrev-downcase nil)
 
-    (add-hook 'company-completion-started-hook 'company-turn-off-fci)
-    (add-hook 'company-completion-finished-hook 'company-maybe-turn-on-fci)
-    (add-hook 'company-completion-cancelled-hook 'company-maybe-turn-on-fci)
     :config
     (spacemacs|diminish company-mode " ⓐ" " a")
 
@@ -151,11 +148,11 @@
     :commands company-quickhelp-manual-begin
     :init
     (spacemacs|do-after-display-system-init
-     (with-eval-after-load 'company
-       (setq company-frontends (delq 'company-echo-metadata-frontend company-frontends))
-       (define-key company-active-map (kbd "M-h") #'company-quickhelp-manual-begin)
-       (unless (eq auto-completion-enable-help-tooltip 'manual)
-         (company-quickhelp-mode))))))
+      (with-eval-after-load 'company
+        (setq company-frontends (delq 'company-echo-metadata-frontend company-frontends))
+        (define-key company-active-map (kbd "M-h") #'company-quickhelp-manual-begin)
+        (unless (eq auto-completion-enable-help-tooltip 'manual)
+          (company-quickhelp-mode))))))
 
 (defun auto-completion/init-company-box ()
   (use-package company-box

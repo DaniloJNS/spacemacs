@@ -40,7 +40,10 @@ output-pdf viewer in `TeX-view-program-selection'.")
 
 (defvar latex-view-pdf-in-split-window nil
   "If non-nil then open pdf in split window.
-Requires pdf-tools to be configured as output-pdf viewer.")
+Requires pdf-tools to be configured as output-pdf viewer.
+
+If the window splits vertically, but is intended to split
+horizontally, consider lowering the value of `split-width-threshold'.")
 
 (defvar latex-backend (if (configuration-layer/layer-used-p 'lsp) 'lsp 'company-auctex)
   "The backend to use for IDE features.
@@ -71,7 +74,10 @@ Allowed values are defined in `TeX-engine-alist'. The default allowed values are
   "Whether to use `TeX-fold-mode' or not in tex/latex buffers.")
 
 (defvar latex-enable-magic nil
-  "Whether to enable \"magic\" symbols in the buffer.")
+  "Whether to enable \"magic\" symbols in the buffer.
+
+Note that enabling this can have a negative impact on performance,
+especially when `magic-latex-enable-pretty-symbols' is t (the default).")
 
 (defvar latex-nofill-env '("equation"
                            "equation*"
@@ -85,4 +91,4 @@ Allowed values are defined in `TeX-engine-alist'. The default allowed values are
   "List of environment names in which `auto-fill-mode' will be inhibited.")
 
 (defvar latex-refresh-preview nil
-  "Whether non-nil, refresh the preview buffer when file changes.")
+  "When non-nil, refresh the preview buffer after recompilation.")

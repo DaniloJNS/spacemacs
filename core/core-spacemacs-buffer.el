@@ -270,18 +270,14 @@ If ALL is non-nil then truly all banners can be selected."
 Returns height in units of line height with a minimum of 1."
   ;; first determine number of lines occupied by startup list
   (let* ((startup-list-line-height
-          ;; the all-the-icons package is not available here yet, but we don't
+          ;; the nerd-icons package is not available here yet, but we don't
           ;; require icons for just counting the lines in the
           ;; `dotspacemacs-startup-lists'
-          (let ((icons dotspacemacs-startup-buffer-show-icons)
-                lines)
-            (setq dotspacemacs-startup-buffer-show-icons nil)
-            (setq lines (with-temp-buffer
-                          (spacemacs-buffer//do-insert-startupify-lists)
-                          (recentf-mode -1)
-                          (line-number-at-pos)))
-            (setq dotspacemacs-startup-buffer-show-icons icons)
-            lines))
+          (let ((dotspacemacs-startup-buffer-show-icons nil))
+            (with-temp-buffer
+              (spacemacs-buffer//do-insert-startupify-lists)
+              (recentf-mode -1)
+              (line-number-at-pos))))
          ;; We determine the maximum available banner height by subtracting the
          ;; number of lines in the home buffer contents (excl. logo and
          ;; startup-list), i.e. `26', and the number of lines in the startup
@@ -345,11 +341,10 @@ Right justified, based on the Spacemacs buffers window width."
                     (create-image badge-path)))
            (badge-size (when badge (car (image-size badge))))
            (build-by (concat "Made with "
-                             (if (and dotspacemacs-startup-buffer-show-icons
-                                      (display-graphic-p)
-                                      (or (fboundp 'all-the-icons-faicon)
-                                          (require 'all-the-icons nil 'noerror)))
-                                 (all-the-icons-faicon "heart" :height 0.8 :v-adjust -0.05)
+                             (if (and (dotspacemacs|symbol-value dotspacemacs-startup-buffer-show-icons)
+                                      (or (fboundp 'nerd-icons-faicon)
+                                          (require 'nerd-icons nil 'noerror)))
+                                 (nerd-icons-faicon "nf-fa-heart" :height 0.8 :v-adjust -0.05)
                                "heart")
                              " by the community"))
            (proudly-free "Proudly free software")
@@ -884,14 +879,14 @@ REAL-WIDTH: the real width of the line.  If the line contains an image, the size
                  :help-echo "Open the Spacemacs GitHub page in your browser."
                  :mouse-face 'highlight
                  :follow-link "\C-m"
-                 "https://develop.spacemacs.org")
+                 "https://spacemacs.org")
   (insert " ")
   (widget-create 'url-link
                  :tag (propertize "Documentation" 'face 'font-lock-keyword-face)
                  :help-echo "Open the Spacemacs documentation in your browser."
                  :mouse-face 'highlight
                  :follow-link "\C-m"
-                 "https://develop.spacemacs.org/doc/DOCUMENTATION.html")
+                 "https://spacemacs.org/doc/DOCUMENTATION.html")
   (insert " ")
   (widget-create 'url-link
                  :tag (propertize "Gitter Chat" 'face 'font-lock-keyword-face)
@@ -955,7 +950,9 @@ REAL-WIDTH: the real width of the line.  If the line contains an image, the size
                            ((configuration-layer/layer-used-p 'helm)
                             'helm-spacemacs-help)
                            ((configuration-layer/layer-used-p 'ivy)
-                            'ivy-spacemacs-help))))
+                            'ivy-spacemacs-help)
+                           ((configuration-layer/layer-used-p 'compleseus)
+                            'compleseus-spacemacs-help))))
                      (call-interactively comp-frontend)))
                  :mouse-face 'highlight
                  :follow-link "\C-m")
@@ -1002,11 +999,11 @@ by pressing its number key."
                     (when dotspacemacs-startup-buffer-show-icons
                       (cond
                        ((file-remote-p el)
-                        (all-the-icons-octicon "radio-tower" :height 0.8 :v-adjust -0.05))
+                        (nerd-icons-codicon "nf-cod-radio_tower" :height 0.8 :v-adjust -0.05))
                        ((file-directory-p el)
-                        (all-the-icons-icon-for-dir el))
+                        (nerd-icons-icon-for-dir el))
                        (t
-                        (all-the-icons-icon-for-file (file-name-nondirectory el) :height 0.8 :v-adjust -0.05))))
+                        (nerd-icons-icon-for-file (file-name-nondirectory el) :height 0.8 :v-adjust -0.05))))
                     " "))
                   (button-text (abbreviate-file-name el)))
               (insert button-prefix)
@@ -1040,8 +1037,8 @@ GROUPED-LIST: a list of string pathnames made interactive in this function."
                      " "
                      (when dotspacemacs-startup-buffer-show-icons
                        (if group-remote-p
-                           (all-the-icons-octicon "radio-tower" :height 0.8 :v-adjust -0.05)
-                         (all-the-icons-icon-for-dir (car group))))
+                           (nerd-icons-codicon "nf-cod-radio_tower" :height 0.8 :v-adjust -0.05)
+                         (nerd-icons-icon-for-dir (car group))))
                      " "))
                    (button-text-project (abbreviate-file-name (car group))))
               (insert button-prefix)
@@ -1065,15 +1062,14 @@ GROUPED-LIST: a list of string pathnames made interactive in this function."
                                (when dotspacemacs-startup-buffer-show-icons
                                  (if (or group-remote-p
                                          (file-remote-p (concat (car group) el)))
-                                     (all-the-icons-octicon "radio-tower" :height 0.8 :v-adjust -0.05)
-                                   (all-the-icons-icon-for-file (file-name-nondirectory el) :height 0.8 :v-adjust -0.05)))
+                                     (nerd-icons-codicon "nf-cod-radio_tower" :height 0.8 :v-adjust -0.05)
+                                   (nerd-icons-icon-for-file (file-name-nondirectory el) :height 0.8 :v-adjust -0.05)))
                                " "))
-                             (button-text-filename (abbreviate-file-name el)))
+                             (button-text-filename (string-trim-left (expand-file-name el)
+                                                                     (regexp-quote (car group)))))
                         (insert button-prefix)
                         (widget-create 'push-button
-                                       :action `(lambda (&rest ignore)
-                                                  (find-file-existing
-                                                   (concat ,(car group) ,el)))
+                                       :action `(lambda (&rest ignore) (find-file-existing ,el))
                                        :mouse-face 'highlight
                                        :follow-link "\C-m"
                                        :button-prefix ""
@@ -1101,11 +1097,11 @@ LIST: a list of string bookmark names made interactive in this function."
                      (when dotspacemacs-startup-buffer-show-icons
                        (cond
                         ((file-remote-p filename)
-                         (all-the-icons-octicon "radio-tower" :height 0.8 :v-adjust -0.05))
+                         (nerd-icons-codicon "nf-cod-radio_tower" :height 0.8 :v-adjust -0.05))
                         ((file-directory-p filename)
-                         (all-the-icons-icon-for-dir filename))
+                         (nerd-icons-icon-for-dir filename))
                         (t
-                         (all-the-icons-icon-for-file (file-name-nondirectory filename) :height 0.8 :v-adjust -0.05))))
+                         (nerd-icons-icon-for-file (file-name-nondirectory filename) :height 0.8 :v-adjust -0.05))))
                      " "))
                    (button-text
                     (if filename
@@ -1205,7 +1201,7 @@ LIST: list of `org-agenda' entries in the todo list."
                        (format "%2s " (number-to-string spacemacs-buffer--startup-list-nr)))
                      " "
                      (when dotspacemacs-startup-buffer-show-icons
-                       (all-the-icons-octicon "primitive-dot" :height 1.0 :v-adjust 0.01))
+                       (nerd-icons-octicon "nf-oct-dot" :height 1.0 :v-adjust 0.01))
                      " "))
                    (button-text
                     (format "%s %s %s"
@@ -1238,7 +1234,7 @@ LIST: list of `org-agenda' entries in the todo list."
 
 (defun spacemacs-buffer//associate-to-project (recent-file by-project)
   (dolist (x by-project)
-    (when (string-prefix-p (car x) recent-file)
+    (when (string-prefix-p (car x) (expand-file-name recent-file))
       (setcdr x (cons (string-remove-prefix (car x) recent-file) (cdr x))))))
 
 (defun spacemacs-buffer//recent-files-by-project ()
@@ -1267,7 +1263,7 @@ SEQ, START and END are the same arguments as for `cl-subseq'"
   (when (spacemacs-buffer//insert-string-list
          (spacemacs-buffer||propertize-heading
           (when dotspacemacs-startup-buffer-show-icons
-            (all-the-icons-material "error" :face 'font-lock-keyword-face))
+            (nerd-icons-codicon "nf-cod-error" :face 'font-lock-keyword-face))
           "Errors:" "e")
          spacemacs-buffer--errors)
     (spacemacs-buffer||add-shortcut "e" "Errors:")
@@ -1277,7 +1273,7 @@ SEQ, START and END are the same arguments as for `cl-subseq'"
   (when (spacemacs-buffer//insert-string-list
          (spacemacs-buffer||propertize-heading
           (when dotspacemacs-startup-buffer-show-icons
-            (all-the-icons-material "warning" :face 'font-lock-keyword-face))
+            (nerd-icons-codicon "nf-cod-warning" :face 'font-lock-keyword-face))
           "Warnings:" "w")
          spacemacs-buffer--warnings)
     (spacemacs-buffer||add-shortcut "w" "Warnings:")
@@ -1290,24 +1286,24 @@ LIST-SIZE is specified in `dotspacemacs-startup-lists' for recent entries."
   (unless recentf-mode (recentf-mode))
   (let (;; we need to remove `org-agenda-files' entries from recent files
         (agenda-files
-         (when-let ((default-directory
-                     (or (bound-and-true-p org-directory) "~/org"))
-                    (files
-                     (when (bound-and-true-p org-agenda-files)
-                       (if (listp org-agenda-files)
-                           ;; if it's a list, we take that value directly
-                           org-agenda-files
-                         ;; but if it's a string, it must be file where the list
-                         ;; of agenda files are stored in that file and we have
-                         ;; to load `org-agenda' to process the list. If org is
-                         ;; already loaded, then we assume that the user has
-                         ;; already called org-agenda-files.
-                         (when (not (featurep 'org))
-                           (warn "`org-agenda-files' is a string and \
+         (when-let* ((default-directory
+                      (or (bound-and-true-p org-directory) "~/org"))
+                     (files
+                      (when (bound-and-true-p org-agenda-files)
+                        (if (listp org-agenda-files)
+                            ;; if it's a list, we take that value directly
+                            org-agenda-files
+                          ;; but if it's a string, it must be file where the list
+                          ;; of agenda files are stored in that file and we have
+                          ;; to load `org-agenda' to process the list. If org is
+                          ;; already loaded, then we assume that the user has
+                          ;; already called org-agenda-files.
+                          (when (not (featurep 'org))
+                            (warn "`org-agenda-files' is a string and \
 not a list. This requires us to load `org' to process the org agenda files in \
 startup list.")
-                           (require 'org)
-                           (org-agenda-files))))))
+                            (require 'org)
+                            (org-agenda-files))))))
            (mapcar #'expand-file-name files)))
         ;; we also need to skip sub-directories of `org-directory'
         (ignore-directory (when (bound-and-true-p org-directory)
@@ -1325,8 +1321,8 @@ startup list.")
     (when (spacemacs-buffer//insert-file-list
            (spacemacs-buffer||propertize-heading
             (when dotspacemacs-startup-buffer-show-icons
-              (all-the-icons-octicon
-               "history" :face 'font-lock-keyword-face :v-adjust -0.05))
+              (nerd-icons-octicon
+               "nf-oct-history" :face 'font-lock-keyword-face :v-adjust -0.05))
             "Recent Files:" "r")
            recent-files-list)
       (spacemacs-buffer||add-shortcut "r" "Recent Files:")))
@@ -1338,7 +1334,7 @@ startup list.")
   (when (spacemacs-buffer//insert-files-by-dir-list
          (spacemacs-buffer||propertize-heading
           (when dotspacemacs-startup-buffer-show-icons
-            (all-the-icons-octicon "rocket" :face 'font-lock-keyword-face :v-adjust -0.05))
+            (nerd-icons-octicon "nf-oct-rocket" :face 'font-lock-keyword-face :v-adjust -0.05))
           "Recent Files by Project:" "R")
          (mapcar (lambda (group)
                    (cons (car group)
@@ -1355,7 +1351,7 @@ startup list.")
   (when (spacemacs-buffer//insert-todo-list
          (spacemacs-buffer||propertize-heading
           (when dotspacemacs-startup-buffer-show-icons
-            (all-the-icons-octicon "check" :face 'font-lock-keyword-face :v-adjust -0.05))
+            (nerd-icons-octicon "nf-oct-check" :face 'font-lock-keyword-face :v-adjust -0.05))
           "To-Do:" "d")
          (spacemacs//subseq (spacemacs-buffer//todo-list)
                             0 list-size))
@@ -1366,7 +1362,7 @@ startup list.")
   (when (spacemacs-buffer//insert-todo-list
          (spacemacs-buffer||propertize-heading
           (when dotspacemacs-startup-buffer-show-icons
-            (all-the-icons-octicon "calendar" :face 'font-lock-keyword-face :v-adjust -0.05))
+            (nerd-icons-octicon "nf-oct-calendar" :face 'font-lock-keyword-face :v-adjust -0.05))
           "Agenda:" "c")
          (spacemacs//subseq (spacemacs-buffer//agenda-list)
                             0 list-size))
@@ -1380,7 +1376,7 @@ startup list.")
   (when (spacemacs-buffer//insert-bookmark-list
          (spacemacs-buffer||propertize-heading
           (when dotspacemacs-startup-buffer-show-icons
-            (all-the-icons-octicon "bookmark" :face 'font-lock-keyword-face :v-adjust -0.05))
+            (nerd-icons-octicon "nf-oct-bookmark" :face 'font-lock-keyword-face :v-adjust -0.05))
           "Bookmarks:" "b")
          (spacemacs//subseq (bookmark-all-names)
                             0 list-size))
@@ -1392,7 +1388,7 @@ startup list.")
   (when (spacemacs-buffer//insert-file-list
          (spacemacs-buffer||propertize-heading
           (when dotspacemacs-startup-buffer-show-icons
-            (all-the-icons-octicon "rocket" :face 'font-lock-keyword-face :v-adjust -0.05))
+            (nerd-icons-octicon "nf-oct-rocket" :face 'font-lock-keyword-face :v-adjust -0.05))
           "Projects:" "p")
          (spacemacs//subseq (projectile-relevant-known-projects)
                             0 list-size))
@@ -1406,14 +1402,14 @@ startup list.")
   (setq spacemacs-buffer--startup-list-nr 1)
   (let ((dotspacemacs-startup-buffer-show-icons dotspacemacs-startup-buffer-show-icons)
         (is-org-loaded (bound-and-true-p spacemacs-initialized)))
-    (if (display-graphic-p)
+    (if (dotspacemacs|symbol-value dotspacemacs-startup-buffer-show-icons)
         (when (and spacemacs-initialized
-                   (not (configuration-layer/package-used-p 'all-the-icons)))
-          (message "Package `all-the-icons' isn't installed")
+                   (not (configuration-layer/package-used-p 'nerd-icons)))
+          (message "Package `nerd-icons' isn't installed")
           (setq dotspacemacs-startup-buffer-show-icons nil))
       (setq dotspacemacs-startup-buffer-show-icons nil))
     (when dotspacemacs-startup-buffer-show-icons
-      (require 'all-the-icons))
+      (require 'nerd-icons))
     (dolist (els (if is-org-loaded (append '(warnings) dotspacemacs-startup-lists) '(warnings)))
       (let ((el (or (car-safe els) els))
             (list-size (or (cdr-safe els)
@@ -1491,7 +1487,7 @@ version of `widget-button-press' since `widget-button-click' doesn't work."
   (when (widget-event-point event)
     (let ((pos (widget-event-point event)))
       (goto-char pos)
-      (when-let ((button (get-char-property pos 'button)))
+      (when-let* ((button (get-char-property pos 'button)))
         (widget-apply-action button)))))
 
 (defun spacemacs-buffer/jump-to-number-startup-list-line ()
@@ -1599,7 +1595,7 @@ If a prefix argument is given, switch to it in an other, possibly new window."
             (when dotspacemacs-startup-lists
               (spacemacs-buffer/insert-startup-lists))
             (spacemacs-buffer//insert-footer)
-            (configuration-layer/display-summary emacs-start-time)
+            (configuration-layer/display-summary)
             (spacemacs-buffer/set-mode-line spacemacs--default-mode-line)
             (force-mode-line-update)
             (spacemacs-buffer-mode)))
@@ -1657,9 +1653,9 @@ This function is intended to be used in `spacemacs-buffer-mode' only."
       ;; point on a button, press it
       (widget-button-press (point))
     ;; point on an entry, press it
-    (if-let ((button (save-excursion
-                       (beginning-of-line-text)
-                       (re-search-forward "[0-9]* +. " (point-at-eol) 'noerror))))
+    (if-let* ((button (save-excursion
+                        (beginning-of-line-text)
+                        (re-search-forward "[0-9]* +. " (point-at-eol) 'noerror))))
         (widget-button-press button)
       ;; go to next line
       (forward-line)

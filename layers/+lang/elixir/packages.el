@@ -23,9 +23,8 @@
 
 (defconst elixir-packages
   '(
-    alchemist
+    (alchemist :toggle (eq elixir-backend 'alchemist))
     company
-    counsel-gtags
     dap-mode
     elixir-mode
     evil-matchit
@@ -38,7 +37,6 @@
 
 (defun elixir/init-alchemist ()
   (use-package alchemist
-    :if (eq elixir-backend 'alchemist)
     :defer t
     :init
     (spacemacs/register-repl 'alchemist 'alchemist-iex-run "alchemist")
@@ -159,8 +157,6 @@
     :backends (company-dabbrev-code company-capf)
     :modes elixir-mode)
   (add-hook 'elixir-mode-local-vars-hook #'spacemacs//elixir-setup-company))
-
-(defun elixir/post-init-counsel-gtags nil)
 
 (defun elixir/pre-init-dap-mode ()
   (when (eq elixir-backend 'lsp) (add-to-list 'spacemacs--dap-supported-modes 'elixir-mode))
