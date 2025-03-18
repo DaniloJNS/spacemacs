@@ -7,6 +7,7 @@
   - [[#features][Features:]]
 - [[#install][Install]]
 - [[#configure][Configure]]
+- [[#help][*Help]]
 
 * Description
 This layer integrates [[https://github.com/emacs-tree-sitter/elisp-tree-sitter][=Emacs Tree-sitter=]] and a few packages built around it.
@@ -57,4 +58,12 @@ not enable highlight by =tree-sitter-hl-mode=, such as
                              tree-sitter-syntax-highlight-enable t
                              tree-sitter-fold-enable t
                              tree-sitter-fold-indicators-enable nil))
+#+END_SRC
+
+* *Help
+
+Set automatically =treesitter mode= with auto-mode-alist in stranges file extensions
+
+#+BEGIN_SRC elisp
+  (add-to-list 'auto-mode-alist '("\\.tsx?\\'" . typescript-mode))
 #+END_SRC

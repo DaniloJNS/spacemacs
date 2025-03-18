@@ -111,9 +111,14 @@ Each entry is either:
 
       (add-to-list 'zoom-ignored-major-modes modes))
     (add-to-list 'zoom-ignored-buffer-name-regexps "^*[hH]elm.*")
+    (add-to-list 'zoom-ignored-buffer-name-regexps "^*[tT]reemacs.*")
     (custom-set-variables
      '(zoom-size 'size-callback))
     ))
+
+(defun show-buffer-name()
+  (interactive)
+  (message "Buffer: %s" (current-buffer)))
 
 (defun my-defaults/pre-init-ts-fold ()
   (spacemacs|use-package-add-hook ts-fold
@@ -240,7 +245,7 @@ Each entry is either:
                           ("accomplishment" . ?a)
                           ))
     ;; Must do this so the agenda knows where to look for my files
-    (setq org-agenda-files '("~/org" "~/Documentos/org-roam" "~/.org-jira"))
+    (setq org-agenda-files '("~/org" "~/Documentos/org-roam" "~/.org-jira" "~/org/rebase/infleet/video_streaming.org" "~/org/personal"))
 
     (setq org-jira-custom-jqls '(
                                  (:jql "project = 'SFI' and assignee = currentUser() and status NOT IN ('CONCLUÍDO', 'Cancelado') ORDER BY created DESC"
@@ -253,6 +258,15 @@ Each entry is either:
 
     ;; Allow refile to create parent tasks with confirmation
     (setq org-refile-allow-creating-parent-nodes (quote confirm))
+                                        ; Targets include this file and any file contributing to the agenda - up to 9 levels deep
+    (setq org-refile-targets (quote ((nil :maxlevel . 9)
+                                     (org-agenda-files :maxlevel . 9))))
+                                        ; Use full outline paths for refile targets - we file directly with IDO
+    (setq org-refile-use-outline-path t)
+                                        ; Targets complete directly with IDO
+    (setq org-outline-path-complete-in-steps nil)
+                                        ; Use the current window for indirect buffer display
+    (setq org-indirect-buffer-display 'current-window)
 
     ;; Refile settings
     ;; Exclude DONE state tasks from refile targets
@@ -281,7 +295,7 @@ Each entry is either:
     ;; Resume clocking task on clock-in if the clock is open
     (setq org-clock-in-resume t)
     ;; Change tasks to NEXT when clocking in
-    (setq org-clock-in-switch-to-state 'bh/clock-in-to-next)
+    ;; (setq org-clock-in-switch-to-state 'bh/clock-in-to-next)
     ;; Separate drawers for clocking and logs
     (setq org-drawers (quote ("PROPERTIES" "LOGBOOK")))
     ;; Save clock data and state changes and notes in the LOGBOOK drawer

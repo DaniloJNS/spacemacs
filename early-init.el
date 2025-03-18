@@ -35,6 +35,11 @@
 ;; needed nor loaded on those versions.
 (setq package-enable-at-startup nil)
 
+
+;; Enables the compilation of the lsp-mode with plist instead of hash-table(default).
+;; plist provide better performance in deserialization
+(setenv "LSP_USE_PLISTS" "true")
+
 (load (concat (file-name-directory load-file-name)
               "core/core-early-funcs")
       nil (not init-file-debug))

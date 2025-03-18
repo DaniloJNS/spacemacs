@@ -1,0 +1,6 @@
+# -*- mode: elixir-mode -*-
+# name: require IEx; IEx.pry ()
+# key: iex
+# --
+
+require IEx; IEx.pry()

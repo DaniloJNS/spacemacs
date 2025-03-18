@@ -155,6 +155,9 @@
 
 (defun elixir/post-init-company ()
   ;; backend specific
+  (spacemacs|add-company-backends
+    :backends (company-dabbrev-code company-capf)
+    :modes elixir-mode)
   (add-hook 'elixir-mode-local-vars-hook #'spacemacs//elixir-setup-company))
 
 (defun elixir/post-init-counsel-gtags nil)
@@ -170,9 +173,10 @@
   (use-package elixir-mode
     :defer t
     :hook (elixir-mode . spacemacs//elixir-default)
-          (elixir-mode-local-vars . spacemacs//elixir-setup-backend)
+    (elixir-mode-local-vars . spacemacs//elixir-setup-backend)
     :config (spacemacs/set-leader-keys-for-major-mode 'elixir-mode
-              "=" 'elixir-format)))
+              "=" 'elixir-format
+              "ee" 'spacemacs/elixir-toggle-breakpoint)))
 
 (defun elixir/post-init-flycheck ()
   (spacemacs/enable-flycheck 'elixir-mode))

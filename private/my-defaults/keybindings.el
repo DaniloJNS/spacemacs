@@ -64,10 +64,10 @@
       (evil-define-key 'treemacs treemacs-mode-map (kbd "C-'") #'treemacs-select-window)))
 
 
-  (evil-global-set-key 'normal (kbd "C-d") 'spacemacs/shell-pop-vterm)
+  (evil-global-set-key 'normal (kbd "C-d") 'my-defaults//toggle-vterm-terminal)
   (evil-global-set-key 'normal (kbd "C-'") 'treemacs-select-window)
 
-  ;; Improve my personal workflow in travel by classes in rails project
+  ;; Improve my personal workflow in travel by classes in large projects
   (when (configuration-layer/package-used-p 'lsp-mode)
     (evil-define-key 'normal prog-mode-map (kbd "gr") 'lsp-ui-peek-find-references))
 
@@ -84,11 +84,20 @@
   (setq code-review-new-buffer-window-strategy #'switch-to-buffer)
 
   ;; Lsp | Code Navigation
-  ;; TODO: We should define this keybing only in cases where we have ts-fold-mode enabled and the folding method is evi
+  ;; TODO: Must be define this keybing only in cases where we have ts-fold-mode enabled and the folding method is evi
   (evil-define-key 'normal prog-mode-map (kbd "<TAB>") 'toggle-fold)
   (evil-define-key 'normal prog-mode-map (kbd "gr") 'lsp-ui-peek-find-references)
   (evil-define-key 'normal prog-mode-map (kbd "gr") 'lsp-ui-peek-find-references)
 
   ;; Custom Org Mode Commands
   (evil-define-key 'normal org-mode-map (kbd "C-=") 'org-fill-paragraph)
+  (evil-define-key 'normal org-agenda-mode-map (kbd "\\") 'org-agenda-filter-by-tag)
+
+  ;; Test
+  (evil-global-set-key 'normal (kbd "M-w") 'spacemacs/eyebrowse-switch-to-new-window-config)
+  (evil-global-set-key 'normal (kbd "M-e") 'eyebrowse-next-window-config)
+  (evil-global-set-key 'normal (kbd "M--") 'eyebrowse-prev-window-config)
+  (evil-global-set-key 'normal (kbd "M-q") 'spacemacs/eyebrowse-close-window-config)
+  (evil-global-set-key 'normal (kbd "M-p") 'test:run-current-scenario)
+  (evil-global-set-key 'normal (kbd "M-o") 'test:run-current-file)
   )

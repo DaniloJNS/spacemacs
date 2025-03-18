@@ -31,10 +31,52 @@
   "Conditionally setup company based on backend."
   (when (eq elixir-backend 'alchemist) (spacemacs//elixir-setup-alchemist-company)))
 
+
+;; DAP
 (defun spacemacs//elixir-setup-dap ()
   "Conditionally setup elixir DAP integration."
   ;; currently DAP is only available using LSP
-  (when (eq elixir-backend 'lsp) (spacemacs//elixir-setup-lsp-dap)))
+  (when (eq elixir-backend 'lsp)
+    (progn
+      (spacemacs//elixir-setup-lsp-dap))
+    (dap-register-debug-template
+     "Elixir Debug"
+     (list :type "Elixir"
+           :cwd nil
+           :request "launch"
+           :program nil
+           :name "Elixir Debug"
+           :startApps t
+           :dap-server-path '("~/.emacs.d/.cache/lsp/elixir-ls/debug_adapter.sh")))))
+
+(defun spacemacs//dap-elixir-run-unit-test-command ()
+  "Conditionally setup elixir DAP integration."
+  ;; currently DAP is only available using LSP
+  (dap-start-debugging)
+  (when (eq elixir-backend 'lsp)
+    (progn
+      (spacemacs//elixir-setup-lsp-dap))
+    (dap-register-debug-template
+     "Elixir Debug"
+     (list :type "Elixir"
+           :cwd nil
+           :request "launch"
+           :program "mix phx.server"
+           :name "Elixir Debug"
+           :startApps t
+           :dap-server-path '("~/.emacs.d/.cache/lsp/elixir-ls/debug_adapter.sh")))
+    (dap-register-debug-template
+     "mix test"
+     (list :type "Elixir"
+           :cwd "${workspaceFolder}"
+           :request "launch"
+           :program nil
+           :name "mix test"
+           :startApps t
+           :task "test"
+           :taskArgs '("${file}:${fileNumber}")
+           :requireFiles '("test/**/test_helper.exs" "test/**/*_test.exs")
+           :dap-server-path '("~/.emacs.d/.cache/lsp/elixir-ls/debug_adapter.sh")))))
 
 
 ;;alchemist
@@ -53,9 +95,14 @@
 ;;lsp
 
 (defun spacemacs//elixir-setup-lsp ()
+  (setq-local lsp-lens-enable nil)
   "Setup lsp backend."
   (if (configuration-layer/layer-used-p 'lsp)
-      (progn (add-to-list 'exec-path elixir-ls-path) (lsp-deferred))
+      (progn
+        ;; (setq lsp-elixir-ls-server-dir elixir-ls-path)
+        (add-to-list 'exec-path elixir-ls-path)
+        (add-to-list 'exec-path "/home/danilo/.cargo/bin")
+        (lsp-deferred))
     (message "`lsp' layer is not installed, please add `lsp' layer to your dotfile.")))
 
 (defun spacemacs//elixir-setup-lsp-dap ()
