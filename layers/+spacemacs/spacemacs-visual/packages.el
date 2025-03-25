@@ -108,6 +108,7 @@
     (push '("*nosetests*"            :dedicated t :position bottom :stick t :noselect nil            ) popwin:special-display-config)
     (push '("^\*WoMan.+\*$" :regexp t             :position bottom                                   ) popwin:special-display-config)
     (push '("*Google Translate*"     :dedicated t :position bottom :stick t :noselect t   :height 0.4) popwin:special-display-config)
+    (push '("^\*alchemist.*\*$" :regexp t  :dedicated t :position bottom :stick t :noselect t   :height 0.4) popwin:special-display-config)
 
     (advice-add 'popwin:match-config :around #'spacemacs/advice-popwin)))
 

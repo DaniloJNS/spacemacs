@@ -23,7 +23,8 @@
 
 (defconst elixir-packages
   '(
-    (alchemist :toggle (eq elixir-backend 'alchemist))
+    (alchemist-minimal-fork :location local)
+    (evil-collection-alchemist-minimal-fork :location local)
     company
     dap-mode
     elixir-mode
@@ -35,16 +36,21 @@
     popwin
     smartparens))
 
-(defun elixir/init-alchemist ()
-  (use-package alchemist
-    :defer t
+(defun elixir/init-evil-collection-alchemist-minimal-fork()
+  (use-package evil-collection-alchemist-minimal-fork
+    :config
+    (with-eval-after-load 'alchemist-minimal-fork
+      (evil-collection-alchemist-minimal-fork-setup))))
+
+(defun elixir/init-alchemist-minimal-fork ()
+  (use-package alchemist-minimal-fork
     :init
     (spacemacs/register-repl 'alchemist 'alchemist-iex-run "alchemist")
-    (add-hook 'elixir-mode-hook 'alchemist-mode)
     (setq alchemist-project-compile-when-needed t
           alchemist-test-status-modeline nil)
-    (add-to-list 'spacemacs-jump-handlers-elixir-mode
-                 '(alchemist-goto-definition-at-point :async t))
+    (add-hook 'elixir-mode-hook 'alchemist-mode)
+    ;; (add-to-list 'spacemacs-jump-handlers-elixir-mode
+    ;;              '(alchemist-goto-definition-at-point :async t))
     :config
     (spacemacs/declare-prefix-for-mode 'elixir-mode "mX" "hex")
     (spacemacs/declare-prefix-for-mode 'elixir-mode "mc" "compile")
@@ -137,19 +143,7 @@
       "or" 'alchemist-macroexpand-region
       "oR" 'alchemist-macroexpand-print-region
 
-      "db" 'spacemacs/elixir-toggle-breakpoint)
-
-    (dolist (mode (list alchemist-compile-mode-map
-                        alchemist-eval-mode-map
-                        alchemist-execute-mode-map
-                        alchemist-message-mode-map
-                        alchemist-help-minor-mode-map
-                        alchemist-mix-mode-map
-                        alchemist-macroexpand-mode-map
-                        alchemist-refcard-mode-map
-                        alchemist-test-report-mode-map))
-      (evil-define-key 'normal mode
-        (kbd "q") 'quit-window))))
+      "db" 'spacemacs/elixir-toggle-breakpoint)))
 
 (defun elixir/post-init-company ()
   ;; backend specific
@@ -170,9 +164,10 @@
     :defer t
     :hook (elixir-mode . spacemacs//elixir-default)
     (elixir-mode-local-vars . spacemacs//elixir-setup-backend)
-    :config (spacemacs/set-leader-keys-for-major-mode 'elixir-mode
-              "=" 'elixir-format
-              "ee" 'spacemacs/elixir-toggle-breakpoint)))
+    :config(spacemacs/set-leader-keys-for-major-mode 'elixir-mode
+             "=" 'elixir-format
+             "ee" 'spacemacs/elixir-toggle-breakpoint)))
+;; (spacemacs//elixir-setup-alchemist-minimal)))
 
 (defun elixir/post-init-flycheck ()
   (spacemacs/enable-flycheck 'elixir-mode))
