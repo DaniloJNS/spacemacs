@@ -188,7 +188,7 @@ Each entry is either:
     (add-to-list 'zoom-ignored-buffer-name-regexps "^*[hH]elm.*")
     (add-to-list 'zoom-ignored-buffer-name-regexps "^*[tT]reemacs.*")
     (custom-set-variables
-     '(zoom-size 'size-callback))
+     '(zoom-size (size-callback)))
     ))
 
 (defun show-buffer-name()
@@ -247,8 +247,31 @@ Each entry is either:
   ;; How to configure this variable -> https://orgmode.org/org.html#Tracking-TODO-state-changes
   ;;                                -> https://orgmode.org/org.html#Setting-up-keywords-for-individual-files
   (setq org-todo-keywords
-        '((sequence "TODO(t)" "PLANNING(p)" "IN-PROGRESS(i@/!)" "VERIFYING(v!)" "BLOCKED(b@)"  "|" "DONE(d!)" "OBE(o@!)" "WONT-DO(w@/!)" ))
-        )
+        '((sequence "TODO(t)" "PLANNING(p)" "IN-PROGRESS(i@/!)" "VERIFYING(v!)" "BLOCKED(b@)"  "|" "DONE(d!)" "OBE(o@!)" "WONT-DO(w@/!)" )))
+  (setq org-todo-state-tags-triggers
+        (quote (("CANCELLED" ("CANCELLED" . t))
+                ("WAITING" ("WAITING" . t))
+                ("HOLD" ("WAITING") ("HOLD" . t))
+                (done ("WAITING") ("HOLD"))
+                ("TODO" ("WAITING") ("CANCELLED") ("HOLD"))
+                ("NEXT" ("WAITING") ("CANCELLED") ("HOLD"))
+                ("DONE" ("WAITING") ("CANCELLED") ("HOLD")))))
+  ;; (setq org-capture-templates
+  ;;       (quote (("t" "todo" entry (file "~/git/org/refile.org")
+  ;;                "* TODO %?\n%U\n%a\n" :clock-in t :clock-resume t)
+  ;;               ("r" "respond" entry (file "~/git/org/refile.org")
+  ;;                "* NEXT Respond to %:from on %:subject\nSCHEDULED: %t\n%U\n%a\n" :clock-in t :clock-resume t :immediate-finish t)
+  ;;               ("n" "note" entry (file "~/git/org/refile.org")
+  ;;                "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t)
+  ;;               ("j" "Journal" entry (file+datetree "~/git/org/diary.org")
+  ;;                "* %?\n%U\n" :clock-in t :clock-resume t)
+  ;;               ("w" "org-protocol" entry (file "~/git/org/refile.org")
+  ;;                "* TODO Review %c\n%U\n" :immediate-finish t)
+  ;;               ("m" "Meeting" entry (file "~/git/org/refile.org")
+  ;;                "* MEETING with %? :MEETING:\n%U" :clock-in t :clock-resume t)
+  ;;               ("p" "Phone call" entry (file "~/git/org/refile.org")
+  ;;                "* PHONE %? :PHONE:\n%U" :clock-in t :clock-resume t)
+  ;;               )))
   ;; Setup captures
   ;; TODO This loading model can be improved, to define org-capture-templates it is necessary that org-directory
   ;; is configured
@@ -275,6 +298,9 @@ Each entry is either:
              :clock-in t
              :clock-resume t
              :empty-lines 0)
+            ("h" "Habit"
+             entry (file "~/git/org/refile.org")
+             "* NEXT %?\n%U\n%a\nSCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: NEXT\n:END:\n")
             )
           )
 
@@ -320,7 +346,7 @@ Each entry is either:
                           ("accomplishment" . ?a)
                           ))
     ;; Must do this so the agenda knows where to look for my files
-    (setq org-agenda-files '("~/org" "~/Documentos/org-roam" "~/.org-jira" "~/org/rebase/infleet/video_streaming.org" "~/org/personal"))
+    (setq org-agenda-files '("~/org" "~/Documentos/org-roam" "~/.org-jira" "~/org/rebase/infleet" "~/org/personal"))
 
     (setq org-jira-custom-jqls '(
                                  (:jql "project = 'SFI' and assignee = currentUser() and status NOT IN ('CONCLUÍDO', 'Cancelado') ORDER BY created DESC"
