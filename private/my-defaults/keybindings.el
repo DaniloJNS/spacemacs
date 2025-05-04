@@ -100,4 +100,6 @@
   (evil-global-set-key 'normal (kbd "M-q") 'spacemacs/eyebrowse-close-window-config)
   (evil-global-set-key 'normal (kbd "M-p") 'test:run-current-scenario)
   (evil-global-set-key 'normal (kbd "M-o") 'test:run-current-file)
+  ;; Dired keybinds
+  (evil-define-key 'normal dired-mode-map (kbd "c") 'dired-create-empty-file)
   )

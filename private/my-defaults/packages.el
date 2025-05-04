@@ -45,7 +45,7 @@
     org
     ts-fold
     zoom
-    )
+    dirvish)
   "The list of Lisp packages required by the my-defaults layer.
 
 Each entry is either:
@@ -74,8 +74,83 @@ Each entry is either:
         recipe.  See: https://github.com/milkypostman/melpa#recipe-format")
 
 (defun size-callback ()
-  (cond ((> (frame-pixel-width) 1280) '(0.65 . 0.75))
+  (cond ((> (frame-pixel-width) 1280) '(0.5 . 0.75))
         (t                            '(0.5 . 0.5))))
+
+(defun my-defaults/init-dirvish ()
+  (use-package dirvish
+    :ensure t
+    :init
+    (dirvish-override-dired-mode)
+    :custom
+    (dirvish-quick-access-entries ; It's a custom option, `setq' won't work
+     '(("h" "~/"                          "Home")
+       ("d" "~/Downloads/"                "Downloads")
+       ("m" "/mnt/"                       "Drives")
+       ("s" "/ssh:my-remote-server")      "SSH server"
+       ("e" "/sudo:root@localhost:/etc")  "Modify program settings"
+       ("t" "~/.local/share/Trash/files/" "TrashCan")))
+    :config
+    (require 'nerd-icons)
+    ;; (dirvish-peek-mode)             ; Preview files in minibuffer
+    ;; (dirvish-side-follow-mode)      ; similar to `treemacs-follow-mode'
+    (setq dirvish-mode-line-format
+          '(:left (sort symlink) :right (omit yank index)))
+    (setq dirvish-attributes           ; The order *MATTERS* for some attributes
+          '(vc-state subtree-state nerd-icons collapse git-msg file-time file-size)
+          dirvish-side-attributes
+          '(vc-state nerd-icons collapse file-size))
+    (setq dirvish-subtree-state-style 'nerd)
+    (setq delete-by-moving-to-trash t)
+    (setq dired-listing-switches
+          "-l --almost-all --human-readable --no-group")
+    (setq dirvish-path-separators (list
+                                   (format "  %s " (nerd-icons-codicon "nf-cod-home"))
+                                   (format "  %s " (nerd-icons-codicon "nf-cod-root_folder"))
+                                   (format " %s " (nerd-icons-faicon "nf-fa-angle_right"))))
+    ;; this command is useful when you want to close the window of `dirvish-side'
+    ;; automatically when opening a file
+    (put 'dired-find-alternate-file 'disabled nil)
+
+    (evil-define-key 'normal dirvish-mode-map (kbd ";") #'dired-up-directory)
+    (evil-define-key 'normal dirvish-mode-map (kbd "?") #'dirvish-dispatch)
+    (evil-define-key 'normal dirvish-mode-map (kbd "a") #'dirvish-setup-menu)
+    (evil-define-key 'normal dirvish-mode-map (kbd "f") #'dirvish-file-info-menu)
+    (evil-define-key 'normal dirvish-mode-map (kbd "o") #'dirvish-quick-access)
+    (evil-define-key 'normal dirvish-mode-map (kbd "s") #'dirvish-quicksort)
+    (evil-define-key 'normal dirvish-mode-map (kbd "r") #'dirvish-history-jump)
+    (evil-define-key 'normal dirvish-mode-map (kbd "l") #'dirvish-ls-switches-menu)
+    (evil-define-key 'normal dirvish-mode-map (kbd "*") #'dirvish-mark-menu)
+    (evil-define-key 'normal dirvish-mode-map (kbd "y") #'dirvish-yank-menu)
+    (evil-define-key 'normal dirvish-mode-map (kbd "N") #'dirvish-narrow)
+    (evil-define-key 'normal dirvish-mode-map (kbd "^") #'dirvish-history-last)
+    (evil-define-key 'normal dirvish-mode-map (kbd "TAB") #'dirvish-subtree-toggle)
+    (evil-define-key 'normal dirvish-mode-map (kbd "M-f") #'dirvish-history-go-forward)
+    (evil-define-key 'normal dirvish-mode-map (kbd "M-f") #'dirvish-history-go-backward)
+    (evil-define-key 'normal dirvish-mode-map (kbd "M-t") #'dirvish-layout-toggle)
+    (evil-define-key 'normal dirvish-mode-map (kbd "M-e") #'dirvish-emerge-menu)
+    (evil-define-key 'normal dirvish-mode-map (kbd "J") #'dirvish-fd)
+    (evil-define-key 'normal dirvish-mode-map (kbd "C-f") #'dirvish-fd)
+    :bind ; Bind `dirvish-fd|dirvish-side|dirvish-dwim' as you see fit
+    (("C-c f" . dirvish)
+     :map dirvish-mode-map               ; Dirvish inherits `dired-mode-map'
+     (";"   . dired-up-directory)        ; So you can adjust `dired' bindings here
+     ("?"   . dirvish-dispatch)          ; [?] a helpful cheatsheet
+     ("a"   . dirvish-setup-menu)        ; [a]ttributes settings: press `a' + `t' toggles mtime, etc.
+     ("f"   . dirvish-file-info-menu)    ; [f]ile info
+     ("o"   . dirvish-quick-access)      ; [o]pen `dirvish-quick-access-entries'
+     ("s"   . dirvish-quicksort)         ; [s]ort flie list
+     ("r"   . dirvish-history-jump)      ; [r]ecent visited
+     ("l"   . dirvish-ls-switches-menu)  ; [l]s command flags
+     ("*"   . dirvish-mark-menu)
+     ("y"   . dirvish-yank-menu)
+     ("N"   . dirvish-narrow)
+     ("^"   . dirvish-history-last)
+     ("TAB" . dirvish-subtree-toggle)
+     ("M-f" . dirvish-history-go-forward)
+     ("M-b" . dirvish-history-go-backward)
+     ("M-t" . dirvish-layout-toggle)
+     ("M-e" . dirvish-emerge-menu))))
 
 (defun my-defaults/init-xclip ()
   (use-package! xclip

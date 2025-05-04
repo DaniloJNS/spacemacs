@@ -137,6 +137,12 @@
     "fj" 'dired-jump
     "jd" 'dired-jump
     "jD" 'dired-jump-other-window)
+  ;; WARNING This flags are required by dirvish
+  (setq dired-listing-switches
+        "-l --almost-all --human-readable --group-directories-first --no-group")
+  ;; this command is useful when you want to close the window of `dirvish-side'
+  ;; automatically when opening a file
+  (put 'dired-find-alternate-file 'disabled nil)
   ;; The search next/previous commands are different
   ;; because of the `evil-search-module' values:
   ;; vim = evil-search, hybrid = isearch
