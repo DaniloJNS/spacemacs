@@ -24,7 +24,7 @@
 (setq vinegar-packages
       '(
         diff-hl
-        ;; dired+
+        dired+
         (dired :location built-in)
         ))
 
