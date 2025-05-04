@@ -18,6 +18,8 @@
 ;;
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
 (with-eval-after-load 'evil
   ;; WINDOWS MANAGEMENT
   (evil-global-set-key 'normal (kbd "C-l") 'evil-window-right)
@@ -31,6 +33,7 @@
   (evil-global-set-key 'normal (kbd "M-j") 'evil-window-decrease-height)
   ;; (evil-global-set-key 'normal (kbd "C--") 'golden-ratio)
   (evil-global-set-key 'normal (kbd "C--") 'zoom)
+  (define-key evil-evilified-state-map (kbd "C--") 'zoom)
 
   ;; Better search experience
   (evil-global-set-key 'normal (kbd "gw") 'spacemacs/symbol-overlay)
@@ -98,8 +101,10 @@
   (evil-global-set-key 'normal (kbd "M-e") 'eyebrowse-next-window-config)
   (evil-global-set-key 'normal (kbd "M--") 'eyebrowse-prev-window-config)
   (evil-global-set-key 'normal (kbd "M-q") 'spacemacs/eyebrowse-close-window-config)
-  (evil-global-set-key 'normal (kbd "M-p") 'test:run-current-scenario)
-  (evil-global-set-key 'normal (kbd "M-o") 'test:run-current-file)
+  ;; DevDocs
+  (spacemacs/set-leader-keys "ardp" 'devdocs-peruse)
+  (spacemacs/set-leader-keys "ardl" 'devdocs-lookup)
+
   ;; Dired keybinds
   (evil-define-key 'normal dired-mode-map (kbd "c") 'dired-create-empty-file)
   )
