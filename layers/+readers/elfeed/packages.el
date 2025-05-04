@@ -25,14 +25,36 @@
       '(elfeed
         (elfeed-goodies :toggle elfeed-enable-goodies)
         elfeed-org
-        (elfeed-web :toggle elfeed-enable-web-interface)
-        ))
+        elfeed-score
+        (elfeed-web :toggle elfeed-enable-web-interface)))
+
+(defun elfeed/init-elfeed-score ()
+  (use-package elfeed-score
+    :ensure t
+    :config
+    ;; Run the function below for reload score file after some change ->
+    (elfeed-score-load-score-file)
+    (progn
+      (elfeed-score-enable)
+      (evilified-state-evilify-map elfeed-search-mode-map
+        :mode elfeed-search-mode
+        :eval-after-load elfeed-search
+        :bindings
+        "= ="  'elfeed-score-map
+        "= e"  'elfeed-score-scoring-explain-entry))))
 
 (defun elfeed/init-elfeed ()
   (use-package elfeed
     :defer t
     :init (spacemacs/set-leader-keys "are" 'elfeed)
     :config
+    (defalias 'spacemacs//elfeed-toggle-starred
+      (elfeed-expose #'elfeed-search-toggle-all 'starred))
+    (defface elfeed-search-starred-title-face
+      '((t :foreground "#f77"))
+      "Marks a starred Elfeed entry")
+    (push '(starred elfeed-search-starred-title-face) elfeed-search-face-alist)
+    (setq rmh-elfeed-org-files (list "~/org/elfeed.org"))
     (evilified-state-evilify-map elfeed-search-mode-map
       :mode elfeed-search-mode
       :eval-after-load elfeed-search
@@ -43,6 +65,9 @@
       "gu" 'elfeed-unjam
       "o"  'elfeed-load-opml
       "w"  'elfeed-web-start
+      "A"  'spacemacs//elfeed-show-all
+      "E"  'spacemacs//elfeed-show-emacs
+      "D"  'spacemacs//elfeed-show-daily
       "W"  'elfeed-web-stop)
     (evilified-state-evilify-map elfeed-show-mode-map
       :mode elfeed-show-mode
@@ -54,6 +79,9 @@
       "+"  'elfeed-search-tag-all
       "-"  'elfeed-search-untag-all
       "b"  'elfeed-search-browse-url
+      "*"  'spacemacs//elfeed-star
+      "8"  'spacemacs//elfeed-unstar
+      "m"  'spacemacs//elfeed-toggle-starred
       "y"  'elfeed-search-yank)))
 
 (defun elfeed/pre-init-elfeed-goodies ()
