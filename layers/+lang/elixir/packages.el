@@ -26,6 +26,7 @@
     (alchemist-minimal-fork :location local)
     (evil-collection-alchemist-minimal-fork :location local)
     company
+    exunit
     dap-mode
     elixir-mode
     evil-matchit
@@ -35,6 +36,13 @@
     ob-elixir
     popwin
     smartparens))
+
+(defun elixir/init-exunit()
+  (use-package exunit
+    :defer t
+    :init
+    (add-hook 'elixir-mode-hook 'exunit-mode)
+    (setq transient-default-level 5)))
 
 (defun elixir/init-evil-collection-alchemist-minimal-fork()
   (use-package evil-collection-alchemist-minimal-fork
@@ -49,6 +57,10 @@
     (setq alchemist-project-compile-when-needed t
           alchemist-test-status-modeline nil)
     (add-hook 'elixir-mode-hook 'alchemist-mode)
+    (when (configuration-layer/package-used-p 'nerd-icons)
+      (spacemacs|use-package-add-hook 'nerd-icons
+        :post-config
+        (add-to-list 'nerd-icons-mode-icon-alist '(alchemist-test-report-mode nerd-icons-mdicon "nf-md-test_tube" :face nerd-icons-purple))))
     ;; (add-to-list 'spacemacs-jump-handlers-elixir-mode
     ;;              '(alchemist-goto-definition-at-point :async t))
     :config
@@ -100,17 +112,18 @@
       "sr" 'alchemist-iex-send-region
       "sR" 'alchemist-iex-send-region-and-go
 
-      "ta" 'alchemist-mix-test
-      "tb" 'alchemist-mix-test-this-buffer
-      "tB" 'alchemist-project-run-tests-for-current-file
-      "tt" 'alchemist-mix-test-at-point
+      ;; "ta" 'alchemist-mix-test
+      ;; "tb" 'alchemist-mix-test-this-buffer
+      ;; "tB" 'alchemist-project-run-tests-for-current-file
+      ;; "tt" 'alchemist-mix-test-at-point
       "tF" 'alchemist-project-find-test
       "tf" 'alchemist-mix-test-file
       "tn" 'alchemist-test-mode-jump-to-next-test
       "tN" 'alchemist-test-mode-jump-to-previous-test
-      "tr" 'alchemist-mix-rerun-last-test
-      "ts" 'alchemist-mix-test-stale
+      ;; "tr" 'alchemist-mix-rerun-last-test
+      ;; "ts" 'alchemist-mix-test-stale
       "tR" 'alchemist-test-toggle-test-report-display
+      "," 'alchemist-test-transient
 
       "xb" 'alchemist-execute-this-buffer
       "xf" 'alchemist-execute-file
@@ -120,13 +133,13 @@
       "cf" 'alchemist-compile-file
       "c:" 'alchemist-compile
 
-      "gg" 'alchemist-goto-definition-at-point
-      "." 'alchemist-goto-definition-at-point
-      "gb" 'alchemist-goto-jump-back
-      ","  'alchemist-goto-jump-back
-      "gN" 'alchemist-goto-jump-to-previous-def-symbol
-      "gn" 'alchemist-goto-jump-to-next-def-symbol
-      "gj" 'alchemist-goto-list-symbol-definitions
+      ;; "gg" 'alchemist-goto-definition-at-point
+      ;; "." 'alchemist-goto-definition-at-point
+      ;; "gb" 'alchemist-goto-jump-back
+      ;; ","  'alchemist-goto-jump-back
+      ;; "gN" 'alchemist-goto-jump-to-previous-def-symbol
+      ;; "gn" 'alchemist-goto-jump-to-next-def-symbol
+      ;; "gj" 'alchemist-goto-list-symbol-definitions
 
       "Xi" 'alchemist-hex-info-at-point
       "Xr" 'alchemist-hex-releases-at-point

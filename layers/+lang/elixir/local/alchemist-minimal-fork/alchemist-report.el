@@ -166,6 +166,7 @@ The HIDDEN variable defines if PROCESS-NAME should run in the background."
     (alchemist-report-activate-mode mode buffer)
     (if (not hidden)
         (alchemist-report-display-buffer buffer))
+    (set-buffer-modified-p nil)
     (alchemist-report-update-mode-name (get-buffer-process buffer))))
 
 

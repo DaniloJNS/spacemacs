@@ -16,7 +16,7 @@
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ;;; Commentary:
-;; Evil bindings for `compile'.
+;; Evil bindings for `alchemist'.
 
 ;;; Code:
 (require 'evil-collection)
@@ -30,21 +30,9 @@
                                                         alchemist-help-minor-mode-map
                                                         alchemist-mix-mode-map
                                                         alchemist-iex-mode-map
+                                                        alchemist-hex-mode-map
                                                         alchemist-macroexpand-mode-map
-                                                        alchemist-refcard-mode-map
-                                                        alchemist-test-report-mode-map))
-
-;; (dolist (mode (list alchemist-compile-mode-map
-;;                     alchemist-eval-mode-map
-;;                     alchemist-execute-mode-map
-;;                     alchemist-message-mode-map
-;;                     alchemist-help-minor-mode-map
-;;                     alchemist-mix-mode-map
-;;                     alchemist-macroexpand-mode-map
-;;                     alchemist-refcard-mode-map
-;;                     alchemist-test-report-mode-map))
-;;   (evil-define-key 'normal mode
-;;     (kbd "q") 'quit-window)))
+                                                        alchemist-refcard-mode-map))
 
 ;;;###autoload
 (defun evil-collection-alchemist-minimal-fork-setup ()
@@ -59,6 +47,9 @@
 
     (evil-collection-define-key 'normal keymap
       "q" 'quit-window))
+
+  (evil-collection-define-key 'normal 'alchemist-test-report-mode-map
+    )
 
   (evil-collection-define-key 'normal 'alchemist-test-report-mode-map
     ;; (kbd "RET") 'compile-goto-error

@@ -27,6 +27,7 @@
 
 (require 'dash)
 (require 'alchemist-project)
+(require 'transient)
 
 (defgroup alchemist-test-mode nil
   "Minor mode for Elixir ExUnit files."
@@ -126,15 +127,60 @@ Otherwise, it saves all modified buffers without asking."
 
 (defvar alchemist-test-mode-map
   (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "C-c , s") alchemist-test-at-point)
-    (define-key map (kbd "C-c , v") alchemist-test-this-buffer)
-    (define-key map (kbd "C-c , a") alchemist-test)
-    (define-key map (kbd "C-c , f") alchemist-test-file)
-    (define-key map (kbd "C-c , p") alchemist-test-jump-to-previous-test)
-    (define-key map (kbd "C-c , n") alchemist-test-jump-to-next-test)
-    (define-key map (kbd "C-c , l") alchemist-test-list-tests)
+    ;; (define-key map (kbd "C-c , s") alchemist-test-at-point)
+    ;; (define-key map (kbd "C-c , v") alchemist-test-this-buffer)
+    ;; (define-key map (kbd "C-c , a") alchemist-test)
+    ;; (define-key map (kbd "C-c , f") alchemist-test-file)
+    ;; (define-key map (kbd "C-c , p") alchemist-test-jump-to-previous-test)
+    ;; (define-key map (kbd "C-c , n") alchemist-test-jump-to-next-test)
+    ;; (define-key map (kbd "C-c , l") alchemist-test-list-tests)
     map)
   "Keymap for `alchemist-test-mode'.")
+
+(transient-define-infix alchemist-test-transient:--exclude ()
+  :description "Exclude"
+  :class 'transient-option
+  :multi-value 'repeat
+  :shortarg "-e"
+  :argument "--exclude=")
+
+(transient-define-infix alchemist-test-transient:--include ()
+  :description "Include"
+  :class 'transient-option
+  :multi-value 'repeat
+  :shortarg "-i"
+  :argument "--include=")
+
+(transient-define-infix alchemist-test-transient:--seed ()
+  :description "Seed"
+  :class 'transient-option
+  :shortarg "-S"
+  :argument "--seed=")
+
+(transient-define-prefix alchemist-test-transient ()
+  "AlchemistTest"
+  ["Arguments"
+   [("-f" "Failed" "--failed")
+    ("-s" "Stale" "--stale")
+    ("-t" "Trace" "--trace")
+    ("-c" "Coverage" "--cover")
+    (alchemist-test-transient:--exclude :level 5)
+    (alchemist-test-transient:--include :level 5)
+    (alchemist-test-transient:--seed :level 5)]
+   [("-z" "Slowest" "--slowest=10")
+    ("-m" "Fail Fast" "--max-failures=1")]]
+  ["Actions"
+   [("a" "all" alchemist-mix-test)
+    ("b" "buffer" alchemist-mix-test-this-buffer)
+    ("B" "related tests" alchemist-project-run-tests-for-current-file)]
+   [("s" "at-point" alchemist-mix-test-at-point)
+    ("d" "debug" exunit-debug)
+    ("r" "rerun" alchemist-mix-rerun-last-test)]
+   ;; [
+   ;;  ("u" "all in umbrella" exunit-verify-all-in-umbrella)]
+   [("t" "toggle file and test" exunit-toggle-file-and-test)
+    ("4 t" "toggle other window" exunit-toggle-file-and-test-other-window)
+    ("D" "toggle display report" alchemist-test-toggle-test-report-display)]])
 
 (defconst alchemist-test-mode--test-regex
   (let ((whitespace-opt "[[:space:]]*")
@@ -263,7 +309,8 @@ macro) while the values are the position at which the test matched."
                           alchemist-test-report-process-name
                           alchemist-test-report-buffer-name
                           'alchemist-test-report-mode
-                          #'alchemist-test--handle-exit)))
+                          #'alchemist-test--handle-exit)
+    (alchemist-test--render-report (get-buffer alchemist-test-report-buffer-name))))
 
 (defun alchemist-test-initialize-modeline ()
   "Initialize the mode-line face."

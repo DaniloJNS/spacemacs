@@ -68,7 +68,7 @@
 ;; (require 'alchemist-info)
 (require 'alchemist-report)
 (require 'alchemist-mix)
-;; (require 'alchemist-hex)
+(require 'alchemist-hex)
 ;; (require 'alchemist-hooks)
 ;; (require 'alchemist-message)
 (require 'alchemist-iex)
@@ -202,11 +202,11 @@ Key bindings:
   (define-key map (kbd "X I") 'alchemist-hex-info)
   (define-key map (kbd "X d") 'alchemist-hex-all-dependencies))
 
-(define-key alchemist-mode-map (kbd "M-.") 'alchemist-goto-definition-at-point)
-(define-key alchemist-mode-map (kbd "M-,") 'alchemist-goto-jump-back)
-(define-key alchemist-mode-map (kbd "C-c , .") 'alchemist-goto-list-symbol-definitions)
-(define-key alchemist-mode-map (kbd "M-P") 'alchemist-goto-jump-to-previous-def-symbol)
-(define-key alchemist-mode-map (kbd "M-N") 'alchemist-goto-jump-to-next-def-symbol)
+;; (define-key alchemist-mode-map (kbd "M-.") 'alchemist-goto-definition-at-point)
+;; (define-key alchemist-mode-map (kbd "M-,") 'alchemist-goto-jump-back)
+;; (define-key alchemist-mode-map (kbd "C-c , .") 'alchemist-goto-list-symbol-definitions)
+;; (define-key alchemist-mode-map (kbd "M-P") 'alchemist-goto-jump-to-previous-def-symbol)
+;; (define-key alchemist-mode-map (kbd "M-N") 'alchemist-goto-jump-to-next-def-symbol)
 (define-key alchemist-mode-map (kbd "C-c M-r") 'alchemist-test-toggle-test-report-display)
 
 (easy-menu-define alchemist-mode-menu alchemist-mode-map
