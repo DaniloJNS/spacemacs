@@ -75,6 +75,7 @@
       "p%" 'projectile-replace-regexp
       "pa" 'projectile-toggle-between-implementation-and-test
       "pb" 'projectile-switch-to-buffer
+      "ps" 'projectile-ibuffer
       "pc" 'projectile-compile-project
       "pu" 'projectile-run-project
       "pd" 'projectile-find-dir

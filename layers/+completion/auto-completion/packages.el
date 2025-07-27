@@ -27,6 +27,10 @@
     (auto-complete :toggle (not (eq auto-completion-front-end 'company)))
     (ac-ispell :toggle (not (eq auto-completion-front-end 'company)))
     (company :toggle (eq auto-completion-front-end 'company))
+    (cape :toggle (eq auto-completion-front-end 'corfu))
+    (corfu :toggle (eq auto-completion-front-end 'corfu))
+    (kind-icon :toggle (eq auto-completion-front-end 'corfu))
+    (dabbrev :toggle (eq auto-completion-front-end 'corfu))
     (company-posframe :toggle auto-completion-use-company-posframe)
     (company-box :toggle auto-completion-use-company-box)
     (company-quickhelp :toggle auto-completion-enable-help-tooltip)
@@ -40,6 +44,131 @@
     smartparens
     yasnippet
     yasnippet-snippets))
+
+
+(defun auto-completion/init-corfu ()
+  (use-package corfu
+    ;; Optional customizations
+    :custom
+    (corfu-cycle t)                     ;; Enable cycling for `corfu-next/previous'
+    (corfu-auto t)
+    (corfu-auto-prefix 2)
+    (corfu-auto-delay 0.2)
+    (corfu-echo-documentation 0.25)
+    (corfu-quit-at-boundary 'separator) ;; Never quit at completion boundary
+    (corfu-preview-current nil)     ;; Disable current candidate preview
+    (corfu-preselect-first nil)
+    ;; (corfu-on-exact-match nil)     ;; Configure handling of exact matches
+    ;; (corfu-quit-no-match nil)      ;; Never quit, even if there is no match
+
+    ;; Enable Corfu only for certain modes. See also `global-corfu-modes'.
+    ;; :hook ((prog-mode . corfu-mode)
+    ;;        (shell-mode . corfu-mode)
+    ;;        (eshell-mode . corfu-mode))
+    :bind (:map corfu-map
+                ("M-SPC" . corfu-insert-separator)
+                ("RET" . corfu-insert) ; leave my enter alone)
+                ("TAB" . corfu-next)
+                ([tab] . corfu-next)
+                ("S-TAB" . corfu-prev)
+                ([backtab] . corfu-prev)
+                ("C-j" . corfu-next)
+                ("M-p" . corfu-previous))
+    :init
+    ;; Recommended: Enable Corfu globally.  Recommended since many modes provide
+    ;; Capfs and Dabbrev can be used globally (M-/).  See also the customization
+    ;; variable `global-corfu-modes' to exclude certain modes.
+    (global-corfu-mode)
+
+    ;; Enable optional extension modes:
+    ;; Save completion history for better sorting
+    (corfu-history-mode)
+    (corfu-popupinfo-mode)
+    (corfu-echo-mode)
+    ;; SPC as separator
+    (setq corfu-separator 32)
+
+    ;; highly recommanded to use corfu-separator with "32" (space)
+    (define-key corfu-map (kbd "SPC")
+                (lambda ()
+                  (interactive)
+                  (if current-prefix-arg
+                      ;;we suppose that we want leave the word like that, so do a space
+                      (progn
+                        (corfu-quit)
+                        (insert " "))
+                    (if (and (= (char-before) corfu-separator)
+                             (or
+                              ;; check if space, return or nothing after
+                              (not (char-after))
+                              (= (char-after) ?\s)
+                              (= (char-after) ?\n)))
+                        (progn
+                          (corfu-insert)
+                          (insert " "))
+                      (corfu-insert-separator))))))
+  :config
+  (spacemacs//cofu-active-navigation dotspacemacs-editing-style))
+
+(defun auto-completion/init-kind-icon ()
+  (use-package kind-icon
+    :ensure t
+    :after corfu
+    :custom
+    (kind-icon-blend-background t)
+    (kind-icon-default-face 'corfu-default) ; only needed with blend-background
+    :config
+    (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter)))
+
+(defun auto-completion/init-dabbrev ()
+  ;; Use Dabbrev with Corfu!
+  (use-package dabbrev
+    ;; Swap M-/ and C-M-/
+    :bind (("M-/" . dabbrev-completion)
+           ("C-M-/" . dabbrev-expand))
+    :config
+    (add-to-list 'dabbrev-ignored-buffer-regexps "\\` ")
+    ;; Available since Emacs 29 (Use `dabbrev-ignored-buffer-regexps' on older Emacs)
+    (add-to-list 'dabbrev-ignored-buffer-modes 'authinfo-mode)
+    (add-to-list 'dabbrev-ignored-buffer-modes 'doc-view-mode)
+    (add-to-list 'dabbrev-ignored-buffer-modes 'pdf-view-mode)
+    (add-to-list 'dabbrev-ignored-buffer-modes 'tags-table-mode)))
+
+(defun auto-completion/init-cape ()
+  ;; Add extensions
+  (use-package cape
+    ;; Bind prefix keymap providing all Cape commands under a mnemonic key.
+    ;; Press C-c p ? to for help.
+    :bind ("C-c p" . cape-prefix-map) ;; Alternative key: M-<tab>, M-p, M-+
+    ;; Alternatively bind Cape commands individually.
+    ;; :bind (("C-c p d" . cape-dabbrev)
+    ;;        ("C-c p h" . cape-history)
+    ;;        ("C-c p f" . cape-file)
+    ;;        ...)
+    :init
+    ;; Add to the global default value of `completion-at-point-functions' which is
+    ;; used by `completion-at-point'.  The order of the functions matters, the
+    ;; first function returning a result wins.  Note that the list of buffer-local
+    ;; completion functions takes precedence over the global list.
+
+    (defun spacemacs//company-cape-capfs ()
+      (cape-company-to-capf
+       (apply-partially #'company--multi-backend-adapter
+                        '(company-dabbrev-code company-semantic company-gtags company-etags
+                                               company-keywords company-files))))
+
+    (defun spacemacs//cape-cafs-merged ()
+      (cape-wrap-super
+       ;; (spacemacs//company-cape-capfs)
+       #'cape-dabbrev
+       #'cape-keyword
+       #'cape-file))
+    (add-hook 'completion-at-point-functions #'spacemacs//cape-cafs-merged)
+    ;; (add-hook 'completion-at-point-functions #'cape-file)
+    ;; (add-hook 'completion-at-point-functions #'cape-elisp-block)
+    ;; (add-hook 'completion-at-point-functions #'cape-history)
+    ;; ...
+    ))
 
 
 ;; TODO replace by company-ispell which comes with company

@@ -320,6 +320,34 @@ MODE parameter must match the :modes values used in the call to
       (define-key map (kbd "C-n") 'company-select-next)
       (define-key map (kbd "C-p") 'company-select-previous)))))
 
+(defun spacemacs//toggle-C-k-corfu-select-previous ()
+  (if completion-in-region-mode
+      (spacemacs//set-C-k-corfu-select-previous)
+    (spacemacs//restore-C-k-evil-insert-digraph)))
+
+(defun spacemacs//cofu-active-navigation (style)
+  "Set navigation for the given editing STYLE."
+  (cond
+   ((or (eq 'vim style)
+        (and (eq 'hybrid style)
+             hybrid-style-enable-hjkl-bindings))
+    (dolist (map (list corfu-map))
+      (define-key map (kbd "C-j") 'corfu-next)
+      (define-key map (kbd "C-k") 'corfu-previous)
+      (define-key map (kbd "C-l") 'corfu-complete))
+    ;; Fix company-quickhelp Evil C-k
+    (let ((prev nil))
+      (defun spacemacs//set-C-k-corfu-select-previous (&rest args)
+        (setf prev (lookup-key evil-insert-state-map (kbd "C-k")))
+        (define-key evil-insert-state-map (kbd "C-k") 'corfu-previous))
+      (defun spacemacs//restore-C-k-evil-insert-digraph (&rest args)
+        (define-key evil-insert-state-map (kbd "C-k") prev)))
+    (add-hook 'completion-in-region-mode-hook 'spacemacs//toggle-C-k-corfu-select-previous))
+   (t
+    (dolist (map (list company-active-map company-search-map))
+      (define-key map (kbd "C-n") 'company-select-next)
+      (define-key map (kbd "C-p") 'company-select-previous)))))
+
 
 ;; helm-yas
 

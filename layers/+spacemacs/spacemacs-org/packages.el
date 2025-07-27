@@ -32,7 +32,7 @@
     ;; to allow the `org' layer to own the `org' package instead of this
     ;; layer. So it is easier for users to steal the ownership of the
     ;; `org' package.
-    (default-org-config :location built-in)
+    ;; (default-org-config :location built-in)
     org-superstar
     (space-doc :location (recipe :fetcher local))
     toc-org
@@ -41,24 +41,24 @@
 (defun spacemacs-org/post-init-flyspell ()
   (spell-checking/add-flyspell-hook 'org-mode-hook))
 
-(defun spacemacs-org/init-default-org-config ()
-  (use-package org
-    :commands (org-clock-out org-occur-in-agenda-files org-agenda-files)
-    :defer t
-    :init
-    (setq org-startup-with-inline-images t
-          org-src-fontify-natively t
-          ;; this is consistent with the value of
-          ;; `helm-org-headings-max-depth'.
-          org-imenu-depth 8)
-    :config
-    (font-lock-add-keywords
-     'org-mode '(("\\(@@html:<kbd>@@\\) \\(.*\\) \\(@@html:</kbd>@@\\)"
-                  (1 font-lock-comment-face prepend)
-                  (2 font-lock-function-name-face)
-                  (3 font-lock-comment-face prepend))))
-    ;; Open links and files with RET in normal state
-    (evil-define-key 'normal org-mode-map (kbd "RET") 'org-open-at-point)))
+;; (defun spacemacs-org/init-default-org-config ()
+;;   (use-package org
+;;     :commands (org-clock-out org-occur-in-agenda-files org-agenda-files)
+;;     :defer t
+;;     :init
+;;     (setq org-startup-with-inline-images t
+;;           org-src-fontify-natively t
+;;           ;; this is consistent with the value of
+;;           ;; `helm-org-headings-max-depth'.
+;;           org-imenu-depth 8)
+;;     :config
+;;     (font-lock-add-keywords
+;;      'org-mode '(("\\(@@html:<kbd>@@\\) \\(.*\\) \\(@@html:</kbd>@@\\)"
+;;                   (1 font-lock-comment-face prepend)
+;;                   (2 font-lock-function-name-face)
+;;                   (3 font-lock-comment-face prepend))))
+;;     ;; Open links and files with RET in normal state
+;;     (evil-define-key 'normal org-mode-map (kbd "RET") 'org-open-at-point)))
 
 (defun spacemacs-org/init-org-superstar ()
   (use-package org-superstar

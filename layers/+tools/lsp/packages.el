@@ -52,43 +52,23 @@
           lsp-ui-sideline-diagnostic-max-lines 20
           lsp-enable-file-watchers nil
           lsp-imenu-index-function #'lsp-imenu-create-categorized-index)
-    (defun lsp-booster--advice-json-parse (old-fn &rest args)
-      "Try to parse bytecode instead of json."
-      (or
-       (when (equal (following-char) ?#)
-         (let ((bytecode (read (current-buffer))))
-           (when (byte-code-function-p bytecode)
-             (funcall bytecode))))
-       (apply old-fn args)))
     (advice-add (if (progn (require 'json)
                            (fboundp 'json-parse-buffer))
                     'json-parse-buffer
                   'json-read)
                 :around
-                #'lsp-booster--advice-json-parse)
-
-    (defun lsp-booster--advice-final-command (old-fn cmd &optional test?)
-      "Prepend emacs-lsp-booster command to lsp CMD."
-      (let ((orig-result (funcall old-fn cmd test?)))
-        (if (and (not test?)                             ;; for check lsp-server-present?
-                 (not (file-remote-p default-directory)) ;; see lsp-resolve-final-command, it would add extra shell wrapper
-                 lsp-use-plists
-                 (not (functionp 'json-rpc-connection))  ;; native json-rpc
-                 (executable-find "emacs-lsp-booster"))
-            (progn
-              (when-let ((command-from-exec-path (executable-find (car orig-result))))  ;; resolve command from exec-path (in case not found in $PATH)
-                (setcar orig-result command-from-exec-path))
-              (message "Using emacs-lsp-booster for %s!" orig-result)
-              (cons "emacs-lsp-booster" orig-result))
-          orig-result)))
-    (advice-add 'lsp-resolve-final-command :around #'lsp-booster--advice-final-command)
+                #'spacemacs//lsp-booster--advice-json-parse)
+    (advice-add 'lsp-resolve-final-command :around #'spacemacs//lsp-booster--advice-final-command)
     ;; If you find something else should be ignored, you could also set them here
+    ;; :hook
+    ;; (lsp-completion-mode . spacemacs//lsp-mode-setup-completion)
     :config
     (if lsp-use-upstream-bindings
         (spacemacs/lsp-bind-upstream-keys)
       (spacemacs/lsp-bind-keys))
     (setq lsp-completion-provider (if (or (equal :all lsp-manage-backends-manually)
-                                          (member major-mode lsp-manage-backends-manually))
+                                          (member major-mode lsp-manage-backends-manually)
+                                          (equal 'company auto-completion-front-end))
                                       :none
                                     :capf))
     ;; This sets the lsp indentation for all modes derived from web-mode.
@@ -104,6 +84,8 @@
     (if lsp-remap-xref-keybindings
         (progn (define-key lsp-ui-mode-map [remap xref-find-definitions] #'lsp-ui-peek-find-definitions)
                (define-key lsp-ui-mode-map [remap xref-find-references] #'lsp-ui-peek-find-references)))
+
+    (define-key lsp-ui-imenu-mode-map (kbd "=") 'spacemacs/lsp-ui--imenu-toggle-window-size)
 
     (spacemacs/lsp-define-key
      lsp-ui-peek-mode-map
@@ -125,12 +107,14 @@
     ;; imenu
     (setq lsp-ui-imenu-kind-position "top")
     (setq lsp-ui-imenu-buffer-position "right")
-    (setq lsp-ui-imenu-window-width 0)
-    (setq lsp-ui-imenu-window-fix-width nil)
+    (setq lsp-ui-imenu-window-width 35)
+    (setq lsp-ui-imenu-window-fix-width t)
     (setq lsp-ui-imenu--custom-mode-line-format nil)
     (setq lsp-ui-imenu-auto-refresh t)
-    (setq lsp-ui-imenu-auto-refresh-delay 5.0)
+    (setq lsp-ui-imenu-auto-refresh-delay 1.0)
     ))
+
+
 
 (defun lsp/init-helm-lsp ()
   (use-package helm-lsp :defer t))
@@ -145,7 +129,15 @@
 
 ;; Reminder: Clean lsp-treemacs-errors-list--refresh function before starting LSP in a project
 (defun lsp/init-lsp-treemacs ()
-  (use-package lsp-treemacs :defer t))
+  (use-package lsp-treemacs
+    :defer t
+    :config
+    ;; Advice the internal function `lsp-treemacs-errors-list--refresh' to avoid excessive updates
+    ;; when modifying buffers. This function is called every time LSP diagnostics are updated.
+    ;; Modify the variable `spacemacs/lsp-treemacs-errors-list-refresh-debounce-time' to define
+    ;; the debounce time.
+    (spacemacs/debounce-lsp-treemacs-errors-list-refresh)))
+
 
 (defun lsp/init-lsp-origami ()
   (use-package lsp-origami

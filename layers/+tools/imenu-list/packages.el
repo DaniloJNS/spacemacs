@@ -37,6 +37,7 @@
     :defer t
     :init
     (setq imenu-list-focus-after-activation t
+          imenu-list-idle-update-delay 3
           imenu-list-auto-resize t)
     :config
     (evilified-state-evilify-map imenu-list-major-mode-map

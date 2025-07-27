@@ -23,6 +23,10 @@
 
 (defconst org-packages
   '(
+    ;; (org :location (recipe :url "https://git.tecosaur.net/tec/org-mode.git" :branch "dev"))
+    ;; https://abode.karthinks.com/org-latex-preview/#org6fef938
+    (org-mode-custom :location (recipe :fetcher git :url "https://git.tecosaur.net/tec/org-mode.git" :branch "dev"))
+    ;; (org :location (recipe :fetcher local))
     company
     company-emoji
     emoji-cheat-sheet-plus
@@ -34,7 +38,7 @@
     htmlize
     ;; ob, org, org-agenda and org-contacts are installed by `org-contrib'
     (ob :location built-in)
-    (org :location elpa :min-version "9.7.8")
+    ;; (org :location elpa :min-version "9.7.8")
     (org-agenda :location built-in)
     (org-wild-notifier :toggle org-enable-notifications)
     (org-contacts :toggle org-enable-org-contacts-support)
@@ -68,8 +72,52 @@
     (valign :toggle org-enable-valign)
     (org-appear :toggle org-enable-appear-support)
     (org-transclusion :toggle org-enable-transclusion-support)
+    ;; org-latex-preview
     helm
     (ox-asciidoc :toggle org-enable-asciidoc-support)))
+
+;; (defun org/init-org-latex-preview ()
+;;   :defer t
+;;   :ensure t
+;;   (use-package org-latex-preview
+;;     :config
+;;     ;; Increase preview width
+;;     (plist-put org-latex-preview-appearance-options
+;;                :page-width 0.8)))
+
+;; (defun org/init-org-latex-preview ()
+;;   :defer t
+;;   :ensure t
+;;   (use-package org-latex-preview
+;;     :config
+;;     ;; Increase preview width
+;;     (plist-put org-latex-preview-appearance-options
+;;                :page-width 0.8)
+
+;;     ;; ;; Use dvisvgm to generate previews
+;;     ;; ;; You don't need this, it's the default:
+;;     ;; (setq org-latex-preview-process-default 'dvisvgm)
+
+;;     ;; Turn on auto-mode, it's built into Org and much faster/more featured than
+;;     ;; org-fragtog. (Remember to turn off/uninstall org-fragtog.)
+;;     (add-hook 'org-mode-hook 'org-latex-preview-auto-mode)
+
+;;     ;; ;; Block C-n, C-p etc from opening up previews when using auto-mode
+;;     ;; (setq org-latex-preview-auto-ignored-commands
+;;     ;;       '(next-line previous-line mwheel-scroll
+;;     ;;         scroll-up-command scroll-down-command))
+
+;;     ;; ;; Enable consistent equation numbering
+;;     ;; (setq org-latex-preview-numbered t)
+
+;;     ;; Bonus: Turn on live previews.  This shows you a live preview of a LaTeX
+;;     ;; fragment and updates the preview in real-time as you edit it.
+;;     ;; To preview only environments, set it to '(block edit-special) instead
+;;     (setq org-latex-preview-live t)
+
+;;     ;; More immediate live-previews -- the default delay is 1 second
+;;     (setq org-latex-preview-live-debounce 0.25))
+;; )
 
 (defun org/post-init-company ()
   (spacemacs|add-company-backends :backends company-capf :modes org-mode))
@@ -123,8 +171,8 @@
     ;; Fix redisplay of inline images after a code block evaluation.
     (add-hook 'org-babel-after-execute-hook 'spacemacs/ob-fix-inline-images)))
 
-(defun org/init-org ()
-  (use-package org
+(defun org/init-org-mode-custom ()
+  (use-package org-mode-custom
     :defer (spacemacs/defer)
     :commands (orgtbl-mode)
     :init
@@ -1045,9 +1093,19 @@ Headline^^            Visit entry^^               Filter^^                    Da
     :defer t
     :init
     (add-hook 'org-mode-hook 'org-appear-mode)
-    (setq org-appear-autolinks t
-          org-appear-autoemphasis t
-          org-appear-autosubmarkers t)
+
+    ;; (setq org-hide-emphasis-markers t
+    ;;       org-pretty-entities nil
+    ;;       ;; org-appear-autoentities t
+    ;;       org-appear-autosubmarkers t
+    ;;       org-appear-inside-latex t
+    ;;       org-appear-autolinks 'just-brackets))
+    (setq
+     org-hide-emphasis-markers t
+     org-appear-autolinks t
+     org-appear-autoemphasis t
+     org-appear-inside-latex t
+     org-appear-autosubmarkers t)
     :config
     (when (eq org-appear-trigger 'manual)
       (when (eq dotspacemacs-editing-style 'vim)

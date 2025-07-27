@@ -72,6 +72,28 @@
                               "gs" #'consult-lsp-symbols
                               "gf" #'consult-lsp-file-symbols))))
 
+(defun spacemacs/lsp-ui--imenu-toggle-window-size()
+  (interactive)
+  (let ((window-size-fixed)) ;; Temporarily set `window-size-fixed' to nil for resizing.
+    ;; When `lsp-ui-imenu-window-width' is 0, fit window to buffer:
+    (if (= lsp-ui-imenu-window-width (window-width))
+        (let ((actual-width (if (fboundp 'buffer-line-statistics)
+                                ;; since Emacs-28
+                                (cadr (buffer-line-statistics))
+                              (save-excursion
+                                (goto-char (point-min))
+                                (let ((max 0)
+                                      (to (point-max)))
+                                  (while (< (point) to)
+                                    (end-of-line)
+                                    (setq max (max max (current-column)))
+                                    (forward-line))
+                                  max)))))
+          (enlarge-window-horizontally
+           (- (1+ actual-width) (window-width (selected-window)))))
+      (let ((x (- lsp-ui-imenu-window-width (window-width))))
+        (window-resize (selected-window) x t)))))
+
 (defun spacemacs/lsp-bind-keys ()
   "Define key bindings for the lsp minor mode."
   (cl-ecase lsp-navigation
@@ -98,6 +120,7 @@
     "g" "goto"
     "gt" #'lsp-find-type-definition
     "gM" #'lsp-ui-imenu
+    "gR" #'lsp-ui-imenu--refresh
     ;; help
     "h" "help"
     "hh" #'lsp-describe-thing-at-point
@@ -292,8 +315,103 @@ EXTRA is an additional parameter that's passed to the LSP function"
            (interactive)
            (funcall ',lsp-extension-fn ,request))))))
 
+
+
+;; Lsp Booster
+
+(defun spacemacs//lsp-booster--advice-json-parse (old-fn &rest args)
+  "Try to parse bytecode instead of json."
+  (or
+   (when (equal (following-char) ?#)
+     (let ((bytecode (read (current-buffer))))
+       (when (byte-code-function-p bytecode)
+         (funcall bytecode))))
+   (apply old-fn args)))
+
+(defun spacemacs//lsp-booster--advice-final-command (old-fn cmd &optional test?)
+  "Prepend emacs-lsp-booster command to lsp CMD."
+  (let ((orig-result (funcall old-fn cmd test?)))
+    (if (and (not test?)                             ;; for check lsp-server-present?
+             (not (file-remote-p default-directory)) ;; see lsp-resolve-final-command, it would add extra shell wrapper
+             lsp-use-plists
+             (not (functionp 'json-rpc-connection))  ;; native json-rpc
+             (executable-find "emacs-lsp-booster"))
+        (progn
+          (when-let ((command-from-exec-path (executable-find (car orig-result))))  ;; resolve command from exec-path (in case not found in $PATH)
+            (setcar orig-result command-from-exec-path))
+          (message "Using emacs-lsp-booster for %s!" orig-result)
+          (cons "emacs-lsp-booster" orig-result))
+      orig-result)))
+
+
+
+
+;; Lsp auto-completion
+
+(defun spacemacs//orderless-dispatch-flex-first (_pattern index _total)
+  (and (eq index 0) 'orderless-flex))
+
+(defun spacemacs//lsp-completion-multi-corfu-cafs ()
+  (cape-wrap-super
+   (cape-capf-buster #'lsp-completion-at-point)
+   (cape-company-to-capf #'company-yasnippet)
+   #'cape-keyword
+   #'cape-dabbrev))
+
+;; (defun spacemacs//lsp-mode-setup-completion ()
+;;   ;; Optionally configure the cape-capf-buster.
+;;   (if lsp-completion-mode
+;;       (progn
+;;         (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
+;;               '(orderless))
+;;         ;; Optionally configure the first word as flex filtered.
+;;         (add-hook 'orderless-style-dispatchers #'spacemacs//orderless-dispatch-flex-first nil 'local)
+;;         (add-hook 'completion-at-point-functions #'spacemacs//lsp-completion-multi-corfu-cafs nil 'local))
+;;     (remove-hook 'completion-at-point-functions #'spacemacs//lsp-completion-multi-corfu-cafs t)
+;;     (remove-hook 'orderless-style-dispatchers #'spacemacs//orderless-dispatch-flex-first t))
+;;   (setq-local cape-dabbrev-min-length 5))
+
+;; (defun unsetup()
+;;   (interactive)
+;;   (remove-hook 'orderless-style-dispatchers #'spacemacs//orderless-dispatch-flex-first t)
+;;   (remove-hook 'completion-at-point-functions #'spacemacs//lsp-completion-multi-corfu-cafs t)
+;;   )
+
+;; (defun setup()
+;;   (interactive)
+;;   (add-hook 'orderless-style-dispatchers #'spacemacs//orderless-dispatch-flex-first nil 'local)
+;;   (add-hook 'completion-at-point-functions #'spacemacs//lsp-completion-multi-corfu-cafs nil 'local))
 
 ;; Utils
+
+
+;; WARNING: Uncomment this line will causes performance issues in modes which use lsp-mode. The process of editing can kkk l
+;; (add-hook 'lsp-diagnostics-updated-hook #'lsp-treemacs-errors-list--refresh-delayed)
+
+(defvar spacemacs/lsp-treemacs-delay-timer nil)
+
+(defvar spacemacs/lsp-treemacs-errors-list-refresh-debounce-time 3.0)
+
+(defun spacemacs/lsp-treemacs-errors-list--refresh-delayed (orig-fn &rest orig-args)
+  (when spacemacs/lsp-treemacs-delay-timer (cancel-timer spacemacs/lsp-treemacs-delay-timer))
+  (setq spacemacs/lsp-treemacs-delay-timer
+        (run-with-idle-timer
+         spacemacs/lsp-treemacs-errors-list-refresh-debounce-time
+         nil
+         (lambda (fn args) (apply fn args))
+         orig-fn orig-args)))
+
+(defun spacemacs/debounce-lsp-treemacs-errors-list-refresh()
+  (dolist (func '(lsp-treemacs-errors-list my-defaults-x-code1--setup-lsp-diagnostics-issues))
+    (advice-add func
+                :before (lambda ()
+                          (advice-remove 'lsp-treemacs-errors-list--refresh
+                                         #'spacemacs/lsp-treemacs-errors-list--refresh-delayed)))
+
+    (advice-add func
+                :after (lambda ()
+                         (advice-add 'lsp-treemacs-errors-list--refresh
+                                     :around #'spacemacs/lsp-treemacs-errors-list--refresh-delayed)))))
 
 (defun spacemacs/lsp-ui-doc-func ()
   "Toggle the function signature in the lsp-ui-doc overlay"

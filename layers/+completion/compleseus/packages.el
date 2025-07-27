@@ -332,6 +332,7 @@
     :hook
     (embark-collect-mode . consult-preview-at-point-mode)))
 
+
 (defun compleseus/init-orderless ()
   (use-package orderless
     :init
@@ -348,6 +349,7 @@
 
     ;; should be all in with orderless otherwise the results are inconsistent.
     ;; the available styles are registered in `completion-styles-alist`.
+    ;; (setq completion-styles '(orderless partial-completion basic)
     (setq completion-styles '(orderless basic)
           completion-category-defaults nil
           ;; we need to have 'basic here first in order to support tramp connections...

@@ -49,9 +49,6 @@
       "q" 'quit-window))
 
   (evil-collection-define-key 'normal 'alchemist-test-report-mode-map
-    )
-
-  (evil-collection-define-key 'normal 'alchemist-test-report-mode-map
     ;; (kbd "RET") 'compile-goto-error
 
     ;; "go" 'compilation-display-error

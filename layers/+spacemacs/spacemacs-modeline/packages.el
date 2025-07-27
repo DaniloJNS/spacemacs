@@ -38,7 +38,13 @@
   (spacemacs|unless-dumping-and-eval-after-loaded-dump doom-modeline
     (use-package doom-modeline
       :defer t
-      :init (doom-modeline-mode))))
+      :init (doom-modeline-mode)
+      :config
+      (add-to-list 'mode-line-misc-info
+                   '(:eval (propertize (format "%s " (purpose--modeline-string))
+                                       'face 'doom-modeline-buffer-minor-mode)))
+      (setq doom-modeline-indent-info t))))
+
 
 (defun spacemacs-modeline/init-fancy-battery ()
   (use-package fancy-battery
@@ -130,11 +136,11 @@
                                                 (message "Update aborted."))))
                                 map)))
     (spaceline-define-segment
-        new-version
-      (when spacemacs-new-version
-        (spacemacs-powerline-new-version
-         (spacemacs/get-new-version-lighter-face
-          spacemacs-version spacemacs-new-version))))
+     new-version
+     (when spacemacs-new-version
+       (spacemacs-powerline-new-version
+        (spacemacs/get-new-version-lighter-face
+         spacemacs-version spacemacs-new-version))))
     (let ((theme (intern (format "spaceline-%S-theme"
                                  (spacemacs/get-mode-line-theme-name)))))
       (apply theme spacemacs-spaceline-additional-segments))

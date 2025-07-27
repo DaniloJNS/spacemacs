@@ -25,6 +25,7 @@
       '(
         ibuffer
         (ibuffer-projectile :requires projectile)
+        bufler
         ))
 
 (defun ibuffer/init-ibuffer ()
@@ -50,6 +51,12 @@
       "]"  'ibuffer-forward-filter-group
       "gk" 'ibuffer-backward-filter-group
       "["  'ibuffer-backward-filter-group)))
+
+;; (defun ibuffer/init-bufler ()
+;;   (use-package bufler
+;;     :defer t
+;;     :ensure t))
+
 
 (defun ibuffer/init-ibuffer-projectile ()
   (use-package ibuffer-projectile

@@ -190,3 +190,17 @@ Intended for use in mode hooks."
 (defun emacs-lisp//flycheck-elsa-setup ()
   (when buffer-file-name
     (flycheck-elsa-setup)))
+
+
+;; Corfu setup
+
+(defun spacemacs//elisp-completion-multi-corfu-cafs ()
+  (cape-wrap-super
+   (cape-capf-buster #'elisp-completion-at-point)
+   (cape-company-to-capf #'company-yasnippet)
+   #'cape-keyword
+   #'cape-dabbrev))
+
+(defun spacemacs//elisp-mode-setup-completion ()
+  (add-hook 'completion-at-point-functions #'spacemacs//elisp-completion-multi-corfu-cafs nil 'local)
+  (setq-local cape-dabbrev-min-length 5))

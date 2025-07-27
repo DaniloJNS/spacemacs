@@ -16,6 +16,18 @@
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+;; maybe use this instead of current aproach
+;; (define-key elfeed-search-mode-map (kbd "i")
+;;             (lambda () (interactive)
+;;               (elfeed-search-set-filter "@6-months-ago +unread +important")))
+
+;; (define-key elfeed-search-mode-map (kbd "v")
+;;             (lambda () (interactive)
+;;               (elfeed-search-set-filter "@6-months-ago +unread +relevant")))
+
+;; (define-key elfeed-search-mode-map (kbd "c")
+;;             (lambda () (interactive)
+;;               (elfeed-search-set-filter "@6-months-ago +unread")))
 (defun spacemacs//elfeed-show-all ()
   (interactive)
   (bookmark-maybe-load-default-file)

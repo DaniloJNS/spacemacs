@@ -127,6 +127,9 @@ Otherwise, it saves all modified buffers without asking."
 
 (defvar alchemist-test-mode-map
   (let ((map (make-sparse-keymap)))
+
+    (define-key map (kbd "M-n") alchemist-test-jump-to-next-test)
+    (define-key map (kbd "M-p") alchemist-test-jump-to-previous-test)
     ;; (define-key map (kbd "C-c , s") alchemist-test-at-point)
     ;; (define-key map (kbd "C-c , v") alchemist-test-this-buffer)
     ;; (define-key map (kbd "C-c , a") alchemist-test)
@@ -416,6 +419,7 @@ The following commands are available:
 (defun alchemist-test-enable-mode ()
   (if (alchemist-utils-test-file-p)
       (alchemist-test-mode)))
+
 
 ;;;###autoload
 (dolist (hook '(alchemist-mode-hook))

@@ -48,4 +48,28 @@
       :mode prodigy-view-mode
       :bindings
       "gf" 'find-file-at-point
-      "q" 'quit-window)))
+      "q" 'quit-window))
+
+  (prodigy-define-tag
+    :name 'phoenix-server
+    :ready-message "Done in [1-9]+ms")
+
+  (prodigy-define-service
+    :name "Hermes Server"
+    :command "mix"
+    :args '("phx.server")
+    :cwd "/home/danilo/workspace/rebase/projects/hermes"
+    :stop-signal 'kill
+    :tags '(phoenix-server)
+    :url "http://localhost:4000"
+    :kill-process-buffer-on-stop t)
+  (prodigy-define-service
+    :name "Telemetry Server"
+    :command "/usr/bin/go"
+    :args '("run" "main.go")
+    :cwd "/home/danilo/workspace/personal-projects/telemetry-server"
+    :stop-signal 'kill
+    :ready-message "listening on"
+    ;; :tags '(phoenix-server)
+    ;; :url "http://localhost:4000"
+    :kill-process-buffer-on-stop t))

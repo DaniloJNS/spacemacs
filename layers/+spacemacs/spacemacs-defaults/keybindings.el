@@ -37,6 +37,7 @@
         "ae"  "email"
         "af"  "fun"
         "ar"  "readers"
+        "ad"  "devdocs"
         "am"  "music"
         "at"  "tools"
         "ats" "shells"

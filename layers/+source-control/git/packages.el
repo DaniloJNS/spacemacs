@@ -44,9 +44,9 @@
     magit-section
     (magit-svn :toggle git-enable-magit-svn-plugin)
     (magit-todos :toggle git-enable-magit-todos-plugin)
-    org
-    (orgit :requires org)
-    (orgit-forge :requires (org forge))
+    org-mode-custom
+    (orgit :requires org-mode-custom)
+    (orgit-forge :requires (org-mode-custom forge))
     smeargle
     transient))
 
@@ -76,9 +76,13 @@
             "g/" 'helm-git-grep
             "g*" 'helm-git-grep-at-point)))
 
+;; How to apply diff view with delta https://github.com/wandersoncferreira/code-review/issues/201
 (defun git/init-code-review ()
   (use-package code-review
-    :defer t))
+    :defer t
+    :init
+    (setq code-review-auth-login-marker 'forge)))
+
 
 (defun git/init-git-link ()
   (use-package git-link
@@ -303,7 +307,7 @@
     :after forge
     :defer t))
 
-(defun git/post-init-org ()
+(defun git/post-init-org-mode-custom ()
   ;; unfold the org headings for a target line
   (advice-add 'magit-blame-addition :after #'spacemacs/org-reveal-advice)
   (advice-add 'magit-diff-visit-file :after #'spacemacs/org-reveal-advice)

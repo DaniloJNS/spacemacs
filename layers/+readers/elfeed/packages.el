@@ -32,16 +32,9 @@
   (use-package elfeed-score
     :ensure t
     :config
-    ;; Run the function below for reload score file after some change ->
-    (elfeed-score-load-score-file)
     (progn
       (elfeed-score-enable)
-      (evilified-state-evilify-map elfeed-search-mode-map
-        :mode elfeed-search-mode
-        :eval-after-load elfeed-search
-        :bindings
-        "= ="  'elfeed-score-map
-        "= e"  'elfeed-score-scoring-explain-entry))))
+      (define-key elfeed-search-mode-map "=" elfeed-score-map))))
 
 (defun elfeed/init-elfeed ()
   (use-package elfeed

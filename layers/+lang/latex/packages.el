@@ -36,6 +36,7 @@
     flycheck
     flyspell
     ggtags
+    cdlatex
     (lsp-latex :requires lsp-mode)
     (magic-latex-buffer :toggle latex-enable-magic)
     smartparens
@@ -43,6 +44,43 @@
     typo
     which-key
     yasnippet))
+
+(defun latex/init-cdlatex ()
+  (use-package cdlatex
+    :ensure t
+    :defer t
+    :config
+    ;; (define-key cdlatex-mode-map (kbd "i") "TAB" #'cdlatex-tab)
+
+    (setq cdlatex-math-symbol-alist ; expand when prefixed with `
+          ;; TODO change prefix key to something like ;
+          '((?e ("\\varepsilon" "\\epsilon"))
+            (?f ("\\varphi" "\\phi"))
+            (?0 ("\\varnothing" "\\emptyset"))
+            (?> ("\\to" "\\implies"))
+            (?= ("\\iff" "\\equiv"))
+            (?| ("\\mid" "\\vert"))
+            (?: ("\\coloneqq")))
+          cdlatex-math-modify-alist ; modify text with '
+          '((?b "\\mathbb" nil t nil nil)
+            (?c "\\mathcal" nil t nil nil)
+            (?f "\\mathbf" nil t nil nil)
+            (?m "\\mathrm" nil t nil nil)
+            (?r "\\mathrel" nil t nil nil)
+            (?s "\\mathsf" nil t nil nil)
+            (?o "\\operatorname" nil t nil nil))
+          cdlatex-command-alist ; expand with <TAB>
+          '(("eqn" "Insert an EQUATION* environment template" "" cdlatex-environment ("equation*") t nil)
+            ("aln" "Insert an ALIGN* environment template" "" cdlatex-environment ("align*") t nil)
+            ("sum" "Insert \\sum\\limits_{}^{}" "\\sum\\limits_{?}^{}" cdlatex-position-cursor nil nil t)
+            ("prod" "Insert \\prod\\limits_{}^{}" "\\prod\\limits_{?}^{}" cdlatex-position-cursor nil nil t)
+            ("bun" "Insert \\bigcup\\limits_{}^{}" "\\bigcup\\limits_{?}^{}" cdlatex-position-cursor nil nil t)
+            ("bin" "Insert \\bigcap\\limits_{}^{}" "\\bigcap\\limits_{?}^{}" cdlatex-position-cursor nil nil t)
+            ("lim" "Insert \\lim_\\limits{{} \\to {}}" "\\lim_\\limits{{?} \\to {}}" cdlatex-position-cursor nil nil t)
+            ("sr" "Insert {}^2" "{?}^2" cdlatex-position-cursor nil nil t)
+            ("cb" "Insert {}^3" "{?}^3" cdlatex-position-cursor nil nil t)
+            ("op" "Insert \\operatorname{}()" "\\operatorname{?}()" cdlatex-position-cursor nil nil t)))))
+
 
 (defun latex/post-init-company ()
   (spacemacs//latex-setup-company))
@@ -70,7 +108,7 @@
     (add-hook 'LaTeX-mode-hook #'spacemacs//latex-setup-backend)
     (when latex-refresh-preview
       (add-hook 'TeX-after-compilation-finished-functions
-            #'TeX-revert-document-buffer))
+                #'TeX-revert-document-buffer))
     :config
     ;; otherwise `, p` preview commands doesn't work
     (require 'preview)

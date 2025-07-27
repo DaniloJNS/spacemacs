@@ -133,7 +133,7 @@
 
 (defun spacemacs-defaults/init-dired ()
   (spacemacs/set-leader-keys
-    "ad" 'spacemacs/dired
+    ;; "ad" 'spacemacs/dired -> WARNING This key will be used as a prefix of Devdocs commands
     "fj" 'dired-jump
     "jd" 'dired-jump
     "jD" 'dired-jump-other-window)

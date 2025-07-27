@@ -31,7 +31,7 @@
     elixir-mode
     evil-matchit
     flycheck
-    flycheck-credo
+    ;; flycheck-credo
     ggtags
     ob-elixir
     popwin
@@ -161,7 +161,8 @@
 (defun elixir/post-init-company ()
   ;; backend specific
   (spacemacs|add-company-backends
-    :backends (company-dabbrev-code company-capf)
+    :backends (company-dabbrev-code company-capf company-semantic company-gtags company-etags
+                                    company-keywords company-files)
     :modes elixir-mode)
   (add-hook 'elixir-mode-local-vars-hook #'spacemacs//elixir-setup-company))
 
@@ -177,18 +178,25 @@
     :defer t
     :hook (elixir-mode . spacemacs//elixir-default)
     (elixir-mode-local-vars . spacemacs//elixir-setup-backend)
-    :config(spacemacs/set-leader-keys-for-major-mode 'elixir-mode
-             "=" 'elixir-format
-             "ee" 'spacemacs/elixir-toggle-breakpoint)))
+    :config
+    (add-hook 'elixir-mode-hook
+              (lambda () (modify-syntax-entry ?_ "w")))
+    (spacemacs/set-leader-keys-for-major-mode 'elixir-mode
+      "=" 'elixir-format
+      "ee" 'spacemacs/elixir-toggle-breakpoint)
+    (setq lsp-elixir-suggest-specs nil)
+    (setq lsp-elixir-enable-test-lenses nil)
+    (setq lsp-elixir-dialyzer-enabled nil)
+    (setq lsp-elixir-incremental-dialyzer t)))
 ;; (spacemacs//elixir-setup-alchemist-minimal)))
 
 (defun elixir/post-init-flycheck ()
   (spacemacs/enable-flycheck 'elixir-mode))
 
-(defun elixir/init-flycheck-credo ()
-  (use-package flycheck-credo
-    :defer t
-    :init (add-hook 'flycheck-mode-hook #'flycheck-credo-setup)))
+;; (defun elixir/init-flycheck-credo ()
+;;   (use-package flycheck-credo
+;;     :defer t
+;;     :init (add-hook 'flycheck-mode-hook #'flycheck-credo-setup)))
 
 (defun elixir/post-init-ggtags ()
   (add-hook 'elixir-mode-local-vars-hook #'spacemacs/ggtags-mode-enable))
