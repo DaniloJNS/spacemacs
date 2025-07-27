@@ -9,3 +9,12 @@
   (interactive)
   (if llm-client--gptel-send-called
       (call-interactively 'gptel-abort)))
+
+(defun spacemacs//open-project-llm-chat()
+  (interactive)
+  (let* ((root (projectile-project-root))
+         (llm-path (expand-file-name "LLM.org" root)))
+    (cond
+     ((not root) (user-error "Not in a project"))
+     ((not (file-exists-p llm-path)) (user-error "LLM.org does not exists in project"))
+     (t (find-file llm-path)))))

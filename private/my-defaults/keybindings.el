@@ -19,66 +19,66 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+(defvar my-defaults-global-keybind-list '(
+                                          ;; Windows navigation and resize
+                                          ("C-l" . evil-window-right)
+                                          ("C-h" . evil-window-left)
+                                          ("C-j" . evil-window-down)
+                                          ("C-k" . evil-window-up)
+                                          ("C-o" . treemacs-select-window)
+                                          ("C-p" . ace-window)
+
+                                          ("M-l" . evil-window-increase-width)
+                                          ("M-h" . evil-window-decrease-width)
+                                          ("M-k" . 'evil-window-increase-height)
+                                          ("M-j" . evil-window-decrease-height)
+                                          ("C-<->" . zoom)
+
+                                          ;; Better search experience
+                                          ("gw" . spacemacs/symbol-overlay)
+                                          ("gW" . symbol-overlay-remove-all)
+
+                                          ("C-f" . symbol-overlay-remove-all)
+                                          ("gC"  . symbol-overlay-remove-all)
+                                          ("C-s" . save-buffer)
+
+                                          ("/" . consult-line)
+
+                                          ;; Workspace Management
+                                          ("M-w" . spacemacs/eyebrowse-switch-to-new-window-config)
+                                          ("M-e" . eyebrowse-next-window-config)
+                                          ("M--" . eyebrowse-prev-window-config)
+                                          ("M-q" . spacemacs/eyebrowse-close-window-config)
+                                          ("M-TAB" . eyebrowse-last-window-config)
+
+                                          ;; Toggles
+                                          ("C-q t" . centaur-tabs-mode)
+                                          ("C-q l" . display-line-numbers-mode)
+
+                                          ;; Term
+                                          ("C-d" . my-defaults//toggle-vterm-terminal)
+                                          ))
 
 (with-eval-after-load 'evil
-  ;; WINDOWS MANAGEMENT
-  (evil-global-set-key 'normal (kbd "C-l") 'evil-window-right)
-  (evil-global-set-key 'normal (kbd "C-h") 'evil-window-left)
-  (evil-global-set-key 'normal (kbd "C-j") 'evil-window-down)
-  (evil-global-set-key 'normal (kbd "C-k") 'evil-window-up)
+  (evil-define-key 'normal 'global (kbd "M-<tab>") 'eyebrowse-last-window-config)
+  (evil-define-key 'normal 'global (kbd "C-<tab>") 'consult-buffer)
+  (evil-define-key 'normal 'global (kbd "-") 'zoom)
+  (evil-define-key 'normal 'global (kbd "C--") 'zoom)
 
-  (evil-global-set-key 'normal (kbd "M-l") 'evil-window-increase-width)
-  (evil-global-set-key 'normal (kbd "M-h") 'evil-window-decrease-width)
-  (evil-global-set-key 'normal (kbd "M-k") 'evil-window-increase-height)
-  (evil-global-set-key 'normal (kbd "M-j") 'evil-window-decrease-height)
-  ;; (evil-global-set-key 'normal (kbd "C--") 'golden-ratio)
-  (evil-global-set-key 'normal (kbd "C--") 'zoom)
-  (define-key evil-evilified-state-map (kbd "C--") 'zoom)
-
-  ;; Better search experience
-  (evil-global-set-key 'normal (kbd "gw") 'spacemacs/symbol-overlay)
-  (evil-global-set-key 'normal (kbd "gW") 'symbol-overlay-remove-all)
-
-  (evil-global-set-key 'normal (kbd "C-f") 'symbol-overlay-remove-all)
-  (evil-global-set-key 'normal (kbd "gC") 'symbol-overlay-remove-all)
-  (evil-global-set-key 'normal (kbd "C-s") 'save-buffer)
-
-  (when (configuration-layer/package-used-p 'helm-swoop)
-    (evil-global-set-key 'normal (kbd "/") 'helm-swoop))
-
-  ;; WORKSPACE MANAGEMENT
-  (evil-global-set-key 'normal (kbd "M-w") 'spacemacs/eyebrowse-switch-to-new-window-config)
-  (evil-global-set-key 'normal (kbd "M-e") 'eyebrowse-next-window-config)
-  (evil-global-set-key 'normal (kbd "M--") 'eyebrowse-prev-window-config)
-  (evil-global-set-key 'normal (kbd "M-q") 'spacemacs/eyebrowse-close-window-config)
-
-  ;; Toggles
-  (evil-global-set-key 'normal (kbd "C-q t") 'centaur-tabs-mode)
-  (evil-global-set-key 'normal (kbd "C-q l") 'display-line-numbers-mode)
-  (evil-global-set-key 'normal (kbd "M--") 'eyebrowse-prev-window-config)
-  (evil-global-set-key 'normal (kbd "M-q") 'spacemacs/eyebrowse-close-window-config)
-  ;; (evil-global-set-key 'normal (kbd "zw") 'my-defaults/toggle-fold)
-
-  (when (configuration-layer/package-used-p 'treemacs)
-    (spacemacs|use-package-add-hook treemacs
-      :post-config
-      (evil-define-key 'treemacs treemacs-mode-map (kbd "C-l") #'evil-window-right)
-      (evil-define-key 'treemacs treemacs-mode-map (kbd "C-j") #''evil-window-down)
-      (evil-define-key 'treemacs treemacs-mode-map (kbd "C-'") #'treemacs-select-window)))
-
-
-  (evil-global-set-key 'normal (kbd "C-d") 'my-defaults//toggle-vterm-terminal)
-  (evil-global-set-key 'normal (kbd "C-'") 'treemacs-select-window)
+  (dolist (bind my-defaults-global-keybind-list)
+    (evil-define-key 'normal 'global (kbd (car bind)) (cdr bind))
+    (define-key evil-evilified-state-map (kbd (car bind)) (cdr bind))
+    (define-key evil-motion-state-map (kbd (car bind)) (cdr bind)))
 
   ;; Improve my personal workflow in travel by classes in large projects
   (when (configuration-layer/package-used-p 'lsp-mode)
     (evil-define-key 'normal prog-mode-map (kbd "gr") 'lsp-ui-peek-find-references))
 
-
   ;; TABS
-  (when (configuration-layer/package-used-p 'centaur-tabs)
-    (evil-global-set-key 'normal (kbd "M-[") 'centaur-tabs-forward)
-    (evil-global-set-key 'normal (kbd "M-]") 'centaur-tabs-backward))
+  ;; BUG when running in terminal with ghost escaped input
+  ;; (when (configuration-layer/package-used-p 'centaur-tabs)
+  ;;   (evil-global-set-key 'normal (kbd "M-[") 'nil)
+  ;;   (evil-global-set-key 'normal (kbd "M-]") 'nil))
 
   ;; Magit Keybinds
   (evil-define-key 'normal forge-topic-mode-map (kbd "C-c r") 'code-review-forge-pr-at-point)
@@ -90,21 +90,27 @@
   ;; TODO: Must be define this keybing only in cases where we have ts-fold-mode enabled and the folding method is evi
   (evil-define-key 'normal prog-mode-map (kbd "<TAB>") 'toggle-fold)
   (evil-define-key 'normal prog-mode-map (kbd "gr") 'lsp-ui-peek-find-references)
-  (evil-define-key 'normal prog-mode-map (kbd "gr") 'lsp-ui-peek-find-references)
+  (evil-define-key 'visual prog-mode-map (kbd "gr") 'lsp-ui-peek-find-references)
 
   ;; Custom Org Mode Commands
   (evil-define-key 'normal org-mode-map (kbd "C-=") 'org-fill-paragraph)
   (evil-define-key 'normal org-agenda-mode-map (kbd "\\") 'org-agenda-filter-by-tag)
 
-  ;; Test
-  (evil-global-set-key 'normal (kbd "M-w") 'spacemacs/eyebrowse-switch-to-new-window-config)
-  (evil-global-set-key 'normal (kbd "M-e") 'eyebrowse-next-window-config)
-  (evil-global-set-key 'normal (kbd "M--") 'eyebrowse-prev-window-config)
-  (evil-global-set-key 'normal (kbd "M-q") 'spacemacs/eyebrowse-close-window-config)
   ;; DevDocs
-  (spacemacs/set-leader-keys "ardp" 'devdocs-peruse)
-  (spacemacs/set-leader-keys "ardl" 'devdocs-lookup)
+  (spacemacs/set-leader-keys "adp" 'devdocs-peruse)
+  (spacemacs/set-leader-keys "adl" 'devdocs-lookup)
 
   ;; Dired keybinds
   (evil-define-key 'normal dired-mode-map (kbd "c") 'dired-create-empty-file)
   )
+
+
+;; (defun debug-evil-commands ()
+;;   (when (and (boundp 'evil-state) evil-state)
+;;     (message "Evil State: %s | Command: %s | Keys: %s | Raw Keys: %s"
+;;              evil-state
+;;              this-command
+;;              (key-description (this-command-keys))
+;;              (this-command-keys))))
+
+;; (add-hook 'pre-command-hook 'debug-evil-commands)

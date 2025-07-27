@@ -19,63 +19,32 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-;;; Commentary:
-
-;; See the Spacemacs documentation and FAQs for instructions on how to implement
-;; a new layer:
-;;
-;;   SPC h SPC layers RET
-;;
-;;
-;; Briefly, each package to be installed or configured by this layer should be
-;; added to `my-defaults-packages'. Then, for each package PACKAGE:
-;;
-;; - If PACKAGE is not referenced by any other Spacemacs layer, define a
-;;   function `my-defaults/init-PACKAGE' to load and initialize the package.
-
-;; - Otherwise, PACKAGE is already referenced by another Spacemacs layer, so
-;;   define the functions `my-defaults/pre-init-PACKAGE' and/or
-;;   `my-defaults/post-init-PACKAGE' to customize the package as it is loaded.
-
-;;; Code:
-
 (defconst my-defaults-packages
   '(
     org-roam
-    org
+    org-mode-custom
     ts-fold
     zoom
-    dirvish)
-  "The list of Lisp packages required by the my-defaults layer.
+    (combobulate :location local)
+    xclip
+    ;; (emacs-color-theme-solarized :location (recipe :fetcher github
+    ;;                                                :repo "bbatsov/zenburn-emacs"))
+    dirvish))
 
-Each entry is either:
+(defun my-defaults/init-combobulate ()
+  (use-package combobulate
+    :custom
+    ;; You can customize Combobulate's key prefix here.
+    ;; Note that you may have to restart Emacs for this to take effect!
+    (combobulate-key-prefix "C-c o")
+    :hook ((prog-mode . combobulate-mode))
+    ;; Amend this to the directory where you keep Combobulate's source
+    ;; code.
+    :load-path ("~/workspace/open-source-projects/combobulate")))
 
-1. A symbol, which is interpreted as a package to be installed, or
-
-2. A list of the form (PACKAGE KEYS...), where PACKAGE is the
-    name of the package to be installed or loaded, and KEYS are
-    any number of keyword-value-pairs.
-
-    The following keys are accepted:
-
-    - :excluded (t or nil): Prevent the package from being loaded
-      if value is non-nil
-
-    - :location: Specify a custom installation location.
-      The following values are legal:
-
-      - The symbol `elpa' (default) means PACKAGE will be
-        installed using the Emacs package manager.
-
-      - The symbol `local' directs Spacemacs to load the file at
-        `./local/PACKAGE/PACKAGE.el'
-
-      - A list beginning with the symbol `recipe' is a melpa
-        recipe.  See: https://github.com/milkypostman/melpa#recipe-format")
-
-(defun size-callback ()
-  (cond ((> (frame-pixel-width) 1280) '(0.5 . 0.75))
-        (t                            '(0.5 . 0.5))))
+;; (defun my-defaults/init-emacs-color-theme-solarized ()
+;;   (use-package emacs-color-theme-solarized
+;;     :ensure t))
 
 (defun my-defaults/init-dirvish ()
   (use-package dirvish
@@ -86,10 +55,8 @@ Each entry is either:
     (dirvish-quick-access-entries ; It's a custom option, `setq' won't work
      '(("h" "~/"                          "Home")
        ("d" "~/Downloads/"                "Downloads")
-       ("m" "/mnt/"                       "Drives")
-       ("s" "/ssh:my-remote-server")      "SSH server"
-       ("e" "/sudo:root@localhost:/etc")  "Modify program settings"
-       ("t" "~/.local/share/Trash/files/" "TrashCan")))
+       ("o" "/org" "Org files")
+       ("w" "~/workspace/" "Workspace")))
     :config
     (require 'nerd-icons)
     ;; (dirvish-peek-mode)             ; Preview files in minibuffer
@@ -153,15 +120,15 @@ Each entry is either:
      ("M-e" . dirvish-emerge-menu))))
 
 (defun my-defaults/init-xclip ()
-  (use-package! xclip
-                :config
-                (setq xclip-program "wl-copy")
-                (setq xclip-select-enable-clipboard t)
-                (setq xclip-mode t)
-                (setq xclip-method (quote wl-copy)))
+  (use-package xclip
+    :ensure t
+    :config
+    (setq xclip-program "wl-copy")
+    (setq xclip-select-enable-clipboard t)
+    (setq xclip-mode t)
+    (setq xclip-method (quote wl-copy)))
 
   (setq xclip-select-enable-clipboard t))
-
 
 (defun my-defaults/init-zoom ()
   (use-package zoom
@@ -183,13 +150,11 @@ Each entry is either:
                      "gdb-memory-mode"
                      "ranger-mode"
                      "speedbar-mode"))
-
       (add-to-list 'zoom-ignored-major-modes modes))
     (add-to-list 'zoom-ignored-buffer-name-regexps "^*[hH]elm.*")
     (add-to-list 'zoom-ignored-buffer-name-regexps "^*[tT]reemacs.*")
     (custom-set-variables
-     '(zoom-size (size-callback)))
-    ))
+     '(zoom-size (size-callback)))))
 
 (defun show-buffer-name()
   (interactive)
@@ -214,11 +179,91 @@ Each entry is either:
                                       :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
                                       :unnarrowed t))))
 
-(defun my-defaults/pre-init-org ()
+(defun my-defaults/post-init-org-mode-custom ()
+  ;; ------------------------------------LATEX SETUP ---------------------------------------------------
+  ;; Increase preview width
+  (plist-put org-latex-preview-appearance-options
+             :page-width 1.0)
+  ;; :page-width 0.8)
+  ;; Use native highlighting for =LaTeX=  related syntax in =org= buffers.
+  ;; By using native highlighting the =org-face= gets added which we want to avoid.
+  (setq org-highlight-latex-and-related '(native script))
+
+  ;; ;; Use dvisvgm to generate previews
+  ;; ;; You don't need this, it's the default:
+  ;; (setq org-latex-preview-process-default 'dvisvgm)
+
+  ;; Turn on auto-mode, it's built into Org and much faster/more featured than
+  ;; org-fragtog. (Remember to turn off/uninstall org-fragtog.)
+  (add-hook 'org-mode-hook 'org-latex-preview-auto-mode)
+  ;; Enable `evil-tex-mode` in LaTeX source blocks. Requires latex and evil enabled
+  (add-hook 'org-src-mode-hook
+            (when (string= major-mode "latex-mode")
+              (evil-tex-mode 1)))
+
+  (dolist (pkg '("amsmath" "amssymb" "mathtools" "mathrsfs"))
+    (add-to-list 'org-latex-packages-alist `("" ,pkg t)))
+
+  ;; ;; Block C-n, C-p etc from opening up previews when using auto-mode
+  ;; (setq org-latex-preview-auto-ignored-commands
+  ;;       '(next-line previous-line mwheel-scroll
+  ;;         scroll-up-command scroll-down-command))
+
+  ;; Enable consistent equation numbering
+  (setq org-latex-preview-numbered t)
+
+  ;; Bonus: Turn on live previews.  This shows you a live preview of a LaTeX
+  ;; fragment and updates the preview in real-time as you edit it.
+  ;; To preview only environments, set it to '(block edit-special) instead
+  (setq org-latex-preview-live t)
+  (setq org-latex-preview-numbered t)
+
+  ;; More immediate live-previews -- the default delay is 1 second
+  (setq org-latex-preview-live-debounce 0.25)
+
+  (setq org-latex-preview-auto-ignored-commands
+        '(next-line previous-line mwheel-scroll ultra-scroll
+                    scroll-up-command scroll-down-command
+                    evil-scroll-up evil-scroll-down evil-scroll-line-up evil-scroll-line-down))
+
+  (defun my/org-latex-preview-uncenter (ov)
+    (overlay-put ov 'before-string nil))
+  (defun my/org-latex-preview-recenter (ov)
+    (overlay-put ov 'before-string (overlay-get ov 'justify)))
+  (defun my/org-latex-preview-center (ov)
+    (save-excursion
+      (goto-char (overlay-start ov))
+      (when-let* ((elem (org-element-context))
+                  ((or (eq (org-element-type elem) 'latex-environment)
+                       (string-match-p "^\\\\\\[" (org-element-property :value elem))))
+                  (img (overlay-get ov 'display))
+                  (prop `(space :align-to (- center (0.55 . ,img))))
+                  (justify (propertize " " 'display prop 'face 'default)))
+        (overlay-put ov 'justify justify)
+        (overlay-put ov 'before-string (overlay-get ov 'justify)))))
+  (define-minor-mode org-latex-preview-center-mode
+    "Center equations previewed with `org-latex-preview'."
+    :global nil
+    (if org-latex-preview-center-mode
+        (progn
+          (add-hook 'org-latex-preview-overlay-open-functions
+                    #'my/org-latex-preview-uncenter nil :local)
+          (add-hook 'org-latex-preview-overlay-close-functions
+                    #'my/org-latex-preview-recenter nil :local)
+          (add-hook 'org-latex-preview-overlay-update-functions
+                    #'my/org-latex-preview-center nil :local))
+      (remove-hook 'org-latex-preview-overlay-close-functions
+                   #'my/org-latex-preview-recenter)
+      (remove-hook 'org-latex-preview-overlay-update-functions
+                   #'my/org-latex-preview-center)
+      (remove-hook 'org-latex-preview-overlay-open-functions
+                   #'my/org-latex-preview-uncenter)))
+  ;; ------------------------------------LATEX SETUP ---------------------------------------------------
+
   ;; Sets the maximum width that each line must have in a paragraph when adjusted by org-fill-paragraph
   (add-hook 'org-mode-hook
             (lambda ()
-              (setq-local fill-column 160)))
+              (setq-local fill-column 120)))
   ;; Configure TODO behavior
   ;; When using a hierarchical TODO, that is, a task that is linked to several subtasks (children),
   ;; it prevents this task from being moved to completed until all of its children are completed.
@@ -345,6 +390,85 @@ Each entry is either:
                           ;; Work Log Tags
                           ("accomplishment" . ?a)
                           ))
+    ;; Do not dim blocked tasks
+    (setq org-agenda-dim-blocked-tasks nil)
+
+    ;; Compact the block agenda view
+    (setq org-agenda-compact-blocks t)
+
+    ;; Custom agenda command definitions
+    (setq org-agenda-custom-commands
+          (quote (("N" "Notes" tags "NOTE"
+                   ((org-agenda-overriding-header "Notes")
+                    (org-tags-match-list-sublevels t)))
+                  ("h" "Habits" tags-todo "STYLE=\"habit\""
+                   ((org-agenda-overriding-header "Habits")
+                    (org-agenda-sorting-strategy
+                     '(todo-state-down effort-up category-keep))))
+                  ("b" "Agenda"
+                   ((agenda "" nil)
+                    (tags "REFILE"
+                          ((org-agenda-overriding-header "Tasks to Refile")
+                           (org-tags-match-list-sublevels nil)))
+                    (tags-todo "-CANCELLED/!"
+                               ((org-agenda-overriding-header "Stuck Projects")
+                                (org-agenda-skip-function 'my-defaults//skip-non-stuck-projects)
+                                (org-agenda-sorting-strategy
+                                 '(category-keep))))
+                    (tags-todo "-HOLD-CANCELLED/!"
+                               ((org-agenda-overriding-header "Projects")
+                                (org-agenda-skip-function 'my-defaults//skip-non-projects)
+                                (org-tags-match-list-sublevels 'indented)
+                                (org-agenda-sorting-strategy
+                                 '(category-keep))))
+                    (tags-todo "-CANCELLED/!NEXT"
+                               ((org-agenda-overriding-header (concat "Project Next Tasks"
+                                                                      (if my-defaults//hide-scheduled-and-waiting-next-tasks
+                                                                          ""
+                                                                        " (including WAITING and SCHEDULED tasks)")))
+                                (org-agenda-skip-function 'my-defaults//skip-projects-and-habits-and-single-tasks)
+                                (org-tags-match-list-sublevels t)
+                                (org-agenda-todo-ignore-scheduled my-defaults//hide-scheduled-and-waiting-next-tasks)
+                                (org-agenda-todo-ignore-deadlines my-defaults//hide-scheduled-and-waiting-next-tasks)
+                                (org-agenda-todo-ignore-with-date my-defaults//hide-scheduled-and-waiting-next-tasks)
+                                (org-agenda-sorting-strategy
+                                 '(todo-state-down effort-up category-keep))))
+                    (tags-todo "-REFILE-CANCELLED-WAITING-HOLD/!"
+                               ((org-agenda-overriding-header (concat "Project Subtasks"
+                                                                      (if my-defaults//hide-scheduled-and-waiting-next-tasks
+                                                                          ""
+                                                                        " (including WAITING and SCHEDULED tasks)")))
+                                (org-agenda-skip-function 'my-defaults//skip-non-project-tasks)
+                                (org-agenda-todo-ignore-scheduled my-defaults//hide-scheduled-and-waiting-next-tasks)
+                                (org-agenda-todo-ignore-deadlines my-defaults//hide-scheduled-and-waiting-next-tasks)
+                                (org-agenda-todo-ignore-with-date my-defaults//hide-scheduled-and-waiting-next-tasks)
+                                (org-agenda-sorting-strategy
+                                 '(category-keep))))
+                    (tags-todo "-REFILE-CANCELLED-WAITING-HOLD/!"
+                               ((org-agenda-overriding-header (concat "Standalone Tasks"
+                                                                      (if my-defaults//hide-scheduled-and-waiting-next-tasks
+                                                                          ""
+                                                                        " (including WAITING and SCHEDULED tasks)")))
+                                (org-agenda-skip-function 'my-defaults//skip-project-tasks)
+                                (org-agenda-todo-ignore-scheduled my-defaults//hide-scheduled-and-waiting-next-tasks)
+                                (org-agenda-todo-ignore-deadlines my-defaults//hide-scheduled-and-waiting-next-tasks)
+                                (org-agenda-todo-ignore-with-date my-defaults//hide-scheduled-and-waiting-next-tasks)
+                                (org-agenda-sorting-strategy
+                                 '(category-keep))))
+                    (tags-todo "-CANCELLED+WAITING|HOLD/!"
+                               ((org-agenda-overriding-header (concat "Waiting and Postponed Tasks"
+                                                                      (if my-defaults//hide-scheduled-and-waiting-next-tasks
+                                                                          ""
+                                                                        " (including WAITING and SCHEDULED tasks)")))
+                                (org-agenda-skip-function 'my-defaults//skip-non-tasks)
+                                (org-tags-match-list-sublevels nil)
+                                (org-agenda-todo-ignore-scheduled my-defaults//hide-scheduled-and-waiting-next-tasks)
+                                (org-agenda-todo-ignore-deadlines my-defaults//hide-scheduled-and-waiting-next-tasks)))
+                    (tags "-REFILE/"
+                          ((org-agenda-overriding-header "Tasks to Archive")
+                           (org-agenda-skip-function 'my-defaults//skip-non-archivable-tasks)
+                           (org-tags-match-list-sublevels nil))))
+                   nil))))
     ;; Must do this so the agenda knows where to look for my files
     (setq org-agenda-files '("~/org" "~/Documentos/org-roam" "~/.org-jira" "~/org/rebase/infleet" "~/org/personal"))
 
@@ -364,6 +488,7 @@ Each entry is either:
                                      (org-agenda-files :maxlevel . 9))))
                                         ; Use full outline paths for refile targets - we file directly with IDO
     (setq org-refile-use-outline-path t)
+
                                         ; Targets complete directly with IDO
     (setq org-outline-path-complete-in-steps nil)
                                         ; Use the current window for indirect buffer display
