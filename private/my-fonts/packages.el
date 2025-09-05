@@ -61,6 +61,7 @@
   ;; Read the manual: <https://protesilaos.com/emacs/fontaine>
   (use-package fontaine
     :ensure t
+    :defer t
     ;; Load only if emacs is running in GUI mode
     :if (display-graphic-p)
     :custom
@@ -99,8 +100,20 @@
         :variable-pitch-family "Iosevka Comfy Wide Duo"
         :variable-pitch-height 120)
 
+       (DejavuSansMono
+        :default-family "Dejavu Sans Mono"
+        :default-height 120
+        :default-weight regular
+
+        :fixed-pitch-family "Dejavu Sans Mono"
+        :fixed-pitch-weight regular
+        :fixed-pitch-height 120
+
+        :variable-pitch-family "Iosevka Comfy Wide Duo"
+        :variable-pitch-height 120)
+
        (JetBrainsMono
-        :default-family "JetBrainsMono Nerd Font"
+        :default-family "JetBrainsMonoNL Nerd Font"
         :default-height 120
         :default-weight regular
 
@@ -111,6 +124,42 @@
         :variable-pitch-family "Iosevka Comfy Wide Duo"
         :variable-pitch-height 120)
 
+       (SourceCode
+        :default-family "Source Code Pro"
+        :default-height 120
+        :default-weight regular
+
+        :fixed-pitch-family "Source Code Pro"
+        :fixed-pitch-weight regular
+        :fixed-pitch-height 120
+
+        :variable-pitch-family "Iosevka Comfy Wide Duo"
+        :variable-pitch-height 120)
+
+       (SourceCode
+        :default-family "Source Code Pro"
+        :default-height 120
+        :default-weight regular
+
+        :fixed-pitch-family "Source Code Pro"
+        :fixed-pitch-weight regular
+        :fixed-pitch-height 120
+
+        :variable-pitch-family "Iosevka Comfy Wide Duo"
+        :variable-pitch-height 120)
+
+       (FiraCode
+        :default-family "Fira Code"
+        :default-height 120
+        :default-weight regular
+
+        :fixed-pitch-family "Fira Code"
+        :fixed-pitch-weight regular
+        :fixed-pitch-height 120
+
+        :variable-pitch-family "Iosevka Comfy Wide Motion"
+        :variable-pitch-height 120)
+
        (MonaspaceNeon
         :default-family "Monaspace Neon"
         :default-height 120
@@ -118,6 +167,30 @@
 
         :fixed-pitch-family "Monaspace Neon"
         :fixed-pitch-weight regular
+        :fixed-pitch-height 120
+
+        :variable-pitch-family "Iosevka Comfy Wide Motion"
+        :variable-pitch-height 120)
+
+       (MonaspaceNeonIosevkaDuo
+        :default-family "Monaspace Neon"
+        :default-height 120
+        :default-weight regular
+
+        :fixed-pitch-family "Monaspace Neon"
+        :fixed-pitch-weight regular
+        :fixed-pitch-height 120
+
+        :variable-pitch-family "Iosevka Comfy Wide Duo"
+        :variable-pitch-height 120)
+
+       (NaruMonoDemo
+        :default-family "Naru Mono Demo"
+        :default-height 120
+        :default-weight bold
+
+        :fixed-pitch-family "Naru Mono Demo"
+        :fixed-pitch-weight bold
         :fixed-pitch-height 120
 
         :variable-pitch-family "Iosevka Comfy Wide Duo"
@@ -167,12 +240,12 @@
     :bind (("C-c f" . fontaine-set-preset)
            ("C-c F" . fontaine-toggle-preset))
     :config
-    (fontaine-mode)
 
     ;; Set the last preset or fall back to desired style from `fontaine-presets'
     ;; (the `medium' in this case).
-    (fontaine-set-preset (or (fontaine-restore-latest-preset) 'medium))
-    ;; (fontaine-set-preset 'medium)
+
+    (fontaine-mode)
+    (fontaine-set-preset 'medium)
 
     ;; This sets the default font on all graphical frames created after restarting Emacs
     ;; Does the same thing as 'set-face-attribute default' above, but emacsclient fonts
@@ -181,7 +254,8 @@
 
     ;; Persist the latest font preset when closing/starting Emacs and
     ;; while switching between themes.
-    (add-hook 'enable-theme-functions #'fontaine-apply-current-preset)
+    ;; (add-hook 'enable-theme-functions #'fontaine-apply-current-preset)
+    (add-hook 'enable-theme-functions (lambda () (fontaine-set-preset 'medium)))
 
     ;; Makes comments text and keywords italics
     ;; This is working in emacsclient but not emacs.

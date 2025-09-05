@@ -24,12 +24,18 @@
     org-roam
     org-mode-custom
     ts-fold
+    ;; Mode used for eww config files
+    yuck-mode
     zoom
     (combobulate :location local)
     xclip
     ;; (emacs-color-theme-solarized :location (recipe :fetcher github
     ;;                                                :repo "bbatsov/zenburn-emacs"))
     dirvish))
+
+(defun my-defaults/init-yuck-mode ()
+  (use-package yuck-mode
+    :ensure t))
 
 (defun my-defaults/init-combobulate ()
   (use-package combobulate
