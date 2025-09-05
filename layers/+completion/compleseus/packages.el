@@ -1,6 +1,6 @@
-;;; packages.el --- compleseus layer packages file for Spacemacs.
+;;; packages.el --- compleseus layer packages file for Spacemacs.  -*- lexical-binding: nil; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Thanh Vuong <thanhvg@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -299,6 +299,9 @@
     (define-key embark-file-map "s" 'spacemacs/compleseus-search-from)
     (define-key embark-buffer-map "s" #'spacemacs/embark-consult-line-multi)
     (add-to-list 'embark-multitarget-actions #'spacemacs/embark-consult-line-multi)
+    ;; Allow using `embark-select' and `embark-act-all' instead of CRM to select packages
+    ;; to update in `configuration-layer/update-packages'.
+    (add-to-list 'embark-multitarget-actions 'configuration-layer/select-packages-to-update)
     (defvar spacemacs-embark-layer-map
       (let ((map (make-sparse-keymap)))
         (set-keymap-parent map embark-general-map)

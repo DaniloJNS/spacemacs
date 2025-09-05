@@ -3,20 +3,20 @@
           #s(hash-table test equal data
                         (#s(elfeed-score-title-or-content-rule "postgres" 150
                                                                150 s nil nil nil)
-                           #s(elfeed-score-rule-stats 129 1748040474.8135304)
+                           #s(elfeed-score-rule-stats 135 1754363081.6192923)
                            #s(elfeed-score-authors-rule "Marc Brooker" 1000 s
                                                         nil nil nil)
                            #s(elfeed-score-rule-stats 48 1747820445.9030383)
                            #s(elfeed-score-feed-rule
                               "https://notes.eatonphil.com/rss.xml" 100 s u nil
                               nil)
-                           #s(elfeed-score-rule-stats 68 1752456153.9791045)
+                           #s(elfeed-score-rule-stats 69 1754363081.6191146)
                            #s(elfeed-score-title-or-content-rule
                               "software design" 150 150 w nil nil nil)
                            #s(elfeed-score-rule-stats 6 1752456150.7813082)
                            #s(elfeed-score-feed-rule
                               "https://www.thecoder.cafe/feed" 500 s u nil nil)
-                           #s(elfeed-score-rule-stats 86 1752456150.781676)
+                           #s(elfeed-score-rule-stats 87 1754363077.4462173)
                            #s(elfeed-score-feed-rule
                               "https://eregon.me/blog/feed.xml" 1300 s u nil nil)
                            #s(elfeed-score-rule-stats 6 1747276792.9451933))))

@@ -1,6 +1,6 @@
-;;; funcs.el --- mu4e Layer functions File for Spacemacs
+;;; funcs.el --- mu4e Layer functions File for Spacemacs  -*- lexical-binding: nil; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -35,3 +35,13 @@
     (or (mu4e-message-contact-field-matches msg :to rx)
         (mu4e-message-contact-field-matches msg :cc rx)
         (mu4e-message-contact-field-matches msg :bcc rx))))
+
+(defun mu4e/headers-mark-thread-read ()
+  "Mark all messages in the thread as read."
+  (interactive)
+  (mu4e-headers-mark-thread nil '(read)))
+
+(defun mu4e/view-mark-thread-read ()
+  "Mark all messages in the thread as read."
+  (interactive)
+  (mu4e-view-mark-thread '(read)))

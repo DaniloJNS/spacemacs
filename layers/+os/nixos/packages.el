@@ -1,6 +1,6 @@
-;;; packages.el --- NixOS Layer packages File for Spacemacs
+;;; packages.el --- NixOS Layer packages File for Spacemacs  -*- lexical-binding: nil; -*-
 ;;
-;; Copyright (c) 2015-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2015-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -22,19 +22,19 @@
 
 
 (defconst nixos-packages
-  '((company-nixos-options :requires company)
-     flycheck
-     (helm-nixos-options :requires helm)
-     nix-mode
-     nixos-options))
+  '((company-nixos-options :requires (company nixos-options))
+    flycheck
+    (helm-nixos-options :requires (helm nixos-options))
+    nix-mode
+    nixos-options))
 
 (defun nixos/post-init-company ()
   (let ((backends '(company-capf)))
     (when (configuration-layer/package-used-p 'company-nixos-options)
       (add-to-list 'backends 'company-nixos-options t))
     (eval `(spacemacs|add-company-backends
-              :backends ,backends
-              :modes nix-mode))))
+            :backends ,backends
+            :modes nix-mode))))
 
 (defun nixos/init-company-nixos-options ()
   (use-package company-nixos-options

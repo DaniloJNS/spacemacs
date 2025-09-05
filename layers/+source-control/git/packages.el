@@ -1,6 +1,6 @@
-;;; packages.el --- Git Layer packages File for Spacemacs
+;;; packages.el --- Git Layer packages File for Spacemacs  -*- lexical-binding: nil; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -37,7 +37,6 @@
     git-messenger
     git-timemachine
     golden-ratio
-    (helm-git-grep :requires helm)
     magit
     (magit-delta :toggle git-enable-magit-delta-plugin)
     (magit-gitflow :toggle git-enable-magit-gitflow-plugin)
@@ -148,13 +147,12 @@
 
 (defun git/init-magit ()
   (use-package magit
-    :defer (spacemacs/defer)
+    :defer t
     :custom (magit-bury-buffer-function #'magit-restore-window-configuration)
     :init
     (when git-magit-buffers-useless
       (cl-pushnew "magit: .*" spacemacs-useless-buffers-regexp :test 'equal)
       (cl-pushnew "magit-.*: .*"  spacemacs-useless-buffers-regexp :test 'equal))
-    (spacemacs|require-when-dumping 'magit)
     (setq magit-revision-show-gravatars '("^Author:     " . "^Commit:     "))
     ;; On Windows, we must use Git GUI to enter username and password
     ;; See: https://github.com/magit/magit/wiki/FAQ#windows-cannot-push-via-https
@@ -173,8 +171,8 @@
       "gL"  'magit-list-repositories
       "gm"  'magit-dispatch
       "gs"  'magit-status
-      "gS"  'magit-stage-file
-      "gU"  'magit-unstage-file)
+      "gS"  'magit-stage-files
+      "gU"  'magit-unstage-files)
     (spacemacs|define-transient-state git-blame
       :title "Git Blame Transient State"
       :hint-is-doc t

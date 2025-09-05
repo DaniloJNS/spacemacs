@@ -1,8 +1,8 @@
-;;; funcs.el --- Smex Layer functions File for Spacemacs
+;;; funcs.el --- Claude Code Layer functions File for Spacemacs  -*- lexical-binding: t; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
-;; Author: Sylvain Benner <sylvain.benner@gmail.com>
+;; Author: sunlin7 <sunlin7 AT hotmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
 ;;
 ;; This file is not part of GNU Emacs.
@@ -21,14 +21,14 @@
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-(defun spacemacs/smex ()
-  "Execute smex with a better prompt."
+(defun spacemacs/claude-code-explain-symbol-at-point ()
+  "Send a question about the symbol at point to Claude Code."
   (interactive)
-  (let ((smex-prompt-string "Emacs commands: "))
-    (smex)))
+  (if-let* ((symbol (thing-at-point 'symbol t)))
+      (cl-letf (((symbol-function 'read-string)
+                 (lambda (&rest args)
+                   (format "What does %s do?" symbol))))
+        (claude-code-ide-send-prompt))
+    (message "No symbol at point")))
 
-(defun spacemacs/smex-major-mode-commands ()
-  "Reexecute smex with major mode commands only."
-  (interactive)
-  (let ((smex-prompt-string (format "%s commands: " major-mode)))
-    (smex-major-mode-commands)))
+

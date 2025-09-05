@@ -1,6 +1,6 @@
-;;; config.el --- Python Layer Configuration File for Spacemacs
+;;; config.el --- Python Layer Configuration File for Spacemacs  -*- lexical-binding: nil; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -51,7 +51,7 @@ If `nil' then `anaconda' is the default backend unless the `lsp' layer is used."
            (eq python-lsp-server 'pylsp))
       'lsp
     'yapf)
-  "The formatter to use. Possible values are `yapf', `black' and `lsp'.
+  "The formatter to use. Possible values are `yapf', `black', `ruff' and `lsp'.
 The default formatter is `yapf' unless both the `lsp' layer is used,
 and `python-lsp-server' is `pylsp' (pyright does not support formatting).")
 
@@ -87,6 +87,10 @@ Possible values are `on-visit', `on-project-switch' or `nil'.")
 
 (defvar python-sort-imports-on-save nil
   "If non-nil, automatically sort imports on save.")
+(put 'python-sort-imports-on-save 'safe-local-variable 'booleanp)
+
+(defvar python-virtualenv-management 'pyvenv
+  "The management backend for virtualenv, Possible value is `pet' or `pyvenv'")
 
 (defvar python-enable-importmagic nil
   "If non-nil, enable the importmagic feature.")

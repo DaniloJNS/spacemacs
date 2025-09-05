@@ -1,6 +1,6 @@
-;;; packages.el --- Ivy Layer packages File
+;;; packages.el --- Ivy Layer packages File  -*- lexical-binding: nil; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -45,7 +45,7 @@
         persp-mode
         projectile
         recentf
-        smex
+        amx
         swiper
         wgrep
         ))
@@ -161,11 +161,6 @@
     (dolist (command '(counsel-org-goto counsel-imenu spacemacs/counsel-jump-in-buffer))
       (evil-add-command-properties command :jump t))
 
-    (when (or (eq 'vim dotspacemacs-editing-style)
-              (and (eq 'hybrid dotspacemacs-editing-style)
-                   hybrid-style-enable-hjkl-bindings))
-      (define-key counsel-find-file-map (kbd "C-h") 'counsel-up-directory))
-
     (define-key read-expression-map (kbd "C-r") 'counsel-minibuffer-history)
     (spacemacs//counsel-search-add-extra-bindings counsel-ag-map)
     ;; remaps built-in commands that have a counsel replacement
@@ -238,14 +233,14 @@
       "bb" 'ivy-switch-buffer)
     ;; Common Ctrl-TAB buffer switch behavior
     (with-eval-after-load 'evil
-      (evil-global-set-key 'motion (kbd "<C-tab>") 'ivy-switch-buffer)
-      (evil-global-set-key 'motion (kbd "<C-iso-lefttab>") 'ivy-switch-buffer))
-    (define-key ivy-mode-map (kbd "<C-tab>") 'ivy-next-line-and-call)
-    (define-key ivy-mode-map (kbd "<C-iso-lefttab>") 'ivy-previous-line-and-call)
+      (evil-global-set-key 'motion (kbd "C-<tab>") 'ivy-switch-buffer)
+      (evil-global-set-key 'motion (kbd "C-<iso-lefttab>") 'ivy-switch-buffer))
+    (define-key ivy-mode-map (kbd "C-<tab>") 'ivy-next-line-and-call)
+    (define-key ivy-mode-map (kbd "C-<iso-lefttab>") 'ivy-previous-line-and-call)
     ;; Moved C-k to C-M-k
     (define-key ivy-switch-buffer-map (kbd "C-M-k") 'ivy-switch-buffer-kill)
     (define-key ivy-reverse-i-search-map
-      (kbd "C-M-k") 'ivy-reverse-i-search-kill)
+                (kbd "C-M-k") 'ivy-reverse-i-search-kill)
     :config
     ;; custom actions for recentf
     (ivy-set-actions
@@ -405,10 +400,14 @@
   ;; merge recentf and bookmarks into buffer switching. If we set this
   (setq ivy-use-virtual-buffers t))
 
-(defun ivy/init-smex ()
-  (use-package smex
+(defun ivy/init-amx ()
+  (use-package amx
     :defer t
-    :init (setq-default smex-history-length 32
+    :init (setq-default amx-history-length 32
+                        amx-save-file (concat spacemacs-cache-directory
+                                              ".amx-items")
+                        ;; Set `smex-save-file' so that `amx' can migrate any
+                        ;; existing history.  See `amx-load-save-file'.
                         smex-save-file (concat spacemacs-cache-directory
                                                ".smex-items"))))
 

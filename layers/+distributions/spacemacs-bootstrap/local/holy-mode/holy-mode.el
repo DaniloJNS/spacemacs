@@ -1,6 +1,6 @@
-;;; holy-mode.el --- Enter the church of Emacs
+;;; holy-mode.el --- Enter the church of Emacs  -*- lexical-binding: nil; -*-
 
-;; Copyright (c) 2015-2024 Sylvain Benner
+;; Copyright (c) 2015-2025 Sylvain Benner
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; Keywords: convenience editing

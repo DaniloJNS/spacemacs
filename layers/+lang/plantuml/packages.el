@@ -1,6 +1,6 @@
-;;; packages.el --- plantuml layer packages file for Spacemacs.
+;;; packages.el --- plantuml layer packages file for Spacemacs.  -*- lexical-binding: nil; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Robert O'Connor <robby.oconnor@gmail.com>
 ;; Contributor: Carlo Sciolla <carlo.sciolla@gmail.com>

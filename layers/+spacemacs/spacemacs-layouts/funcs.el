@@ -1,6 +1,6 @@
 ;;; funcs.el --- Spacemacs Layouts Layer functions File -*- lexical-binding: t; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -44,8 +44,8 @@
 (defun spacemacs//layout-wait-for-modeline (&rest _)
   "Assure the mode-line is loaded before restoring the layouts."
   (advice-remove 'persp-load-state-from-file 'spacemacs//layout-wait-for-modeline)
-  (when (and (configuration-layer/package-used-p 'spaceline)
-             (memq (spacemacs/get-mode-line-theme-name) '(spacemacs all-the-icons custom)))
+  (when (and (configuration-layer/layer-used-p 'spacemacs-modeline)
+             (spacemacs//enable-spaceline-p))
     (require 'spaceline-config)))
 
 (defun spacemacs//current-layout-name ()
@@ -445,18 +445,18 @@ just switch to it."
 
 (defun spacemacs//helm-perspectives-source ()
   (helm-build-in-buffer-source
-      (concat "Current Perspective: " (spacemacs//current-layout-name))
-    :data (persp-names)
-    :fuzzy-match t
-    :action
-    '(("Switch to perspective" . persp-switch)
-      ("Close perspective(s)" . (lambda (candidate)
-                                  (mapcar
-                                   'persp-kill-without-buffers
-                                   (helm-marked-candidates))))
-      ("Kill perspective(s)" . (lambda (candidate)
-                                 (mapcar 'persp-kill
-                                         (helm-marked-candidates)))))))
+   (concat "Current Perspective: " (spacemacs//current-layout-name))
+   :data (persp-names)
+   :fuzzy-match t
+   :action
+   '(("Switch to perspective" . persp-switch)
+     ("Close perspective(s)" . (lambda (candidate)
+                                 (mapcar
+                                  'persp-kill-without-buffers
+                                  (helm-marked-candidates))))
+     ("Kill perspective(s)" . (lambda (candidate)
+                                (mapcar 'persp-kill
+                                        (helm-marked-candidates)))))))
 (defun spacemacs/helm-perspectives ()
   "Control Panel for perspectives. Has many actions.
 If match is found
@@ -475,13 +475,13 @@ perspectives does."
    :sources
    `(,(spacemacs//helm-perspectives-source)
      ,(helm-build-dummy-source "Create new perspective"
-        :action
-        '(("Create new perspective" .
-           spacemacs//create-persp-with-home-buffer)
-          ("Create new perspective with buffers from current project" .
-           spacemacs//create-persp-with-current-project-buffers)
-          ("Create new perspective with buffers from current perspective" .
-           persp-copy))))))
+                               :action
+                               '(("Create new perspective" .
+                                  spacemacs//create-persp-with-home-buffer)
+                                 ("Create new perspective with buffers from current project" .
+                                  spacemacs//create-persp-with-current-project-buffers)
+                                 ("Create new perspective with buffers from current perspective" .
+                                  persp-copy))))))
 
 ;; ability to use helm find files but also adds to current perspective
 (defun spacemacs/helm-persp-close ()
@@ -491,14 +491,14 @@ perspectives does."
    :buffer "*Helm Kill Perspectives (without killing buffers)*"
    :sources
    (helm-build-in-buffer-source
-       (concat "Current Perspective: " (spacemacs//current-layout-name))
-     :data (persp-names)
-     :fuzzy-match t
-     :action
-     '(("Close perspective(s)" . (lambda (candidate)
-                                   (mapcar
-                                    'persp-kill-without-buffers
-                                    (helm-marked-candidates))))))))
+    (concat "Current Perspective: " (spacemacs//current-layout-name))
+    :data (persp-names)
+    :fuzzy-match t
+    :action
+    '(("Close perspective(s)" . (lambda (candidate)
+                                  (mapcar
+                                   'persp-kill-without-buffers
+                                   (helm-marked-candidates))))))))
 
 (defun spacemacs/helm-persp-kill ()
   "Kills perspectives with all their buffers"
@@ -506,15 +506,15 @@ perspectives does."
   (helm
    :buffer "*Helm Kill Perspectives with all their buffers*"
    :sources (helm-build-in-buffer-source
-                (s-concat "Current Perspective: "
-                          (spacemacs//current-layout-name))
-              :data (persp-names)
-              :fuzzy-match t
-              :action
-              '(("Kill perspective(s)" .
-                 (lambda (candidate)
-                   (mapcar 'persp-kill
-                           (helm-marked-candidates))))))))
+             (s-concat "Current Perspective: "
+                       (spacemacs//current-layout-name))
+             :data (persp-names)
+             :fuzzy-match t
+             :action
+             '(("Kill perspective(s)" .
+                (lambda (candidate)
+                  (mapcar 'persp-kill
+                          (helm-marked-candidates))))))))
 
 (defun spacemacs//helm-persp-switch-project-action (project)
   "Default action for `spacemacs/helm-persp-switch-project'."
@@ -523,6 +523,16 @@ perspectives does."
           (helm-quit-hook (append helm-quit-hook
                                   (lambda ()
                                     (persp-kill-without-buffers project)))))
+      ;; HACK Fixes the bug reported in
+      ;; https://github.com/syl20bnr/spacemacs/issues/17074#issuecomment-3134120413.
+      ;; `helm-projectile' is invoked as our `projectile-switch-project-action'.
+      ;; It tries to determine the project through `projectile-acquire-root'
+      ;; within `with-helm-current-buffer', but this fails for buffers that are
+      ;; not part of the project. As a workaround we preemptively switch to one of
+      ;; the project's buffers here.
+      (when (eq projectile-switch-project-action 'helm-projectile)
+        (let ((project-buffers (projectile-project-buffers (expand-file-name project))))
+          (switch-to-buffer (or (car project-buffers) (dired project)))))
       (projectile-switch-project-by-name project))))
 
 (defun spacemacs//helm-persp-switch-project-action-maker (project-action)
@@ -543,32 +553,32 @@ Run PROJECT-ACTION on project."
   (helm
    :sources
    (helm-build-in-buffer-source "*Helm Switch Project Layout*"
-     :data (lambda ()
-             (if (projectile-project-p)
-                 (cons (abbreviate-file-name (projectile-project-root))
-                       (projectile-relevant-known-projects))
-               projectile-known-projects))
-     :fuzzy-match helm-projectile-fuzzy-match
-     :mode-line helm-read-file-name-mode-line-string
-     :keymap (let ((map (make-sparse-keymap)))
-               (define-key map
-                           (kbd "C-d") (lambda () (interactive)
-                                         (helm-exit-and-execute-action
-                                          (lambda (project)
-                                            (spacemacs||switch-project-persp project
-                                              (dired project))))))
-               map)
-     :action `(("Switch to Project Perspective" .
-                spacemacs//helm-persp-switch-project-action)
-               ("Switch to Project Perspective and Open Dired `C-d'" .
-                ,(spacemacs//helm-persp-switch-project-action-maker
-                  (lambda () (dired "."))))
-               ("Switch to Project Perspective and Show Recent Files" .
-                ,(spacemacs//helm-persp-switch-project-action-maker
-                  'helm-projectile-recentf))
-               ("Switch to Project Perspective and Search" .
-                ,(spacemacs//helm-persp-switch-project-action-maker
-                  'spacemacs/helm-project-smart-do-search))))
+                                :data (lambda ()
+                                        (if (projectile-project-p)
+                                            (cons (abbreviate-file-name (projectile-project-root))
+                                                  (projectile-relevant-known-projects))
+                                          projectile-known-projects))
+                                :fuzzy-match helm-projectile-fuzzy-match
+                                :mode-line helm-read-file-name-mode-line-string
+                                :keymap (let ((map (make-sparse-keymap)))
+                                          (define-key map
+                                                      (kbd "C-d") (lambda () (interactive)
+                                                                    (helm-exit-and-execute-action
+                                                                     (lambda (project)
+                                                                       (spacemacs||switch-project-persp project
+                                                                         (dired project))))))
+                                          map)
+                                :action `(("Switch to Project Perspective" .
+                                           spacemacs//helm-persp-switch-project-action)
+                                          ("Switch to Project Perspective and Open Dired `C-d'" .
+                                           ,(spacemacs//helm-persp-switch-project-action-maker
+                                             (lambda () (dired "."))))
+                                          ("Switch to Project Perspective and Show Recent Files" .
+                                           ,(spacemacs//helm-persp-switch-project-action-maker
+                                             'helm-projectile-recentf))
+                                          ("Switch to Project Perspective and Search" .
+                                           ,(spacemacs//helm-persp-switch-project-action-maker
+                                             'spacemacs/helm-project-smart-do-search))))
    :buffer "*Helm Projectile Layouts*"))
 
 (defun spacemacs//make-helm-list-reorder-fn (fn)
@@ -896,13 +906,14 @@ graphical frames, and one set for terminal frames."
     (--zip-with (set-persp-parameter it other persp)
                 param-names workspace-params)))
 
-(defun spacemacs/load-eyebrowse-for-perspective (type &optional frame)
+(defun spacemacs/load-eyebrowse-for-perspective (type &optional frame persp)
   "Load an eyebrowse workspace according to a perspective's parameters.
- FRAME's perspective is the perspective that is considered, defaulting to
- the current frame's perspective.
- If the perspective doesn't have a workspace, create one."
+If the perspective doesn't have a workspace, create one.
+
+See the hook `persp-activated-functions'."
   (when (eq type 'frame)
-    (let* ((workspace-params (spacemacs//get-persp-workspace (get-frame-persp frame) frame))
+    (let* ((workspace-params (spacemacs//get-persp-workspace
+                              (or persp (get-frame-persp frame)) frame))
            (window-configs (nth 0 workspace-params))
            (current-slot (nth 1 workspace-params))
            (last-slot (nth 2 workspace-params)))
@@ -1000,14 +1011,14 @@ Accepts a list of VARIABLE, DEFAULT-VALUE pairs.
                                     (-map 'car
                                           spacemacs--layout-local-variables))))
     ;; save the current layout
-    (spacemacs-ht-set! spacemacs--layout-local-map
-                       (spacemacs//current-layout-name)
-                       (--map (cons it (symbol-value it))
-                              layout-local-vars))
+    (puthash (spacemacs//current-layout-name)
+             (--map (cons it (symbol-value it))
+                    layout-local-vars)
+             spacemacs--layout-local-map)
     ;; load the default values into the new layout
     (--each layout-local-vars
       (set it (alist-get it spacemacs--layout-local-variables)))
     ;; override with the previously bound values for the new layout
-    (--when-let (spacemacs-ht-get spacemacs--layout-local-map persp-name)
+    (--when-let (gethash persp-name spacemacs--layout-local-map)
       (-each it
         (-lambda ((var . val)) (set var val))))))
