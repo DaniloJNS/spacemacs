@@ -1,6 +1,6 @@
-;;; packages.el --- Themes Mega-Pack Layer packages File for Spacemacs
+;;; packages.el --- Themes Mega-Pack Layer packages File for Spacemacs  -*- lexical-binding: nil; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -128,7 +128,8 @@
 
 ;; define programmatically the init functions
 (dolist (pkg themes-megapack-packages)
-  (eval `(defun ,(intern (format "themes-megapack/init-%S" (if (listp pkg) (car pkg) pkg))) nil)))
+  (defalias (intern (format "themes-megapack/init-%S" (if (listp pkg) (car pkg) pkg)))
+    #'ignore))
 
 (defun themes-megapack/init-darkokai-theme ()
   (setq darkokai-mode-line-padding 1))

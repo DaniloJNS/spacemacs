@@ -1,6 +1,6 @@
-;;; packages.el --- ocaml Layer packages File for Spacemacs
+;;; packages.el --- ocaml Layer packages File for Spacemacs  -*- lexical-binding: nil; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -23,7 +23,6 @@
 
 (defconst ocaml-packages
   '(
-    company
     dune
     evil-matchit
     flycheck
@@ -31,7 +30,7 @@
     ggtags
     imenu
     merlin
-    merlin-company
+    (merlin-company :requires (company merlin))
     merlin-eldoc
     merlin-iedit
     ocamlformat
@@ -39,14 +38,6 @@
     smartparens
     tuareg
     utop))
-
-(defun ocaml/post-init-company ()
-  (when (and (configuration-layer/package-used-p 'merlin)
-             (configuration-layer/package-used-p 'merlin-company))
-    (spacemacs|add-company-backends
-      :backends merlin-company-backend
-      :modes merlin-mode
-      :variables merlin-completion-with-doc t)))
 
 (defun ocaml/init-dune ()
   (use-package dune
@@ -127,7 +118,11 @@
 
 (defun ocaml/init-merlin-company ()
   (use-package merlin-company
-    :defer t))
+    :defer t)
+  (spacemacs|add-company-backends
+    :backends merlin-company-backend
+    :modes merlin-mode
+    :variables merlin-completion-with-doc t))
 
 (defun ocaml/init-merlin-iedit ()
   (use-package merlin-iedit

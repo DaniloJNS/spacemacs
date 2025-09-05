@@ -1,6 +1,6 @@
-;;; packages.el --- Large Language Model Client for Spacemacs
+;;; packages.el --- Large Language Model Client for Spacemacs  -*- lexical-binding: nil; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Codruț Constantin Gușoi <mail+spacemacs@codrut.pro>
 ;; Author: Alexander Matyasko <alexander.matyasko@gmail.com>
@@ -34,6 +34,7 @@
     :defer t
     :ensure t
     :init
+    (spacemacs/declare-prefix "$" "AI")
     (spacemacs/declare-prefix "$e" "Ellama")
     (spacemacs/set-leader-keys "$e" 'ellama-transient-main-menu)))
 

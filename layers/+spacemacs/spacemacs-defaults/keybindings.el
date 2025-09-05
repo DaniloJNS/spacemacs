@@ -1,6 +1,6 @@
-;;; keybindings.el --- Spacemacs Defaults Layer key-bindings File
+;;; keybindings.el --- Spacemacs Defaults Layer key-bindings File  -*- lexical-binding: nil; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -243,7 +243,7 @@
    ("9" buffer-to-window-9 "Move buffer to window 9")
    ("C-d" spacemacs/kill-other-buffers "Kill other buffers...")
    ("C-S-d" spacemacs/kill-matching-buffers-rudely "Kill buffers...")
-   ("d" spacemacs/kill-this-buffer "Kill buffer")
+   ("d" kill-current-buffer "Kill buffer")
    ("e" spacemacs/safe-erase-buffer "Erase...")
    ("h" spacemacs/home "Spacemacs home buffer")
    ("H" spacemacs/switch-to-help-buffer "Help buffer")
@@ -648,24 +648,24 @@ respond to this toggle."
   "w3"  'spacemacs/window-split-triple-columns
   "w4"  'spacemacs/window-split-grid
   "wb"  'spacemacs/switch-to-minibuffer-window
-  "wd"  'spacemacs/delete-window
+  "wd"  'delete-window
   "wt"  'spacemacs/toggle-current-window-dedication
   "wf"  'follow-mode
   "wF"  'make-frame
   "wH"  'evil-window-move-far-left
-  "w <S-left>"  'evil-window-move-far-left
+  "w S-<left>"  'evil-window-move-far-left
   "wh"  'evil-window-left
   "w <left>"  'evil-window-left
   "wJ"  'evil-window-move-very-bottom
-  "w <S-down>"  'evil-window-move-very-bottom
+  "w S-<down>"  'evil-window-move-very-bottom
   "wj"  'evil-window-down
   "w <down>"  'evil-window-down
   "wK"  'evil-window-move-very-top
-  "w <S-up>"  'evil-window-move-very-top
+  "w S-<up>"  'evil-window-move-very-top
   "wk"  'evil-window-up
   "w <up>"  'evil-window-up
   "wL"  'evil-window-move-far-right
-  "w <S-right>"  'evil-window-move-far-right
+  "w S-<right>"  'evil-window-move-far-right
   "wl"  'evil-window-right
   "w <right>"  'evil-window-right
   "wm"  'spacemacs/toggle-maximize-window
@@ -746,9 +746,8 @@ respond to this toggle."
 (define-key indent-rigidly-map "L" 'indent-rigidly-right-to-tab-stop)
 
 ;; shell ----------------------------------------------------------------------
-(with-eval-after-load 'shell
-  (evil-define-key 'insert comint-mode-map [up] 'comint-previous-input)
-  (evil-define-key 'insert comint-mode-map [down] 'comint-next-input))
+(evil-define-key 'insert comint-mode-map [up] 'comint-previous-input)
+(evil-define-key 'insert comint-mode-map [down] 'comint-next-input)
 
 ;; ---------------------------------------------------------------------------
 ;; Transient-states
@@ -799,7 +798,7 @@ respond to this toggle."
               (ivy-switch-buffer))
              ((configuration-layer/layer-used-p 'compleseus)
               (spacemacs/compleseus-switch-to-buffer))))
-  ("d" spacemacs/kill-this-buffer)
+  ("d" kill-current-buffer)
   ("x" kill-buffer-and-window)
   ("C-d" bury-buffer)
   ("z" recenter-top-bottom)
@@ -926,13 +925,13 @@ Select: _a_ _h_ _j_ _k_ _l_ _w_ _0_.._9_ Move: _H_ _J_ _K_ _L_ _r_ _R_ Split: _s
   ("w" other-window)
   ;; Move
   ("J" evil-window-move-very-bottom)
-  ("<S-down>" evil-window-move-very-bottom)
+  ("S-<down>" evil-window-move-very-bottom)
   ("K" evil-window-move-very-top)
-  ("<S-up>" evil-window-move-very-top)
+  ("S-<up>" evil-window-move-very-top)
   ("H" evil-window-move-far-left)
-  ("<S-left>" evil-window-move-far-left)
+  ("S-<left>" evil-window-move-far-left)
   ("L" evil-window-move-far-right)
-  ("<S-right>" evil-window-move-far-right)
+  ("S-<right>" evil-window-move-far-right)
   ("r" spacemacs/rotate-windows-forward)
   ("R" spacemacs/rotate-windows-backward)
   ;; Split

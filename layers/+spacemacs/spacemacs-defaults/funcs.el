@@ -1,6 +1,6 @@
-;;; funcs.el --- Spacemacs Defaults Layer functions File
+;;; funcs.el --- Spacemacs Defaults Layer functions File  -*- lexical-binding: nil; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -284,7 +284,7 @@ persistent which-key) are kept or minimized too."
 
 (defun spacemacs/useful-buffer-p (buffer)
   "Return non-nil if BUFFER should be offered when switching buffers."
-  (let ((buf-name (buffer-name buffer)))
+  (when-let* ((buf-name (buffer-name buffer)))
     (or (provided-mode-derived-p (buffer-local-value 'major-mode buffer) 'comint-mode)
         (cl-loop for useful-regexp in spacemacs-useful-buffers-regexp
                  thereis (string-match-p useful-regexp buf-name))
@@ -745,25 +745,6 @@ suppress this warning.")))
       (buffer-disable-undo)
       (fundamental-mode))))
 
-(defun spacemacs/delete-window (&optional arg)
-  "Delete the current window.
-If the universal prefix argument is used then kill the buffer too."
-  (interactive "P")
-  (if (equal '(4) arg)
-      (kill-buffer-and-window)
-    (delete-window)))
-
-;; our own implementation of kill-this-buffer from menu-bar.el
-(defun spacemacs/kill-this-buffer (&optional arg)
-  "Kill the current buffer.
-If the universal prefix argument is used then kill also the window."
-  (interactive "P")
-  (if (window-minibuffer-p)
-      (abort-recursive-edit)
-    (if (equal '(4) arg)
-        (kill-buffer-and-window)
-      (kill-buffer))))
-
 ;; found at http://emacswiki.org/emacs/KillingBuffers
 (defun spacemacs/kill-other-buffers (&optional arg)
   "Kill all other buffers.
@@ -851,11 +832,7 @@ Returns:
             (+ (current-column) (if column-number-indicator-zero-based 0 1)))))
 
 (defun spacemacs/copy-directory-path ()
-  "Copy and show the directory path of the current buffer.
-
-If the buffer is not visiting a file, use the `list-buffers-directory'
-variable as a fallback to display the directory, useful in buffers like the
-ones created by `magit' and `dired'."
+  "Copy and show the `default-directory' of the current buffer."
   (interactive)
   (if-let* ((directory-path (spacemacs--directory-path)))
       (progn
@@ -946,7 +923,7 @@ variable."
   "ediff the current `dotfile' with the template."
   (interactive)
   (ediff-files (dotspacemacs/location)
-               (concat dotspacemacs-template-directory ".spacemacs.template")))
+               (concat dotspacemacs-template-directory "dotspacemacs-template.el")))
 
 (defun spacemacs//ediff-buffer-outline-show-all ()
   "Try `outline-show-all' for ediff buffers."
@@ -954,8 +931,6 @@ variable."
     (outline-show-all)))
 
 (spacemacs|eval-until-emacs-min-version "31.0.50"
-  "Use builtin `ediff--delete-temp-files-on-kill-emacs' first"
-
   (defun spacemacs//ediff-delete-temp-files ()
     "Delete the temp-files associated with the ediff buffers."
     (let ((inhibit-interaction t))

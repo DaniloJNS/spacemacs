@@ -1,6 +1,6 @@
-;;; packages.el --- Python Layer packages File for Spacemacs
+;;; packages.el --- Python Layer packages File for Spacemacs  -*- lexical-binding: nil; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -28,6 +28,9 @@
     company
     cython-mode
     dap-mode
+    ;; We are using a fork until pet is prefering ipython as default shell (https://github.com/wyuenho/emacs-pet/pull/56)
+    (pet :location (recipe :fetcher github :repo "smile13241324/emacs-pet")
+         :toggle (eq python-virtualenv-management 'pet))
     eldoc
     evil-matchit
     flycheck
@@ -44,12 +47,15 @@
     poetry
     pippel
     py-isort
-    pydoc
     pyenv-mode
+    pydoc
     (pylookup :location (recipe :fetcher local))
     (pytest :toggle (memq 'pytest (flatten-list (list python-test-runner))))
     (python :location built-in)
-    pyvenv
+    ;; Use the performance enhanced fork (https://github.com/jorgenschaefer/pyvenv/pull/128)
+    (pyvenv :location (recipe :fetcher github :repo "sunlin7/pyvenv")
+            :toggle (eq python-virtualenv-management 'pyvenv))
+    (ruff-format :toggle (eq 'ruff python-formatter))
     semantic
     sphinx-doc
     smartparens
@@ -62,6 +68,10 @@
     ;; packages for Microsoft's pyright language server
     (lsp-pyright :requires lsp-mode :toggle (eq python-lsp-server 'pyright))))
 
+(defun python/init-pet ()
+  (use-package pet
+    :hook (python-base-mode . pet-mode)))
+
 (defun python/init-anaconda-mode ()
   (use-package anaconda-mode
     :defer t
@@ -73,16 +83,6 @@
       "hh" 'anaconda-mode-show-doc
       "ga" 'anaconda-mode-find-assignments
       "gu" 'anaconda-mode-find-references)
-    ;; new anaconda-mode (2018-06-03) removed `anaconda-view-mode-map' in
-    ;; favor of xref. Eventually we need to remove this part.
-    (when (boundp 'anaconda-view-mode-map)
-      (evilified-state-evilify-map anaconda-view-mode-map
-        :mode anaconda-view-mode
-        :bindings
-        (kbd "q") 'quit-window
-        (kbd "C-j") 'next-error-no-select
-        (kbd "C-k") 'previous-error-no-select
-        (kbd "RET") 'spacemacs/anaconda-view-forward-and-push))
     (spacemacs|hide-lighter anaconda-mode)
     (define-advice anaconda-mode-goto (:before (&rest _) python/anaconda-mode-goto)
       (evil--jumps-push))
@@ -105,10 +105,7 @@
   (add-hook 'python-mode-local-vars-hook #'spacemacs//python-setup-company)
   (spacemacs|add-company-backends
     :backends (company-files company-capf)
-    :modes inferior-python-mode
-    :variables
-    company-minimum-prefix-length 0
-    company-idle-delay 0.5)
+    :modes inferior-python-mode)
   (when (configuration-layer/package-used-p 'pip-requirements)
     (spacemacs|add-company-backends
       :backends company-capf
@@ -148,7 +145,10 @@
   (add-hook `python-mode-hook `turn-on-evil-matchit-mode))
 
 (defun python/post-init-flycheck ()
-  (spacemacs/enable-flycheck 'python-mode))
+  (spacemacs/enable-flycheck 'python-mode)
+  ;; Setup flycheck but only after pet is loaded.
+  (with-eval-after-load 'pet
+    (add-hook 'python-mode-hook 'pet-flycheck-setup)))
 
 (defun python/pre-init-helm-cscope ()
   (spacemacs|use-package-add-hook xcscope
@@ -225,6 +225,26 @@
         "vps" 'pipenv-shell
         "vpu" 'pipenv-uninstall))))
 
+(defun python/pre-init-pyenv-mode ()
+  (add-to-list 'spacemacs--python-pyenv-modes 'python-mode))
+(defun python/init-pyenv-mode ()
+  (use-package pyenv-mode
+    :if (executable-find "pyenv")
+    :commands (pyenv-mode-versions)
+    :init
+    (pcase python-auto-set-local-pyenv-version
+      ('on-visit
+       (dolist (m spacemacs--python-pyenv-modes)
+         (add-hook (intern (format "%s-hook" m))
+                   'spacemacs//pyenv-mode-set-local-version)))
+      ('on-project-switch
+       (add-hook 'projectile-after-switch-project-hook
+                 'spacemacs//pyenv-mode-set-local-version)))
+    ;; setup shell correctly on environment switch
+    (spacemacs/set-leader-keys-for-major-mode 'python-mode
+      "vu" 'pyenv-mode-unset
+      "vs" 'pyenv-mode-set)))
+
 (defun python/pre-init-poetry ()
   (add-to-list 'spacemacs--python-poetry-modes 'python-mode))
 (defun python/init-poetry ()
@@ -279,31 +299,6 @@
     (spacemacs/set-leader-keys-for-major-mode 'python-mode
       "hp" 'pydoc-at-point-no-jedi
       "hP" 'pydoc)))
-
-(defun python/pre-init-pyenv-mode ()
-  (add-to-list 'spacemacs--python-pyenv-modes 'python-mode))
-(defun python/init-pyenv-mode ()
-  (use-package pyenv-mode
-    :if (executable-find "pyenv")
-    :commands (pyenv-mode-versions)
-    :init
-    (pcase python-auto-set-local-pyenv-version
-      ('on-visit
-       (dolist (m spacemacs--python-pyenv-modes)
-         (add-hook (intern (format "%s-hook" m))
-                   'spacemacs//pyenv-mode-set-local-version)))
-      ('on-project-switch
-       (add-hook 'projectile-after-switch-project-hook
-                 'spacemacs//pyenv-mode-set-local-version)))
-    ;; setup shell correctly on environment switch
-    (dolist (func '(pyenv-mode-set pyenv-mode-unset))
-      (advice-add func :after
-                  (lambda (&optional version)
-                    (spacemacs/python-setup-everything
-                     (when version (pyenv-mode-full-path version))))))
-    (spacemacs/set-leader-keys-for-major-mode 'python-mode
-      "vu" 'pyenv-mode-unset
-      "vs" 'pyenv-mode-set)))
 
 (defun python/pre-init-pyvenv ()
   (add-to-list 'spacemacs--python-pyvenv-modes 'python-mode))
@@ -475,6 +470,14 @@
     (when python-format-on-save
       (add-hook 'python-mode-hook 'yapf-mode))
     :config (spacemacs|hide-lighter yapf-mode)))
+
+(defun python/init-ruff-format ()
+  (use-package ruff-format
+    :defer t
+    :init
+    (when python-format-on-save
+      (add-hook 'python-mode-hook 'ruff-format-on-save-mode))
+    :config (spacemacs|hide-lighter ruff-format-on-save-mode)))
 
 (defun python/init-lsp-pyright ()
   (use-package lsp-pyright

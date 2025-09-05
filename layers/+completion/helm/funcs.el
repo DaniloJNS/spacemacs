@@ -1,6 +1,6 @@
-;;; funcs.el --- Helm Layer functions File for Spacemacs
+;;; funcs.el --- Helm Layer functions File for Spacemacs  -*- lexical-binding: nil; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -535,21 +535,32 @@ Removes the automatic guessing of the initial value based on thing at point. "
     (set-text-properties 0 (length input) nil input)
     (helm-find-files-1 input)))
 
+(defun spacemacs/helm-git-grep ()
+  "Search for a pattern in the Git repository of the current buffer."
+  (interactive)
+  (helm-grep-git-1 "" t nil ""))
+
+(defun spacemacs/helm-git-grep-at-point ()
+  "Search for the symbol at point in the Git repository of the current buffer."
+  (interactive)
+  (helm-grep-git-1 "" t))
+
  ;; Key bindings
 
 (defmacro spacemacs||set-helm-key (keys func)
   "Define a key bindings for FUNC using KEYS.
 Ensure that helm is required before calling FUNC."
-  (let ((func-name (intern (format "lazy-helm/%s" (symbol-name func)))))
+  (let* ((actual-func (if (consp func) (cdr func) func))
+         (func-name (intern (format "lazy-helm/%s" (symbol-name actual-func))))
+         (func-param (if (consp func) `(,(car func) . ,func-name) func-name)))
     `(progn
        (defun ,func-name ()
          ,(format "Wrapper to ensure that `helm' is loaded before calling %s."
-                  (symbol-name func))
+                  (symbol-name actual-func))
          (interactive)
          (require 'helm)
-         (command-execute ',func))
-       (spacemacs/set-leader-keys ,keys ',func-name))))
-
+         (command-execute ',actual-func))
+       (spacemacs/set-leader-keys ,keys ',func-param))))
  ;; Find files tweaks
 
 (defun spacemacs//helm-find-files-edit (candidate)
@@ -635,12 +646,31 @@ to buffers)."
 
 
 ;; theme
+(defun spacemacs//helm-themes-load (theme)
+  "Disable the `custom-enabled-themes'first then load the named THEME."
+  (mapc 'disable-theme custom-enabled-themes)
+  (if (string= theme "default")
+      t
+    (load-theme (intern theme) t)))
+
+(defun spacemacs//helm-themes-candidates ()
+  "Return list of available themes with `default' on the head."
+  (cons 'default (custom-available-themes)))
 
 (defun spacemacs/helm-themes ()
-  "Remove limit on number of candidates on `helm-themes'"
+  "List the theme candidates without number limit."
   (interactive)
-  (let (helm-candidate-number-limit)
-    (helm-themes)))
+  (let (helm-candidate-number-limit
+        (orig-theme (or (car-safe custom-enabled-themes) 'default)))
+    (unwind-protect
+        (unless (helm :prompt (format "pattern (current theme: %s): " orig-theme)
+                      :preselect (format "%s$" orig-theme)
+                      :sources (helm-build-sync-source "Selection Theme"
+                                 :candidates 'spacemacs//helm-themes-candidates
+                                 :action 'spacemacs//helm-themes-load
+                                 :persistent-action 'spacemacs//helm-themes-load)
+                      :buffer "*helm-themes*")
+          (spacemacs//helm-themes-load (symbol-name orig-theme))))))
 
 ;; Buffers ---------------------------------------------------------------------
 
