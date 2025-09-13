@@ -29,9 +29,32 @@
     zoom
     (combobulate :location local)
     xclip
-    ;; (emacs-color-theme-solarized :location (recipe :fetcher github
-    ;;                                                :repo "bbatsov/zenburn-emacs"))
-    dirvish))
+    gcmh
+    spacious-padding
+    dirvish
+    diredfl))
+
+(defun my-defaults/init-spacious-padding ()
+  (use-package spacious-padding
+    :ensure t
+    :config
+    (setq spacious-padding-widths
+          '(
+            :internal-border-width 20
+            :header-line-width 8
+            :mode-line-width 4
+            :tab-width 4 ;; ?
+            :right-divider-width 0
+            :left-fringe-width 8))
+    (spacious-padding-mode 1)))
+
+(defun my-defaults/init-gcmh()
+  (use-package gcmh
+    :init
+    (setq gchm-idle-delay 5
+          gchm-high-cons-thresold (* 256 1024 1024)) ;; use 256 MB when idle
+    :config
+    (gcmh-mode 1)))
 
 (defun my-defaults/init-yuck-mode ()
   (use-package yuck-mode
@@ -68,19 +91,20 @@
     ;; (dirvish-peek-mode)             ; Preview files in minibuffer
     ;; (dirvish-side-follow-mode)      ; similar to `treemacs-follow-mode'
     (setq dirvish-mode-line-format
-          '(:left (sort symlink) :right (omit yank index)))
+          '(:left (sort file-time symlink) :right (omit yank index)))
     (setq dirvish-attributes           ; The order *MATTERS* for some attributes
-          '(vc-state subtree-state nerd-icons collapse git-msg file-time file-size)
+          ;; '(file-time file-size vc-state subtree-state nerd-icons collapse git-msg)
+          '(vc-state subtree-state nerd-icons collapse git-msg file-size)
           dirvish-side-attributes
           '(vc-state nerd-icons collapse file-size))
     (setq dirvish-subtree-state-style 'nerd)
     (setq delete-by-moving-to-trash t)
-    (setq dired-listing-switches
-          "-l --almost-all --human-readable --no-group")
     (setq dirvish-path-separators (list
                                    (format "  %s " (nerd-icons-codicon "nf-cod-home"))
                                    (format "  %s " (nerd-icons-codicon "nf-cod-root_folder"))
                                    (format " %s " (nerd-icons-faicon "nf-fa-angle_right"))))
+    (setq dirvish-hide-details '(dirvish dirvish-side)
+          dirvish-hide-cursor '(dirvish dirvish-side))
     ;; this command is useful when you want to close the window of `dirvish-side'
     ;; automatically when opening a file
     (put 'dired-find-alternate-file 'disabled nil)
@@ -124,6 +148,12 @@
      ("M-b" . dirvish-history-go-backward)
      ("M-t" . dirvish-layout-toggle)
      ("M-e" . dirvish-emerge-menu))))
+
+(defun my-defaults/init-diredfl ()
+  (use-package diredfl
+    :ensure t
+    :hook (dired-mode . diredfl-mode)
+    :hook (dirvish-directory-view-mode . diredfl-mode)))
 
 (defun my-defaults/init-xclip ()
   (use-package xclip

@@ -94,6 +94,9 @@
      "k" #'lsp-ui-peek--select-prev
      "l" #'lsp-ui-peek--select-next-file)
     ;; My Custom configs
+    ;; breadcrumbs
+    ;; disable breadcrumb in terminal mode because headline is not available
+    (setq lsp-headerline-breadcrumb-enable nil)
     ;; diagnostics
     (setq lsp-ui-sideline-show-diagnostics t)
     (setq lsp-ui-sideline-show-hover nil)

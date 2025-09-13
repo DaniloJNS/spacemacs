@@ -243,8 +243,9 @@ of directories to file basenames."
        "Cannot find any of the specified fonts (%s)! Font settings may not be correct."
        (if (listp (car dotspacemacs-default-font))
            (mapconcat 'car dotspacemacs-default-font ", ")
-         (car dotspacemacs-default-font)))))
-  ;; Inhibit the default Emacs startup screen.
+         (car dotspacemacs-default-font))))
+    (fontaine-set-preset 'medium))
+  ;; spacemacs init
   (setq inhibit-startup-screen t)
   ;; Go to the Spacemacs buffer on startup.
   (spacemacs-buffer/goto-buffer t)

@@ -44,51 +44,78 @@
   '(
     fontaine
     face-remap
-    kaolin-themes
+    mixed-pitch
     modus-themes)
   "The list of Lisp packages required by the my-fonts layer.")
 
-
-(defun my-fonts/init-kaolin-themes ()
-  (use-package kaolin-themes
-    :ensure t
+(defun my-fonts/init-mixed-pitch ()
+  (use-package mixed-pitch
+    :hook
+    (org-mode           . mixed-pitch-mode)
+    (org-roam-mode      . mixed-pitch-mode)
     :config
-    (load-theme 'kaolin-ocean t)
-    (kaolin-treemacs-theme)))
+    ;; (setq mixed-pitch-set-height t
+    ;;       variable-pitch-serif-font doom-variable-pitch-font)
+
+    ;; 'font-latex-math-face
+    (dolist (face '('org-drawer 'org-cite-key 'org-list-dt 'org-hide) mixed-pitch-fixed-pitch-faces)
+      (cl-pushnew face mixed-pitch-fixed-pitch-faces :test #'equal))))
 
 (defun my-fonts/init-fontaine ()
-  ;;;; Fontaine (font configurations)
+  ;; Fontaine (font configurations)
   ;; Read the manual: <https://protesilaos.com/emacs/fontaine>
   (use-package fontaine
-    :ensure t
-    :defer t
     ;; Load only if emacs is running in GUI mode
     :if (display-graphic-p)
     :custom
     ;; This is defined in Emacs C code: it belongs to font settings.
     (x-underline-at-descent-line nil)
     ;; And this is for Emacs28.
-    (text-scale-remap-header-line t)
+    ;; (text-scale-remap-header-line t)
     ;; This is the default value.  Just including it here for completeness.
     (fontaine-latest-state-file (locate-user-emacs-file "fontaine-latest-state.eld"))
+    (fontaine-faces
+     '( default fixed-pitch fixed-pitch-serif variable-pitch
+        mode-line-active mode-line-inactive header-line
+        line-number tab-bar tab-line variable-pitch-text
+        bold italic))
+
     ;; Set my custom font presets
     (fontaine-presets
      '(
        (regular
+        :variable-pitch-text-height 1.0 ;; by defaults its height is 1.1x the value of variable-pitch. But text is very big
+
         ;; Space Mono was the only font I found installed that contains all the special characters used by doom modeline
-        :mode-line-active-family "Space Mono Nerd Font"
+        :mode-line-active-family "SpaceMono Nerd Font"
+        :mode-line-active-font "SpaceMono Nerd Font"
         :mode-line-active-weight regular
         :mode-line-active-slant normal
         :mode-line-active-width nil
-        :mode-line-active-height 120
+        :mode-line-active-height 115
 
-        :mode-line-active-family "Space Mono Nerd Font"
-        :mode-line-active-weight regular
-        :mode-line-active-slant normal
+        :mode-line-inactive-family "SpaceMono Nerd Font"
+        :mode-line-inactive-font "SpaceMono Nerd Font"
+        :mode-line-inactive-weight regular
+        :mode-line-inactive-slant normal
         :mode-line-inactive-width nil
-        :mode-line-inactive-height 120) ; like this it uses all the fallback values and is named `regular'
+        :mode-line-inactive-height 115) ; like this it uses all the fallback values and is named `regular'
 
        (medium
+        :default-family "Monaspace Neon"
+        :default-height 115
+        :default-weight regular
+
+        :fixed-pitch-family "Monaspace Neon"
+        :fixed-pitch-weight regular
+        :fixed-pitch-height 115
+
+        :variable-pitch-family "Iosevka Comfy Wide Duo"
+        :variable-pitch-height 120
+
+        :inherit regular)
+
+       (MonoLisa
         :default-family "MonoLisa Nerd Font Mono"
         :default-height 120
         :default-weight regular
@@ -158,7 +185,7 @@
         :fixed-pitch-height 120
 
         :variable-pitch-family "Iosevka Comfy Wide Motion"
-        :variable-pitch-height 120)
+        :variable-pitch-height 110)
 
        (MonaspaceNeon
         :default-family "Monaspace Neon"
@@ -172,18 +199,6 @@
         :variable-pitch-family "Iosevka Comfy Wide Motion"
         :variable-pitch-height 120)
 
-       (MonaspaceNeonIosevkaDuo
-        :default-family "Monaspace Neon"
-        :default-height 120
-        :default-weight regular
-
-        :fixed-pitch-family "Monaspace Neon"
-        :fixed-pitch-weight regular
-        :fixed-pitch-height 120
-
-        :variable-pitch-family "Iosevka Comfy Wide Duo"
-        :variable-pitch-height 120)
-
        (NaruMonoDemo
         :default-family "Naru Mono Demo"
         :default-height 120
@@ -194,7 +209,7 @@
         :fixed-pitch-height 120
 
         :variable-pitch-family "Iosevka Comfy Wide Duo"
-        :variable-pitch-height 120)
+        :variable-pitch-height 100)
 
        (mode-line
         :default-family "MonoLisa Nerd Font Mono"
@@ -230,27 +245,21 @@
         :default-height 260)
        )
      )
-    ;; :hook
+    :hook
     ;; Persist the latest font preset when closing/starting Emacs and
     ;; while switching between themes.
-    ;; ((after-init . fontaine-mode)
-    ;;  (after-init . (lambda ()
-    ;;                  ;; Set last preset or fall back to desired style from `fontaine-presets'.
-    ;;                  (fontaine-set-preset (or (fontaine-restore-latest-preset) 'medium)))))
+    ((after-init . fontaine-mode)
+     (after-init . (lambda ()
+                     ;; Set last preset or fall back to desired style from `fontaine-presets'.
+                     (fontaine-set-preset (or (fontaine-restore-latest-preset) 'medium)))))
     :bind (("C-c f" . fontaine-set-preset)
            ("C-c F" . fontaine-toggle-preset))
     :config
-
-    ;; Set the last preset or fall back to desired style from `fontaine-presets'
-    ;; (the `medium' in this case).
-
-    (fontaine-mode)
-    (fontaine-set-preset 'medium)
-
     ;; This sets the default font on all graphical frames created after restarting Emacs
     ;; Does the same thing as 'set-face-attribute default' above, but emacsclient fonts
     ;; are not right unless I also add this method of setting the default font
-    (add-to-list 'default-frame-alist '(font . "MonoLisa Nerd Font Mono-12"))
+    ;; (add-to-list 'default-frame-alist '(font . "Space Mono Nerd Font-11"))
+    ;; Checks if is secure remove this function
 
     ;; Persist the latest font preset when closing/starting Emacs and
     ;; while switching between themes.
@@ -268,24 +277,7 @@
                         ;; :foreground "#0ec9ea"
                         ;; :background "#1A1B26"
                         ) ;; Fundo claro para comentários (opcional)
-
-    ;; (set-face-attribute 'font-lock-keyword-face nil
-    ;;                     :weight 'bold)
-
-    (set-face-attribute 'mode-line nil
-                        ;; Space Mono was the only font I found installed that contains all the special characters used by doom modeline
-                        :font "Space Mono Nerd Font"
-                        :slant 'normal
-                        :weight 'regular
-                        :foreground "#7EABE7"
-                        ;; Others greats background colors
-                        ;; #0ec9ea
-                        ;; #00BCFF
-                        :background "#1A1B26")
-    (set-face-attribute 'mode-line-inactive nil
-                        :font "Space Mono Nerd Font"
-                        :slant 'normal
-                        :weight 'regular)))
+    ))
 
 (defun my-fonts/init-face-remap()
   (use-package face-remap
@@ -300,7 +292,7 @@
     ;; fine in my workflow.  I am still undecided by EWW.
     (defun prot/enable-variable-pitch ()
       (unless (derived-mode-p 'mhtml-mode 'nxml-mode 'yaml-mode)
-        (variable-pitch-mode 1)))
+        (variable-pitch-mode 0)))
 
     (setq-default truncate-lines t)
     ;;;;; Resize keys with global effect
@@ -328,7 +320,7 @@
           modus-themes-mixed-fonts t
           modus-themes-variable-pitch-ui t
           modus-themes-italic-constructs t
-          modus-themes-bold-constructs t
+          modus-themes-bold-constructs nil
           modus-themes-completions '((t . (extrabold)))
           modus-themes-prompts '(extrabold)
           modus-themes-common-palette-overrides nil

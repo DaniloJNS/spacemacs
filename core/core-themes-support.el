@@ -318,6 +318,7 @@
     (solarized-gruvbox-dark           . solarized-theme)
     (solarized-gruvbox-light          . solarized-theme)
     (solarized-light                  . solarized-theme)
+    (solarized-selenized-light        . solarized-theme)
     (solarized-light-high-contrast    . solarized-theme)
     (solarized-wombat-dark            . solarized-theme)
     (solarized-zenburn                . solarized-theme)
@@ -449,6 +450,7 @@ THEME."
     (when disable
       (mapc 'disable-theme custom-enabled-themes))
     (enable-theme theme-name)
+    (message "theme loaded: %s" theme-name)
     (setq spacemacs--cur-theme theme-name)
     (unless (display-graphic-p)
       (spacemacs|do-after-display-system-init
@@ -479,6 +481,8 @@ When BACKWARD is non-nil, or with \\[universal-argument], cycle backwards."
 
 (define-advice enable-theme (:after (theme &rest _) spacemacs//run-post-theme-hooks)
   "Perform post load processing."
+
+  (message "theme loaded by advice: %s" theme)
   (setq spacemacs--cur-theme theme)
   (run-hooks 'spacemacs-post-theme-change-hook))
 

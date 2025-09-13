@@ -161,8 +161,7 @@
 (defun elixir/post-init-company ()
   ;; backend specific
   (spacemacs|add-company-backends
-    :backends (company-dabbrev-code company-capf company-semantic company-gtags company-etags
-                                    company-keywords company-files)
+    :backends (company-dabbrev-code company-capf)
     :modes elixir-mode)
   (add-hook 'elixir-mode-local-vars-hook #'spacemacs//elixir-setup-company))
 

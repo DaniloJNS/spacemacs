@@ -231,8 +231,13 @@
           company-minimum-prefix-length auto-completion-minimum-prefix-length
           company-require-match nil
           company-dabbrev-ignore-case nil
-          company-dabbrev-other-buffers t
-          company-dabbrev-downcase nil)
+          company-dabbrev-other-buffers nil
+          company-dabbrev-downcase nil
+          company-format-margin-function 'company-text-icons-margin
+          company-tooltip-align-annotations t
+          company-text-icons-add-background t
+          company-frontends '(company-pseudo-tooltip-unless-just-one-frontend company-echo-metadata-frontend
+                                                                              company-preview-if-just-one-frontend))
 
     :config
     (spacemacs|diminish company-mode " ⓐ" " a")

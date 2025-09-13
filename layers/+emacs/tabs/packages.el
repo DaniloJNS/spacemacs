@@ -45,6 +45,7 @@
     (centaur-tabs-close-button "✕")
     (centaur-tabs-modified-marker "•")
     (centaur-tabs-cycle-scope 'tabs)
+    (centaur-tabs-style 'wave)
     :init
     (if (daemonp)
         (add-hook 'server-after-make-frame-hook #'centaur-tabs-mode)

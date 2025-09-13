@@ -64,6 +64,25 @@
     :url "http://localhost:4000"
     :kill-process-buffer-on-stop t)
   (prodigy-define-service
+    :name "FrontEnd"
+    :command "npm"
+    :args '("start")
+    :cwd "/home/danilo/workspace/rebase/projects/frontend"
+    :stop-signal 'kill
+    :tags '(vite-server)
+    :url "http://localhost:3000"
+    :ready-message "ready in"
+    :kill-process-buffer-on-stop t)
+  (prodigy-define-service
+    :name "infleet-bff"
+    :command "npm"
+    :args '("run" "start:dev")
+    :cwd "/home/danilo/workspace/rebase/projects/infleet-bff"
+    :stop-signal 'kill
+    :tags '(vite-server)
+    :ready-message "Nest application successfully started"
+    :kill-process-buffer-on-stop t)
+  (prodigy-define-service
     :name "Telemetry Server"
     :command "/usr/bin/go"
     :args '("run" "main.go")

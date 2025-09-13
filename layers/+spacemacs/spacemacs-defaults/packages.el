@@ -134,9 +134,18 @@
     "fj" 'dired-jump
     "jd" 'dired-jump
     "jD" 'dired-jump-other-window)
+  (setq dired-dwim-target t  ; suggest a target for moving/copying intelligently
+        ;; don't prompt to revert, just do it
+        dired-auto-revert-buffer #'dired-buffer-stale-p
+        ;; Always copy/delete recursively
+        dired-recursive-copies  'always
+        dired-recursive-deletes 'top
+        ;; Ask whether destination dirs should get created when copying/removing files.
+        dired-create-destination-dirs 'ask)
   ;; WARNING This flags are required by dirvish
   (setq dired-listing-switches
-        "-l --almost-all --human-readable --group-directories-first --no-group")
+        "-ahl -v --almost-all --human-readable --group-directories-first --no-group")
+
   ;; this command is useful when you want to close the window of `dirvish-side'
   ;; automatically when opening a file
   (put 'dired-find-alternate-file 'disabled nil)

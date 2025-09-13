@@ -32,15 +32,77 @@
         (vim-powerline :location (recipe :fetcher local)
                        :toggle (eq (spacemacs/get-mode-line-theme-name) 'vim-powerline))))
 
+
 (defun spacemacs-modeline/init-doom-modeline ()
-    (use-package doom-modeline
-      :defer t
-      :init (doom-modeline-mode)
-      :config
-      (add-to-list 'mode-line-misc-info
-                   '(:eval (propertize (format "%s " (purpose--modeline-string))
-                                       'face 'doom-modeline-buffer-minor-mode)))
-      (setq doom-modeline-indent-info t)))
+  (use-package doom-modeline
+    :defer t
+    :init (doom-modeline-mode)
+    ;; :hook
+    ;; ((after-init . (lambda ()
+    ;;                  (set-face-attribute 'doom-modeline-buffer-file nil
+    ;;                                      :foreground (doom-color 'fg-alt)                        )
+
+    ;;                  (set-face-attribute 'mode-line nil
+    ;;                                      :background (doom-color 'bg)
+    ;;                                      :foreground (doom-color 'fg-alt)
+    ;;                                      ;; :overline (doom-color 'base4)
+    ;;                                      :overline "#657b83"
+    ;;                                      :family  "SpaceMono Nerd"
+    ;;                                      :font "SpaceMono Nerd Font")
+    ;;                  (set-face-attribute 'mode-line-inactive nil
+    ;;                                      :background (doom-color 'bg)
+    ;;                                      :foreground (doom-color 'fg-alt)
+    ;;                                      ;; :overline (doom-color 'base4)
+    ;;                                      :overline "#657b83"
+    ;;                                      :underline nil
+    ;;                                      :family  "SpaceMono Nerd"
+    ;;                                      :font "SpaceMono Nerd Font"
+    ;;                                      :box nil)
+
+    ;;                  (set-face-attribute 'mode-line-active nil
+    ;;                                      :overline "#657b83"
+    ;;                                      :box nil
+    ;;                                      :family  "SpaceMono Nerd"
+    ;;                                      :font "SpaceMono Nerd Font")
+    ;;                  )))
+    :config
+    (add-to-list 'mode-line-misc-info
+                 '(:eval (propertize (format "%s " (purpose--modeline-string))
+                                     'face 'doom-modeline-buffer-minor-mode)))
+    (setq doom-modeline-indent-info t)
+    (setq doom-modeline-buffer-file-name-style 'auto
+          doom-modeline-always-show-macro-register t
+          doom-modeline-enable-word-count nil
+          doom-modeline-buffer-encoding t
+          doom-modeline-major-mode-icon t
+          doom-modeline-buffer-modification-icon nil
+          doom-modeline-bar-width 0
+          doom-modeline-height 30
+          doom-modeline-modal nil)
+    (setq mode-line-right-align-edge 'right-fringe)
+
+
+    ;; (set-face-attribute 'head-line nil
+    ;;                     :overline nil)
+    ;; (custom-set-faces!
+    ;;  `(doom-modeline-buffer-file
+    ;;    :foreground ,(doom-color 'fg-alt)
+    ;;    :family  "Space Mono Nerd Font")
+    ;;  `(mode-line
+    ;;    :background ,(doom-color 'bg)
+    ;;    :foreground ,(doom-color 'fg-alt)
+    ;;    :overline ,(doom-color 'base4)
+    ;;    :family  "Space Mono Nerd Font")
+    ;;  `(mode-line-inactive
+    ;;    :overline ,(doom-color 'base4)
+    ;;    :family "Space Mono Nerd Font"
+    ;;    :box nil)
+    ;;  `(mode-line-active
+    ;;    :foreground ,(doom-color 'fg-alt)
+    ;;    :box nil)
+    ;;  '(header-line
+    ;;    :overline nil))
+    ))
 
 (defun spacemacs-modeline/init-fancy-battery ()
   (use-package fancy-battery

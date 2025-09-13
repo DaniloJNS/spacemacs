@@ -24,8 +24,14 @@
 (defconst theming-packages
   '((theming :location local)))
 
+
+(define-advice enable-theme (:after (theme &rest _) spacemacs//run-theming)
+  "Perform post load processing."
+  (spacemacs//theming (car (last custom-enabled-themes))))
+
 (defun theming/init-theming ()
   ;; Apply theme customizations after any call to load-theme
   (advice-add 'load-theme :after 'spacemacs//theming)
+
   ;; Apply the initial customizations now, because load-theme has already been called
   (spacemacs//theming spacemacs--cur-theme))

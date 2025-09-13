@@ -138,7 +138,7 @@ It runs `tabulated-list-revert-hook', then calls `tabulated-list-print'."
 (setq delete-by-moving-to-trash t)
 
 ;; auto fill breaks line beyond buffer's fill-column
-(setq-default fill-column 80)
+(setq-default fill-column 120)
 (spacemacs|diminish auto-fill-function " Ⓕ" " F")
 
 ;; persistent abbreviation file

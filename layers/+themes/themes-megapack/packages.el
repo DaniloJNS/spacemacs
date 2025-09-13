@@ -46,7 +46,6 @@
         darkokai-theme
         darktooth-theme
         django-theme
-        doom-themes
         dracula-theme
         ef-themes
         espresso-theme
@@ -73,7 +72,7 @@
         madhat2r-theme
         material-theme
         minimal-theme
-        modus-themes
+        ;; modus-themes
         moe-theme
         molokai-theme
         monokai-theme
@@ -130,6 +129,22 @@
 (dolist (pkg themes-megapack-packages)
   (defalias (intern (format "themes-megapack/init-%S" (if (listp pkg) (car pkg) pkg)))
     #'ignore))
+
+(defun themes-megapack/init-doom-themes()
+  (use-package doom-themes
+    :ensure t
+    :custom
+    (doom-themes-enable-bold nil)
+    (doom-themes-padded-modeline t)
+    :config
+    ;; Enable flashing mode-line on errors
+    (doom-themes-visual-bell-config)
+    ;; Enable custom neotree theme (nerd-icons must be installed!)
+    (doom-themes-neotree-config)
+    ;; or for treemacs users
+    (doom-themes-treemacs-config)
+    ;; Corrects (and improves) org-mode's native fontification.
+    (doom-themes-org-config)))
 
 (defun themes-megapack/init-darkokai-theme ()
   (setq darkokai-mode-line-padding 1))
