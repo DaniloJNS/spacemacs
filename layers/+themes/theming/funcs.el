@@ -53,6 +53,6 @@ theme."
       (custom-set-faces `(,(car spec) ((t ,(cdr spec)))))
       (push (car spec) spacemacs--theming-modified-faces))))
 
-(defun spacemacs/update-theme ()
+(defun spacemacs/update-theme (&rest args)
   (interactive)
   (spacemacs//theming spacemacs--cur-theme))

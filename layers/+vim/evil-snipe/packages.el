@@ -31,5 +31,5 @@
 
 (defun evil-snipe/post-init-ranger ()
   (add-hook 'ranger-mode-hook 'turn-off-evil-snipe-mode)
-  (when evil-snipe-enable-alternate-f-and-t-behaviors
+  (when evil-snipe-enable-alternate-f-two-t-behaviors
     (add-hook 'ranger-mode-hook 'turn-off-evil-snipe-override-mode)))

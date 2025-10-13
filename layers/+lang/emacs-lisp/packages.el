@@ -200,7 +200,11 @@
 (defun emacs-lisp/init-emacs-lisp ()
   ;; Format buffers automatically if required
   (spacemacs//make-elisp-buffers-format-on-save-maybe)
-
+  (let ((modes '(emacs-lisp-mode lisp-interaction-mode lisp-data-mode)))
+    (spacemacs/set-lookup-handlers `(,@modes helpful-mode)
+      :definition    #'emacs-lisp//lookup-definition
+      :documentation #'emacs-lisp//lookup-documentation)
+    )
   ;; Set default keybindings in the repl and elisp mode
   (dolist (mode '(emacs-lisp-mode lisp-interaction-mode))
     (spacemacs/declare-prefix-for-mode mode "mc" "compile")

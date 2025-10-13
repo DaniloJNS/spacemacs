@@ -44,6 +44,10 @@
   (use-package lsp-mode
     :defer t
     :init
+    (spacemacs/set-leader-keys "pOl" 'spacemacs/toggle-lsp-for-project) ; Start aider contentx
+    (define-key spacemacs/lsp-project-map (kbd "t") #'spacemacs/toggle-lsp-for-project)
+    (define-key spacemacs/lsp-project-map (kbd "e") #'spacemacs/enable-lsp-for-project)
+    (define-key spacemacs/lsp-project-map (kbd "d") #'spacemacs/disable-lsp-for-project)
     (setq lsp-server-install-dir (concat spacemacs-cache-directory "lsp/")
           lsp-session-file (concat lsp-server-install-dir (file-name-nondirectory ".lsp-session-v1"))
           lsp-eslint-library-choices-file (concat lsp-server-install-dir ".lsp-eslint-choices")
@@ -60,8 +64,9 @@
                 #'spacemacs//lsp-booster--advice-json-parse)
     (advice-add 'lsp-resolve-final-command :around #'spacemacs//lsp-booster--advice-final-command)
     ;; If you find something else should be ignored, you could also set them here
-    ;; :hook
+    :hook
     ;; (lsp-completion-mode . spacemacs//lsp-mode-setup-completion)
+    (lsp-mode #'spacemacs/lsp-check-project-enabled)
     :config
     (if lsp-use-upstream-bindings
         (spacemacs/lsp-bind-upstream-keys)
@@ -73,6 +78,14 @@
                                     :capf))
     ;; This sets the lsp indentation for all modes derived from web-mode.
     (add-to-list 'lsp--formatting-indent-alist '(web-mode . web-mode-markup-indent-offset))
+
+    (spacemacs/set-lookup-handlers 'lsp-mode
+      :definition #'spacemacs/lsp-lookup-definition-handler
+      :references #'spacemacs/lsp-lookup-references-handler
+      :documentation '(lsp-describe-thing-at-point :async t)
+      :implementations '(lsp-find-implementation :async t)
+      :type-definition #'lsp-find-type-definition)
+
     (add-hook 'lsp-after-open-hook (lambda ()
                                      "Setup xref jump handler"
                                      (spacemacs//setup-lsp-jump-handler)))))
@@ -87,6 +100,12 @@
 
     (define-key lsp-ui-imenu-mode-map (kbd "=") 'spacemacs/lsp-ui--imenu-toggle-window-size)
 
+    (spacemacs/set-lookup-handlers 'lsp-ui-mode
+      :definition 'lsp-ui-peek-find-definitions
+      :implementations 'lsp-ui-peek-find-implementation
+      :references 'lsp-ui-peek-find-references
+      :async t)
+
     (spacemacs/lsp-define-key
      lsp-ui-peek-mode-map
      "h" #'lsp-ui-peek--select-prev-file
@@ -97,6 +116,9 @@
     ;; breadcrumbs
     ;; disable breadcrumb in terminal mode because headline is not available
     (setq lsp-headerline-breadcrumb-enable nil)
+    ;; disable use icon from `all-the-icons' package because the icon used has font height greather than others modeline face.
+    ;; In achieving this the laurear of Modeline increases when active
+    (setq lsp-modeline-code-action-icons-enable nil)
     ;; diagnostics
     (setq lsp-ui-sideline-show-diagnostics t)
     (setq lsp-ui-sideline-show-hover nil)
@@ -108,7 +130,7 @@
     (setq lsp-ui-doc-show-with-cursor nil)
     (setq lsp-ui-doc-show-with-mouse t)
     ;; imenu
-    (setq lsp-ui-imenu-kind-position "top")
+    (setq lsp-ui-imenu-kind-position 'top)
     (setq lsp-ui-imenu-buffer-position "right")
     (setq lsp-ui-imenu-window-width 35)
     (setq lsp-ui-imenu-window-fix-width t)

@@ -63,6 +63,7 @@
     :defer t
     :init
     (spacemacs/set-leader-keys
+      "`" 'ace-window
       "bD" 'spacemacs/ace-kill-this-buffer
       ;; FIXME: Needs new binding.
       ;; "wC" 'spacemacs/ace-center-window
@@ -441,7 +442,8 @@
           winum-auto-setup-mode-line (eq (spacemacs/get-mode-line-theme-name) 'vanilla)
           winum-ignored-buffers '(" *LV*" " *which-key*"))
     (spacemacs/set-leader-keys
-      "`" 'winum-select-window-by-number
+      ;; WARNING: This key is now used by ace-window
+      ;; "`" 'winum-select-window-by-number
       "²" 'winum-select-window-by-number
       "0" 'winum-select-window-0-or-10
       "1" 'winum-select-window-1

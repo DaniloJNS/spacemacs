@@ -345,7 +345,7 @@
 
     ;; Provide proper prefixes for which key
     (which-key-add-keymap-based-replacements evil-motion-state-map
-      "gs"  "evil-easymotion")
+      "s"  "evil-easymotion")
     (which-key-add-keymap-based-replacements evilem-map
       "g" "misc"
       "[" "section backward"

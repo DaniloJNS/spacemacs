@@ -34,7 +34,7 @@
 (defun dash/init-helm-dash ()
   (use-package helm-dash
     :defer t
-    :init 
+    :init
     (spacemacs/declare-prefix "arz" "zeal/dash docs")
     (spacemacs/set-leader-keys
       "azh" 'helm-dash-at-point
@@ -45,7 +45,7 @@
 (defun dash/init-counsel-dash ()
   (use-package counsel-dash
     :defer t
-    :init 
+    :init
     (spacemacs/declare-prefix "arz" "zeal/dash docs")
     (spacemacs/set-leader-keys
       "arzh" 'counsel-dash-at-point
@@ -72,7 +72,7 @@
 (defun dash/init-dash-at-point ()
   (use-package dash-at-point
     :defer t
-    :init 
+    :init
     (spacemacs/declare-prefix "arz" "zeal/dash docs")
     (spacemacs/set-leader-keys
       "arzd" 'dash-at-point
@@ -81,7 +81,7 @@
 (defun dash/init-zeal-at-point ()
   (use-package zeal-at-point
     :defer t
-    :init 
+    :init
     (spacemacs/declare-prefix "arz" "zeal/dash docs")
     (spacemacs/set-leader-keys
       "arzd" 'zeal-at-point

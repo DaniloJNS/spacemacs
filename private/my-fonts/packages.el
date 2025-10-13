@@ -264,7 +264,7 @@
     ;; Persist the latest font preset when closing/starting Emacs and
     ;; while switching between themes.
     ;; (add-hook 'enable-theme-functions #'fontaine-apply-current-preset)
-    (add-hook 'enable-theme-functions (lambda () (fontaine-set-preset 'medium)))
+    ;; (add-hook 'enable-theme-functions (lambda () (fontaine-set-preset 'medium)))
 
     ;; Makes comments text and keywords italics
     ;; This is working in emacsclient but not emacs.

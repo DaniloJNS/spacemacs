@@ -61,7 +61,8 @@
 
 (defun compleseus/post-init-imenu ()
   (spacemacs/set-leader-keys "ji" 'spacemacs/consult-jump-in-buffer)
-  (spacemacs/set-leader-keys "sj" 'spacemacs/consult-jump-in-buffer))
+  ;; (spacemacs/set-leader-keys "sj" 'spacemacs/consult-jump-in-buffer)
+  )
 
 (defun compleseus/init-helm-make ()
   (use-package helm-make
@@ -94,7 +95,7 @@
                (projectile-switch-to-buffer . buffer)
                (projectile-switch-project . project-file)))
       (push it marginalia-command-categories))
-    (setq marginalia-align 'right)
+    (setq marginalia-align 'left)
     ;; The :init configuration is always executed (Not lazy!)
     :init
     ;; Must be in the :init section of use-package such that the mode gets
@@ -155,7 +156,9 @@
     ;; The :init configuration is always executed (Not lazy)
     :init
     ;; disable automatic preview by default
-    (setq consult-preview-key compleseus-consult-preview-keys)
+    ;; (setq consult-preview-key compleseus-consult-preview-keys)
+    ;; (setq consult-preview-key 'any)
+
 
     (define-key read-expression-map (kbd "C-r") #'consult-history)
     (spacemacs/set-leader-keys
@@ -164,6 +167,7 @@
       "*" #'spacemacs/compleseus-search-default
       "/" #'spacemacs/compleseus-search-projectile
       "bb" #'spacemacs/compleseus-switch-to-buffer
+      "," #'spacemacs/compleseus-switch-to-buffer
       "bB" #'consult-buffer
       "fb" #'consult-bookmark
       "ff" #'spacemacs/compleseus-find-file
@@ -184,10 +188,26 @@
       "sF" #'spacemacs/compleseus-search-auto-symbol
       "sd" #'spacemacs/compleseus-search-dir
       "sD" #'spacemacs/compleseus-search-dir-symbol
+      "sj" #'spacemacs/consult-jump-list
       "sp" #'spacemacs/compleseus-search-projectile
       "sP" #'spacemacs/compleseus-search-projectile-symbol
       "ry" #'consult-yank-from-kill-ring
       "Ts" #'consult-theme)
+
+    (setq consult-project-function #'spacemacs/projectile-project-root
+          consult-narrow-key "<"
+          consult-line-numbers-widen t
+          consult-async-min-input 2
+          consult-async-refresh-delay  0.15
+          consult-async-input-throttle 0.2
+          consult-async-input-debounce 0.1
+          consult-fd-args
+          '((if (executable-find "fdfind" 'remote) "fdfind" "fd")
+            "--color=never"
+            ;; https://github.com/sharkdp/fd/issues/839
+            "--full-path --absolute-path"
+            "--hidden --exclude .git"
+            (if (featurep :system 'windows) "--path-separator=/")))
 
     ;; Optionally configure the register formatting. This improves the register
     ;; preview for `consult-register', `consult-register-load',
@@ -206,6 +226,7 @@
                                            xref-find-references
                                            spacemacs/jump-to-definition))
     (setq xref-show-xrefs-function #'consult-xref)
+    (setq xref-show-definitions-function #'consult-xref)
 
     ;; Configure other variables and modes in the :config section,
     ;; after lazily loading the package.
@@ -218,6 +239,18 @@
      consult-theme
      spacemacs/theme-loader
      :preview-key '(:debounce 0.2 any))
+    (consult-customize
+     consult-ripgrep consult-git-grep consult-grep
+     consult-bookmark consult-recent-file
+     consult--source-recent-file consult--source-project-recent-file consult--source-bookmark
+     spacemacs/compleseus-search
+     spacemacs/compleseus-search-projectile
+     spacemacs/compleseus-search-projectile-symbol
+     spacemacs/compleseus-search-dir
+     spacemacs/compleseus-search-dir-symbol
+     spacemacs/compleseus-search-auto
+     spacemacs/embark-consult-line-multi
+     :preview-key "C-SPC")
 
     ;; hide magit buffer
     (add-to-list 'consult-buffer-filter "magit.*:.*")
@@ -247,22 +280,22 @@
                        consult-org-heading
                        consult-imenu
                        spacemacs/consult-jump-in-buffer))
-      (evil-add-command-properties command :jump t)))
+      (evil-add-command-properties command :jump t))))
 
-  ;; Configure consult-imenu for java-mode.
-  (use-package consult-imenu
-    :after consult
-    :config
-    (add-to-list 'consult-imenu-config '(java-mode :toplevel "Classes" :types
-                                                   ((?m "Methods" font-lock-function-name-face)
-                                                    (?f "Fields" font-lock-variable-name-face)
-                                                    (?c "Classes" font-lock-type-face)
-                                                    (?p "Packages" font-lock-constant-face)
-                                                    (?C "Constants" font-lock-constant-face)
-                                                    (?M "Constructors" font-lock-function-name-face)
-                                                    (?e "Enums" font-lock-type-face)
-                                                    (?E "Enum Members" font-lock-constant-face)
-                                                    (?i "Interfaces" font-lock-type-face))))))
+;; Configure consult-imenu for java-mode.
+(use-package consult-imenu
+  :after consult
+  :config
+  (add-to-list 'consult-imenu-config '(java-mode :toplevel "Classes" :types
+                                                 ((?m "Methods" font-lock-function-name-face)
+                                                  (?f "Fields" font-lock-variable-name-face)
+                                                  (?c "Classes" font-lock-type-face)
+                                                  (?p "Packages" font-lock-constant-face)
+                                                  (?C "Constants" font-lock-constant-face)
+                                                  (?M "Constructors" font-lock-function-name-face)
+                                                  (?e "Enums" font-lock-type-face)
+                                                  (?E "Enum Members" font-lock-constant-face)
+                                                  (?i "Interfaces" font-lock-type-face)))))
 
 (defun compleseus/init-consult-yasnippet ()
   (use-package consult-yasnippet
@@ -347,6 +380,7 @@
           (apply orig-fun args)
         (let ((completion-styles '(basic partial-completion orderless)))
           (apply orig-fun args))))
+
 
     (setq orderless-component-separator "[ &]")
 

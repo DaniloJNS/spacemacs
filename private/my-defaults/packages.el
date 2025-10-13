@@ -22,7 +22,7 @@
 (defconst my-defaults-packages
   '(
     org-roam
-    org-mode-custom
+    org
     ts-fold
     ;; Mode used for eww config files
     yuck-mode
@@ -32,7 +32,61 @@
     gcmh
     spacious-padding
     dirvish
+    (so-long :location built-in)
+    ultra-scroll
     diredfl))
+
+(defun my-defaults/init-ultra-scroll()
+  (use-package ultra-scroll
+    :ensure t
+    :defer t
+    :config
+    (add-hook 'ultra-scroll-hide-functions #'hl-todo-mode)
+    (add-hook 'ultra-scroll-hide-functions #'diff-hl-flydiff-mode)
+    (add-hook 'ultra-scroll-hide-functions #'jit-lock-mode)
+    (add-hook 'ultra-scroll-hide-functions #'good-scroll-mode)))
+
+(defun my-defaults/init-so-long ()
+  (use-package so-long
+    :ensure t
+    :hook (spacemacs-post-user-config . global-so-long-mode)
+    :config
+    ;; Emacs 29 introduced faster long-line detection, so they can afford a much
+    ;; larger `so-long-threshold' and its default `so-long-predicate'.
+    (if (fboundp 'buffer-line-statistics)
+        (unless (featurep 'native-compile)
+          (setq so-long-threshold 5000))
+      ;; reduce false positives w/ larger threshold
+      (setq so-long-threshold 400)
+      )
+    ;; Don't disable syntax highlighting and line numbers, or make the buffer
+    ;; read-only, in `so-long-minor-mode', so we can have a basic editing
+    ;; experience in them, at least. It will remain off in `so-long-mode',
+    ;; however, because long files have a far bigger impact on Emacs performance.
+    (cl-callf2 delq 'font-lock-mode so-long-minor-modes)
+    (cl-callf2 delq 'display-line-numbers-mode so-long-minor-modes)
+    (setf (alist-get 'buffer-read-only so-long-variable-overrides nil t) nil)
+    ;; ...but at least reduce the level of syntax highlighting
+    (add-to-list 'so-long-variable-overrides '(font-lock-maximum-decoration . 1))
+    ;; ...and insist that save-place not operate in large/long files
+    (add-to-list 'so-long-variable-overrides '(save-place-alist . nil))
+    ;; But disable everything else that may be unnecessary/expensive for large or
+    ;; wide buffers.
+    (cl-callf append so-long-minor-modes
+      '(spell-fu-mode
+        eldoc-mode
+        better-jumper-local-mode
+        ws-butler-mode
+        auto-composition-mode
+        undo-tree-mode
+        highlight-indent-guides-mode
+        hl-fill-column-mode
+        ;; These are redundant on Emacs 29+
+        flycheck-mode
+        smartparens-mode
+        smartparens-strict-mode))
+    )
+  )
 
 (defun my-defaults/init-spacious-padding ()
   (use-package spacious-padding
@@ -215,15 +269,15 @@
                                       :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
                                       :unnarrowed t))))
 
-(defun my-defaults/post-init-org-mode-custom ()
+(defun my-defaults/post-init-org ()
   ;; ------------------------------------LATEX SETUP ---------------------------------------------------
   ;; Increase preview width
-  (plist-put org-latex-preview-appearance-options
-             :page-width 1.0)
+  ;; (plist-put org-latex-preview-appearance-options
+  ;;            :page-width 1.0)
   ;; :page-width 0.8)
   ;; Use native highlighting for =LaTeX=  related syntax in =org= buffers.
   ;; By using native highlighting the =org-face= gets added which we want to avoid.
-  (setq org-highlight-latex-and-related '(native script))
+  ;; (setq org-highlight-latex-and-related '(native script))
 
   ;; ;; Use dvisvgm to generate previews
   ;; ;; You don't need this, it's the default:
@@ -231,14 +285,14 @@
 
   ;; Turn on auto-mode, it's built into Org and much faster/more featured than
   ;; org-fragtog. (Remember to turn off/uninstall org-fragtog.)
-  (add-hook 'org-mode-hook 'org-latex-preview-auto-mode)
+  ;; (add-hook 'org-mode-hook 'org-latex-preview-auto-mode)
   ;; Enable `evil-tex-mode` in LaTeX source blocks. Requires latex and evil enabled
-  (add-hook 'org-src-mode-hook
-            (when (string= major-mode "latex-mode")
-              (evil-tex-mode 1)))
+  ;; (add-hook 'org-src-mode-hook
+  ;;           (when (string= major-mode "latex-mode")
+  ;;             (evil-tex-mode 1)))
 
-  (dolist (pkg '("amsmath" "amssymb" "mathtools" "mathrsfs"))
-    (add-to-list 'org-latex-packages-alist `("" ,pkg t)))
+  ;; (dolist (pkg '("amsmath" "amssymb" "mathtools" "mathrsfs"))
+  ;;   (add-to-list 'org-latex-packages-alist `("" ,pkg t)))
 
   ;; ;; Block C-n, C-p etc from opening up previews when using auto-mode
   ;; (setq org-latex-preview-auto-ignored-commands
@@ -246,54 +300,54 @@
   ;;         scroll-up-command scroll-down-command))
 
   ;; Enable consistent equation numbering
-  (setq org-latex-preview-numbered t)
+  ;; (setq org-latex-preview-numbered t)
 
   ;; Bonus: Turn on live previews.  This shows you a live preview of a LaTeX
   ;; fragment and updates the preview in real-time as you edit it.
   ;; To preview only environments, set it to '(block edit-special) instead
-  (setq org-latex-preview-live t)
-  (setq org-latex-preview-numbered t)
+  ;; (setq org-latex-preview-live t)
+  ;; (setq org-latex-preview-numbered t)
 
   ;; More immediate live-previews -- the default delay is 1 second
-  (setq org-latex-preview-live-debounce 0.25)
+  ;; (setq org-latex-preview-live-debounce 0.25)
 
-  (setq org-latex-preview-auto-ignored-commands
-        '(next-line previous-line mwheel-scroll ultra-scroll
-                    scroll-up-command scroll-down-command
-                    evil-scroll-up evil-scroll-down evil-scroll-line-up evil-scroll-line-down))
+  ;; (setq org-latex-preview-auto-ignored-commands
+  ;;       '(next-line previous-line mwheel-scroll ultra-scroll
+  ;;                   scroll-up-command scroll-down-command
+  ;;                   evil-scroll-up evil-scroll-down evil-scroll-line-up evil-scroll-line-down))
 
-  (defun my/org-latex-preview-uncenter (ov)
-    (overlay-put ov 'before-string nil))
-  (defun my/org-latex-preview-recenter (ov)
-    (overlay-put ov 'before-string (overlay-get ov 'justify)))
-  (defun my/org-latex-preview-center (ov)
-    (save-excursion
-      (goto-char (overlay-start ov))
-      (when-let* ((elem (org-element-context))
-                  ((or (eq (org-element-type elem) 'latex-environment)
-                       (string-match-p "^\\\\\\[" (org-element-property :value elem))))
-                  (img (overlay-get ov 'display))
-                  (prop `(space :align-to (- center (0.55 . ,img))))
-                  (justify (propertize " " 'display prop 'face 'default)))
-        (overlay-put ov 'justify justify)
-        (overlay-put ov 'before-string (overlay-get ov 'justify)))))
-  (define-minor-mode org-latex-preview-center-mode
-    "Center equations previewed with `org-latex-preview'."
-    :global nil
-    (if org-latex-preview-center-mode
-        (progn
-          (add-hook 'org-latex-preview-overlay-open-functions
-                    #'my/org-latex-preview-uncenter nil :local)
-          (add-hook 'org-latex-preview-overlay-close-functions
-                    #'my/org-latex-preview-recenter nil :local)
-          (add-hook 'org-latex-preview-overlay-update-functions
-                    #'my/org-latex-preview-center nil :local))
-      (remove-hook 'org-latex-preview-overlay-close-functions
-                   #'my/org-latex-preview-recenter)
-      (remove-hook 'org-latex-preview-overlay-update-functions
-                   #'my/org-latex-preview-center)
-      (remove-hook 'org-latex-preview-overlay-open-functions
-                   #'my/org-latex-preview-uncenter)))
+  ;; (defun my/org-latex-preview-uncenter (ov)
+  ;;   (overlay-put ov 'before-string nil))
+  ;; (defun my/org-latex-preview-recenter (ov)
+  ;;   (overlay-put ov 'before-string (overlay-get ov 'justify)))
+  ;; (defun my/org-latex-preview-center (ov)
+  ;;   (save-excursion
+  ;;     (goto-char (overlay-start ov))
+  ;;     (when-let* ((elem (org-element-context))
+  ;;                 ((or (eq (org-element-type elem) 'latex-environment)
+  ;;                      (string-match-p "^\\\\\\[" (org-element-property :value elem))))
+  ;;                 (img (overlay-get ov 'display))
+  ;;                 (prop `(space :align-to (- center (0.55 . ,img))))
+  ;;                 (justify (propertize " " 'display prop 'face 'default)))
+  ;;       (overlay-put ov 'justify justify)
+  ;;       (overlay-put ov 'before-string (overlay-get ov 'justify)))))
+  ;; (define-minor-mode org-latex-preview-center-mode
+  ;;   "Center equations previewed with `org-latex-preview'."
+  ;;   :global nil
+  ;;   (if org-latex-preview-center-mode
+  ;;       (progn
+  ;;         (add-hook 'org-latex-preview-overlay-open-functions
+  ;;                   #'my/org-latex-preview-uncenter nil :local)
+  ;;         (add-hook 'org-latex-preview-overlay-close-functions
+  ;;                   #'my/org-latex-preview-recenter nil :local)
+  ;;         (add-hook 'org-latex-preview-overlay-update-functions
+  ;;                   #'my/org-latex-preview-center nil :local))
+  ;;     (remove-hook 'org-latex-preview-overlay-close-functions
+  ;;                  #'my/org-latex-preview-recenter)
+  ;;     (remove-hook 'org-latex-preview-overlay-update-functions
+  ;;                  #'my/org-latex-preview-center)
+  ;;     (remove-hook 'org-latex-preview-overlay-open-functions
+  ;;                  #'my/org-latex-preview-uncenter)))
   ;; ------------------------------------LATEX SETUP ---------------------------------------------------
 
   ;; Sets the maximum width that each line must have in a paragraph when adjusted by org-fill-paragraph

@@ -205,3 +205,24 @@ Intended for use in mode hooks."
 (defun spacemacs//elisp-mode-setup-completion ()
   (add-hook 'completion-at-point-functions #'spacemacs//elisp-completion-multi-corfu-cafs nil 'local)
   (setq-local cape-dabbrev-min-length 5))
+
+
+;; Lookup
+(defun emacs-lisp//lookup-documentation (thing)
+  "Lookup THING with `helpful-variable' if it's a variable, `helpful-callable'
+if it's callable, `apropos' otherwise."
+  (cond (thing
+         (let ((thing (intern thing)))
+           (if (and (not (cl-find-class thing))
+                    (fboundp 'helpful-symbol))
+               (helpful-symbol thing)
+             (describe-symbol thing)
+             (pop-to-buffer (help-buffer)))))
+        ((call-interactively
+          (if (fboundp #'helpful-at-point)
+              #'helpful-at-point
+            #'describe-symbol)))))
+
+(defun emacs-lisp//lookup-definition (_thing)
+  "Lookup definition of THING."
+  (call-interactively #'elisp-def))

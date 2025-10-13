@@ -1,4 +1,4 @@
-;;; config.el --- Agda2 Layer config File for Spacemacs
+;;; config.el --- MyDefaults Layer config File for Spacemacs
 ;;
 ;; Copyright (c) 2012-2024 Danilo Nascimento
 ;;

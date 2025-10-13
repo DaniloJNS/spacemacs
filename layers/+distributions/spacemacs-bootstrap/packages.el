@@ -159,9 +159,14 @@
 
   (evil-ex-define-cmd "enew" 'spacemacs/new-empty-buffer)
 
-  (define-key evil-normal-state-map (kbd "K") 'spacemacs/evil-smart-doc-lookup)
-  (define-key evil-normal-state-map (kbd "gd") 'spacemacs/jump-to-definition)
-  (define-key evil-normal-state-map (kbd "gD") 'spacemacs/jump-to-definition-other-window)
+  ;; (define-key evil-normal-state-map (kbd "K") 'spacemacs/evil-smart-doc-lookup)
+  (define-key evil-normal-state-map (kbd "K") 'spacemacs/lookup-documentation)
+  (define-key evil-normal-state-map (kbd "gd") 'spacemacs/lookup-definition)
+  (define-key evil-normal-state-map (kbd "gr") 'spacemacs/lookup-references)
+  (define-key evil-normal-state-map (kbd "gI") 'spacemacs/lookup-implementations)
+  (define-key evil-normal-state-map (kbd "gD") 'spacemacs/lookup-type-definition)
+  ;; (define-key evil-normal-state-map (kbd "gd") 'spacemacs/jump-to-definition)
+  ;; (define-key evil-normal-state-map (kbd "gD") 'spacemacs/jump-to-definition-other-window)
 
   ;; scrolling transient state
   (spacemacs|transient-state-format-hint scroll

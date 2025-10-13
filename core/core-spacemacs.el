@@ -56,6 +56,7 @@
 (require 'core-use-package-ext)
 (require 'core-spacebind)
 (require 'core-compilation)
+(require 'core-text)
 
 ;; Hooks for post-user configuration and scratch buffer customization.
 (defvar spacemacs-post-user-config-hook nil

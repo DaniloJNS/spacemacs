@@ -437,3 +437,156 @@ EXTRA is an additional parameter that's passed to the LSP function"
 (defun spacemacs//lsp-client-server-id ()
   "Return the ID of the LSP server associated with current project."
   (mapcar 'lsp--client-server-id (mapcar 'lsp--workspace-client (lsp-workspaces))))
+
+
+;; jump helpers
+
+(defun spacemacs/lsp-lookup-definition-handler ()
+  "Find definition of the symbol at point using LSP."
+  (interactive)
+  (when-let (loc (lsp-request "textDocument/definition"
+                              (lsp--text-document-position-params)))
+    (lsp-show-xrefs (lsp--locations-to-xref-items loc) nil nil)
+    'deferred))
+
+(defun spacemacs/lsp-lookup-references-handler (&optional include-declaration)
+  "Find project-wide references of the symbol at point using LSP."
+  (interactive "P")
+  (when-let
+      (loc (lsp-request "textDocument/references"
+                        (append (lsp--text-document-position-params)
+                                (list
+                                 :context `(:includeDeclaration
+                                            ,(lsp-json-bool include-declaration))))))
+    (lsp-show-xrefs (lsp--locations-to-xref-items loc) nil t)
+    'deferred))
+
+
+
+;; -*- lexical-binding: t; -*-
+
+;; File to save project state
+(defvar spacemacs/lsp-projects-state-file
+  (expand-file-name "lsp-disabled-projects" user-emacs-directory)
+  "File where the state of projects with LSP disabled is saved.")
+
+;; Variable to track projects with LSP disabled
+(defvar spacemacs/lsp-disabled-projects nil
+  "List of project root directories where LSP is disabled.")
+
+;; Load saved state
+(defun spacemacs/lsp-load-disabled-projects ()
+  "Load list of projects with LSP disabled from file."
+  (when (file-exists-p spacemacs/lsp-projects-state-file)
+    (with-temp-buffer
+      (insert-file-contents spacemacs/lsp-projects-state-file)
+      (setq spacemacs/lsp-disabled-projects
+            (read (current-buffer))))))
+
+;; Save current state
+(defun spacemacs/lsp-save-disabled-projects ()
+  "Save list of projects with LSP disabled to file."
+  (with-temp-file spacemacs/lsp-projects-state-file
+    (prin1 spacemacs/lsp-disabled-projects (current-buffer))))
+
+;; Load state on startup
+(spacemacs/lsp-load-disabled-projects)
+
+(defun spacemacs/project-root ()
+  "Retorna o diretório raiz do projeto atual usando projectile."
+  (and (fboundp 'projectile-project-root)
+       (projectile-project-root)))
+
+(defun spacemacs/lsp-enabled-for-project-p ()
+  "Verifica se LSP está habilitado para o projeto atual."
+  (let ((root (spacemacs/project-root)))
+    (and root (not (member root spacemacs/lsp-disabled-projects)))))
+
+(defun spacemacs/get-project-buffers ()
+  "Retorna lista de buffers do projeto atual."
+  (let ((root (spacemacs/project-root)))
+    (when root
+      (seq-filter
+       (lambda (buf)
+         (when-let ((file (buffer-file-name buf)))
+           (string-prefix-p root (expand-file-name file))))
+       (buffer-list)))))
+
+(defun spacemacs/disable-lsp-for-project ()
+  "Desabilita LSP para o projeto atual."
+  (interactive)
+  (let ((root (spacemacs/project-root)))
+    (unless root
+      (user-error "Não está em um projeto projectile"))
+
+    (add-to-list 'spacemacs/lsp-disabled-projects root)
+    (spacemacs/lsp-save-disabled-projects)
+
+    ;; Desliga LSP em todos os buffers do projeto
+    (dolist (buf (spacemacs/get-project-buffers))
+      (with-current-buffer buf
+        (when (bound-and-true-p lsp-mode)
+          (lsp-disconnect)
+          (lsp-mode -1))))
+
+    ;; Desliga workspace do LSP para o projeto
+    (when (fboundp 'lsp-workspace-folders-remove)
+      (lsp-workspace-folders-remove root))
+
+    (message "LSP desabilitado para o projeto: %s" root)))
+
+(defun spacemacs/enable-lsp-for-project ()
+  "Habilita LSP para o projeto atual."
+  (interactive)
+  (let ((root (spacemacs/project-root)))
+    (unless root
+      (user-error "Não está em um projeto projectile"))
+
+    (setq spacemacs/lsp-disabled-projects
+          (delete root spacemacs/lsp-disabled-projects))
+    (spacemacs/lsp-save-disabled-projects)
+
+    ;; Adiciona workspace folder se necessário
+    (when (fboundp 'lsp-workspace-folders-add)
+      (lsp-workspace-folders-add root))
+
+    ;; Ativa LSP em todos os buffers do projeto
+    (dolist (buf (spacemacs/get-project-buffers))
+      (with-current-buffer buf
+        (when (and (buffer-file-name)
+                   (not (bound-and-true-p lsp-mode)))
+          (lsp-deferred))))
+    (message "LSP habilitado para o projeto: %s" root)))
+
+(defun spacemacs/toggle-lsp-for-project ()
+  "Alterna LSP on/off para o projeto atual."
+  (interactive)
+  (if (spacemacs/lsp-enabled-for-project-p)
+      (spacemacs/disable-lsp-for-project)
+    (spacemacs/enable-lsp-for-project)))
+
+;; Hook para prevenir LSP de iniciar em projetos desabilitados
+(defun spacemacs/lsp-check-project-enabled ()
+  "Previne LSP de iniciar se o projeto está desabilitado."
+  (when (and (spacemacs/project-root)
+             (not (spacemacs/lsp-enabled-for-project-p)))
+    (lsp-mode -1)))
+
+(add-hook 'lsp-mode-hook #'spacemacs/lsp-check-project-enabled)
+
+;; Keymap personalizado
+(defvar spacemacs/lsp-project-map (make-sparse-keymap)
+  "Keymap para controlar LSP por projeto.")
+
+(define-key spacemacs/lsp-project-map (kbd "t") #'spacemacs/toggle-lsp-for-project)
+(define-key spacemacs/lsp-project-map (kbd "e") #'spacemacs/enable-lsp-for-project)
+(define-key spacemacs/lsp-project-map (kbd "d") #'spacemacs/disable-lsp-for-project)
+
+;; Bind o keymap no prefixo desejado (ex: C-c l p)
+;; Ajuste conforme sua preferência
+(global-set-key (kbd "C-c l p") spacemacs/lsp-project-map)
+
+;; Alternativa: usar com projectile commander
+;; (def-projectile-commander-method ?l
+;;   "Toggle LSP for project"
+;;   (spacemacs/toggle-lsp-for-project))

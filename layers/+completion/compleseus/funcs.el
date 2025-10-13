@@ -330,3 +330,102 @@ Note: this function relies on embark internals and might break upon embark updat
           compleseus--previous-preview-keys nil)
     )
   )
+
+(defun spacemacs/consult-jump-list (jump)
+  "Go to an entry in evil's (or better-jumper's) jumplist."
+  (interactive
+   (let (buffers)
+     (require 'consult)
+     (unwind-protect
+         (list
+          (consult--read
+           ;; REVIEW Refactor me
+           (nreverse
+            (delete-dups
+             (delq
+              nil (mapcar
+                   (lambda (mark)
+                     (when mark
+                       (cl-destructuring-bind (path pt _id) mark
+                         (let* ((visiting (find-buffer-visiting path))
+                                (buf (or visiting (find-file-noselect path t)))
+                                (dir default-directory))
+                           (unless visiting
+                             (push buf buffers))
+                           (with-current-buffer buf
+                             (goto-char pt)
+                             (font-lock-fontify-region
+                              (line-beginning-position) (line-end-position))
+                             (format "%s:%d: %s"
+                                     (car (cl-sort (list (abbreviate-file-name (buffer-file-name buf))
+                                                         (file-relative-name (buffer-file-name buf) dir))
+                                                   #'< :key #'length))
+                                     (line-number-at-pos)
+                                     (string-trim-right (or (thing-at-point 'line) ""))))))))
+                   (cddr (better-jumper-jump-list-struct-ring
+                          (better-jumper-get-jumps (better-jumper--get-current-context))))))))
+           :prompt "jumplist: "
+           :sort nil
+           :require-match t
+           :category 'jump-list))
+       (mapc #'kill-buffer buffers))))
+  (if (not (string-match "^\\([^:]+\\):\\([0-9]+\\): " jump))
+      (user-error "No match")
+    (let ((file (match-string-no-properties 1 jump))
+          (line (match-string-no-properties 2 jump)))
+      (find-file file)
+      (goto-char (point-min))
+      (forward-line (string-to-number line)))))
+
+(cl-defun spacemacs/vertico-file-search (&key query in all-files (recursive t) prompt args)
+  "Conduct a file search using ripgrep.
+
+:query STRING
+  Determines the initial input to search for.
+:in PATH
+  Sets what directory to base the search out of. Defaults to the current project's root.
+:recursive BOOL
+  Whether or not to search files recursively from the base directory.
+:args LIST
+  Arguments to be appended to `consult-ripgrep-args'."
+  (declare (indent defun))
+  (unless (executable-find "rg")
+    (user-error "Couldn't find ripgrep in your PATH"))
+  (require 'consult)
+  (setq deactivate-mark t)
+  (let* ((project-root (or (spacemacs/projectile-project-root) default-directory))
+         (directory (or in project-root))
+         (consult-ripgrep-args
+          (concat "rg "
+                  (if all-files "-uu ")
+                  (unless recursive "--maxdepth 1 ")
+                  "--null --line-buffered --color=never --max-columns=1000 "
+                  "--path-separator /   --smart-case --no-heading "
+                  "--with-filename --line-number --search-zip "
+                  "--hidden -g !.git -g !.svn -g !.hg "
+                  (mapconcat #'identity args " ")))
+         (prompt (if (stringp prompt) (string-trim prompt) "Search"))
+         (query (or query
+                    (when (spacemacs/region-active-p)
+                      (regexp-quote (doom-thing-at-point-or-region)))))
+         (consult-async-split-style consult-async-split-style)
+         (consult-async-split-styles-alist consult-async-split-styles-alist))
+    ;; Change the split style if the initial query contains the separator.
+    (when query
+      (cl-destructuring-bind (&key type separator initial _function)
+          (alist-get consult-async-split-style consult-async-split-styles-alist)
+        (pcase type
+          (`separator
+           (replace-regexp-in-string (regexp-quote (char-to-string separator))
+                                     (concat "\\" (char-to-string separator))
+                                     query t t))
+          (`perl
+           (when (string-match-p initial query)
+             (setf (alist-get 'perlalt consult-async-split-styles-alist)
+                   `(:initial ,(or (cl-loop for char in (list "%" "@" "!" "&" "/" ";")
+                                            unless (string-match-p char query)
+                                            return char)
+                                   "%")
+                              :type perl)
+                   consult-async-split-style 'perlalt))))))
+    (consult--grep prompt #'consult--ripgrep-make-builder directory query)))

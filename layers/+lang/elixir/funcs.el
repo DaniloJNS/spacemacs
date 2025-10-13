@@ -26,6 +26,8 @@
   (pcase elixir-backend
     ('alchemist (spacemacs//elixir-setup-alchemist))
     ('lsp (spacemacs//elixir-setup-lsp))))
+;; lsp backend disabled in matriarch project by dir variable in root dir
+;; Expert is locked when executed in this project
 
 (defun spacemacs//elixir-setup-company ()
   "Conditionally setup company based on backend."

@@ -26,10 +26,20 @@
 (defun dtrt-indent/init-dtrt-indent ()
   (use-package dtrt-indent
     :hook (prog-mode .
-              (lambda ()
-                (dtrt-indent-mode)
-                (dtrt-indent-adapt)))
+                     (lambda ()
+                       (dtrt-indent-mode)
+                       (dtrt-indent-adapt)))
     :config
-    (spacemacs|hide-lighter dtrt-indent-mode)))
+    (spacemacs|hide-lighter dtrt-indent-mode)
+
+    ;; Enable dtrt-indent even in smie modes so that it can update `tab-width',
+    ;; `standard-indent' and `evil-shift-width' there as well.
+    (setq dtrt-indent-run-after-smie t)
+    ;; Reduced from the default of 5000 for slightly faster analysis
+    (setq dtrt-indent-max-lines 2000)
+
+    ;; always keep tab-width up-to-date
+    ;; (push '(t tab-width) dtrt-indent-hook-generic-mapping-list)
+    ))
 
 ;;; packages.el ends here

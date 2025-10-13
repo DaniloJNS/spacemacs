@@ -25,7 +25,7 @@
   '(
     ;; (org :location (recipe :url "https://git.tecosaur.net/tec/org-mode.git" :branch "dev"))
     ;; https://abode.karthinks.com/org-latex-preview/#org6fef938
-    (org-mode-custom :location (recipe :fetcher git :url "https://git.tecosaur.net/tec/org-mode.git" :branch "dev"))
+    ;; (org-mode-custom :location (recipe :fetcher git :url "https://git.tecosaur.net/tec/org-mode.git" :branch "dev"))
     ;; (org :location (recipe :fetcher local))
     company
     company-emoji
@@ -38,7 +38,7 @@
     htmlize
     ;; ob, org, org-agenda and org-contacts are installed by `org-contrib'
     (ob :location built-in)
-    ;; (org :location elpa :min-version "9.7.8")
+    (org :location elpa :min-version "9.7.8")
     (org-agenda :location built-in)
     (org-alert  :toggle org-enable-notifications)
     (org-contacts :toggle org-enable-org-contacts-support)

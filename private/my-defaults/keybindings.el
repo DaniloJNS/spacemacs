@@ -25,8 +25,10 @@
                                           ("C-h" . evil-window-left)
                                           ("C-j" . evil-window-down)
                                           ("C-k" . evil-window-up)
-                                          ("C-o" . treemacs-select-window)
-                                          ("C-p" . ace-window)
+                                          ;; This keybind is used by better jump to forward
+                                          ;; ("C-o" . treemacs-select-window)
+                                          ;; This keybind is used by better jump to forward
+                                          ("C-k" . ace-window)
 
                                           ("M-l" . evil-window-increase-width)
                                           ("M-h" . evil-window-decrease-width)
@@ -56,12 +58,13 @@
                                           ("C-q l" . display-line-numbers-mode)
 
                                           ;; Term
-                                          ("C-d" . my-defaults//toggle-vterm-terminal)
                                           ))
 
 (with-eval-after-load 'evil
   (evil-define-key 'normal 'global (kbd "M-<tab>") 'eyebrowse-last-window-config)
   (evil-define-key 'normal 'global (kbd "C-<tab>") 'consult-buffer)
+  (evil-define-key 'normal 'global (kbd "C-<return>") 'my-defaults//toggle-vterm-terminal)
+  (evil-define-key 'insert vterm-mode-map (kbd "C-<return>") 'my-defaults//toggle-vterm-terminal)
   (evil-define-key 'normal 'global (kbd "-") 'zoom)
   (evil-define-key 'normal 'global (kbd "C--") 'zoom)
 
@@ -71,8 +74,8 @@
     (define-key evil-motion-state-map (kbd (car bind)) (cdr bind)))
 
   ;; Improve my personal workflow in travel by classes in large projects
-  (when (configuration-layer/package-used-p 'lsp-mode)
-    (evil-define-key 'normal prog-mode-map (kbd "gr") 'lsp-ui-peek-find-references))
+  ;; (when (configuration-layer/package-used-p 'lsp-mode)
+  ;;   (evil-define-key 'normal prog-mode-map (kbd "gr") 'lsp-ui-peek-find-references))
 
   ;; TABS
   ;; BUG when running in terminal with ghost escaped input
@@ -89,8 +92,8 @@
   ;; Lsp | Code Navigation
   ;; TODO: Must be define this keybing only in cases where we have ts-fold-mode enabled and the folding method is evi
   (evil-define-key 'normal prog-mode-map (kbd "<TAB>") 'toggle-fold)
-  (evil-define-key 'normal prog-mode-map (kbd "gr") 'lsp-ui-peek-find-references)
-  (evil-define-key 'visual prog-mode-map (kbd "gr") 'lsp-ui-peek-find-references)
+  ;; (evil-define-key 'normal prog-mode-map (kbd "gr") 'lsp-ui-peek-find-references)
+  ;; (evil-define-key 'visual prog-mode-map (kbd "gr") 'lsp-ui-peek-find-references)
 
   ;; Custom Org Mode Commands
   (evil-define-key 'normal org-mode-map (kbd "C-=") 'org-fill-paragraph)
