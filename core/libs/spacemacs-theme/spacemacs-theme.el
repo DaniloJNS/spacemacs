@@ -314,17 +314,17 @@ to `auto', tags may not be properly aligned. "
      `(corfu-current ((,class (:background ,ttip-sl :foreground ,base))))
 
 ;;;;; diff
-     `(diff-added             ((,class :background unspecified :foreground ,green :extend t)))
-     `(diff-changed           ((,class :background unspecified :foreground ,blue)))
+     `(diff-added             ((,class :background ,green-bg :extend t)))
+     `(diff-changed           ((,class :background ,blue-bg)))
      `(diff-header            ((,class :background ,cblk-ln-bg :foreground ,func :extend t)))
      `(diff-file-header       ((,class :background ,cblk-ln-bg :foreground ,cblk :extend t)))
-     `(diff-indicator-added   ((,class :background unspecified :foreground ,green :extend t)))
-     `(diff-indicator-changed ((,class :background unspecified :foreground ,blue)))
-     `(diff-indicator-removed ((,class :background unspecified :foreground ,red)))
-     `(diff-refine-added      ((,class :background ,green :foreground ,bg1)))
-     `(diff-refine-changed    ((,class :background ,blue :foreground ,bg1)))
-     `(diff-refine-removed    ((,class :background ,red :foreground ,bg1)))
-     `(diff-removed           ((,class :background unspecified :foreground ,red :extend t)))
+     `(diff-indicator-added   ((,class :background ,green-bg :extend t)))
+     `(diff-indicator-changed ((,class :background ,blue-bg)))
+     `(diff-indicator-removed ((,class :background ,red-bg)))
+     `(diff-refine-added      ((,class :background ,green-bg-s)))
+     `(diff-refine-changed    ((,class :background ,blue-bg-s)))
+     `(diff-refine-removed    ((,class :background ,red-bg-s)))
+     `(diff-removed           ((,class :background ,red-bg :extend t)))
 
 ;;;;; diff-hl
      `(diff-hl-insert ((,class :background ,green :foreground ,green)))
@@ -341,6 +341,22 @@ to `auto', tags may not be properly aligned. "
      `(dired-perm-write ((,class (:foreground ,base :underline t))))
      `(dired-symlink ((,class (:foreground ,cyan :background ,bg1 :inherit bold))))
      `(dired-warning ((,class (:foreground ,war))))
+
+;;;;; diredfl
+     `(diredfl-file-name ((,class (:foreground ,base))))
+     `(diredfl-file-suffix ((,class (:foreground ,magenta))))
+     `(diredfl-dir-name ((,class (:foreground ,keyword :inherit bold))))
+     `(diredfl-symlink ((,class (:foreground ,cyan :background ,bg1 :inherit bold))))
+     `(diredfl-deletion-file-name ((,class (:foreground ,red))))
+     `(diredfl-ignored-file-name ((,class (:inherit shadow))))
+     `(diredfl-dir-heading ((,class (:foreground ,comp :inherit bold))))
+     `(diredfl-date-time ((,class (:foreground ,yellow))))
+     `(diredfl-number ((,class (:foreground ,keyword))))
+     `(diredfl-write-priv ((,class (:foreground ,magenta))))
+     `(diredfl-exec-priv ((,class (:foreground ,cyan))))
+     `(diredfl-read-priv ((,class (:foreground ,aqua))))
+     `(diredfl-no-priv ((,class (:foreground ,base))))
+     `(diredfl-dir-priv ((,class (:foreground ,type))))
 
 ;;;;; dired-subtree
      `(dired-subtree-depth-1-face ((,class (:background ,bg1))))

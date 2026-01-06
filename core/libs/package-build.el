@@ -14,7 +14,9 @@
 ;; Keywords: maint tools
 
 ;; Package-Version: 4.0.0.50-git
-;; Package-Requires: ((emacs "26.1") (compat "30.0.0.0"))
+;; Package-Requires: (
+;;     (emacs  "26.1")
+;;     (compat "30.1"))
 
 ;; SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -442,15 +444,18 @@ or snapshots are build.")
   "Determine version corresponding to largest version tag for RCP.
 Return (COMMIT-HASH COMMITTER-DATE VERSION-STRING REVDESC TAG) or nil."
   (let ((regexp (package-build--version-regexp rcp))
+        (forced (oref rcp tag))
         (tag nil)
         (version '(0)))
     (dolist (n (package-build--list-tags rcp))
-      (let ((v (ignore-errors
-                 (version-to-list (and (string-match regexp n)
-                                       (match-string 1 n))))))
-        (when (and v (version-list-<= version v))
-          (setq tag n)
-          (setq version v))))
+      (when-let* ((_ (or (not forced)
+                         (equal n forced)))
+                  (_ (string-match regexp n))
+                  (m (match-string 1 n))
+                  (v (ignore-errors (version-to-list m)))
+                  (_ (version-list-<= version v)))
+        (setq tag n)
+        (setq version v)))
     (and tag
          (pcase-let ((`(,hash ,time)
                       (package-build--select-commit
@@ -1071,7 +1076,13 @@ that is put in the tarball."
     (when (and (eq system-type 'windows-nt)
                (eq (package-build--tar-type) 'gnu))
       (setq tar (replace-regexp-in-string "^\\([a-z]\\):" "/\\1" tar)))
-    (let ((default-directory directory))
+    (let ((default-directory directory)
+          (process-environment process-environment))
+      (when (eq system-type 'darwin)
+        ;; Files whose name begin with ._ are added to tarballs
+        ;; by, default, but at least we can turn that off.  See
+        ;; also https://superuser.com/a/260264.
+        (setenv "COPYFILE_DISABLE" "true"))
       (process-file
        package-build-tar-executable nil
        (get-buffer-create "*package-build-checkout*") nil
@@ -1506,16 +1517,18 @@ are subsequently dumped."
          (url (oref rcp url))
          (repo (oref rcp repo))
          (fetcher (package-recipe--fetcher rcp))
-         (version nil))
-    (cond ((not noninteractive)
-           (message " • %s package %s (from %s)..."
-                    (if package-build--inhibit-update "Fetching" "Building")
-                    name
-                    (if repo (format "%s:%s" fetcher repo) url)))
-          (package-build-verbose
+         (version nil)
+         (msg (format "%s%s package %s"
+                      (if noninteractive " • " "")
+                      (if package-build--inhibit-update "Fetching" "Building")
+                      name)))
+    (cond ((and package-build-verbose (not noninteractive))
+           (message "%s..." msg)
            (message "Package: %s" name)
            (message "Fetcher: %s" fetcher)
-           (message "Source:  %s\n" url)))
+           (message "Source:  %s\n" url))
+          ((message "%s (from %s)..." msg
+                    (if repo (format "%s:%s" fetcher repo) url))))
     (package-build--fetch rcp)
     (unless package-build--inhibit-update
       (package-build--select-version rcp)

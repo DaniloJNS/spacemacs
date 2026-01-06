@@ -144,7 +144,6 @@ Last but not least there are a lot of high class tutorials available on YouTube:
 
    - [ripgrep (rg)][ripgrep]
    - [The silver searcher (ag)][ag]
-   - [The platinum searcher (pt)][pt]
    - [ack][]
    - [GNU Grep][] or [BSD Grep][]
 
@@ -533,6 +532,9 @@ first.
 Spacemacs is a community-driven project, it needs _you_ to keep it up to date
 and to propose great and useful configurations for all the things!
 
+This repository utilizes a specialized **[AI Collaboration Framework](ai/README.md)** for maintenance, refactoring, and quality assurance.
+Contributors are encouraged to leverage our pre-configured AI agents (like **Spacky** for Elisp or **G.O.L.E.M.** for documentation) to ensure code consistency and adherence to Spacemacs conventions.
+
 Before contributing, be sure to consult the [contribution
 guidelines][CONTRIBUTING.org] and [conventions][CONVENTIONS.org].
 
@@ -637,7 +639,6 @@ Thank you!
 [ripgrep]: https://github.com/BurntSushi/ripgrep
 [ripgrep-installation]: https://github.com/BurntSushi/ripgrep#installation=
 [ag]: https://github.com/ggreer/the_silver_searcher
-[pt]: https://github.com/monochromegane/the_platinum_searcher
 [ack]: https://github.com/beyondgrep/ack3
 [GNU Grep]: https://www.gnu.org/software/grep/
 [BSD Grep]: https://man.openbsd.org/grep

@@ -45,9 +45,8 @@
     :ensure t
     :init
     ;; evilify gptel-context-buffer-mode-map
-    (require 'gptel-context)
-    (evil-set-initial-state 'gptel-context-buffer-mode 'evilified)
     (evilified-state-evilify-map gptel-context-buffer-mode-map
+      :eval-after-load gptel-context
       :mode gptel-context-buffer-mode
       :bindings
       "C-c C-c" #'gptel-context-confirm
@@ -66,7 +65,8 @@
       "$gc" 'gptel-add                      ; Add context
       "$gf" 'gptel-add-file                 ; Add a file
       "$go" 'gptel-org-set-topic            ; Set topic in Org-mode
-      "$gp" 'gptel-org-set-properties)))    ; Set properties in Org-mode
+      "$gp" 'gptel-org-set-properties       ; Set properties in Org-mode
+      "$gr" 'gptel-rewrite)))               ; Rewrite or refactor test region
 
 (defun llm-client/post-init-org ()
   "Set up Org-mode keybindings for GPTel."
@@ -86,7 +86,8 @@
     (let ((purpose-mode-was-enabled (bound-and-true-p purpose-mode)))
       (when purpose-mode-was-enabled
         (purpose-mode -1))
-      (apply orig-func args)
-      (when purpose-mode-was-enabled
-        (purpose-mode 1))))
+      (unwind-protect
+          (apply orig-func args)
+        (when purpose-mode-was-enabled
+          (purpose-mode 1)))))
   (advice-add 'gptel :around #'llm-client/disable-purpose-mode-around-for-gptel))

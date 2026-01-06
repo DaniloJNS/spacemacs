@@ -28,9 +28,7 @@
     company
     cython-mode
     dap-mode
-    ;; We are using a fork until pet is prefering ipython as default shell (https://github.com/wyuenho/emacs-pet/pull/56)
-    (pet :location (recipe :fetcher github :repo "smile13241324/emacs-pet")
-         :toggle (eq python-virtualenv-management 'pet))
+    (pet :toggle (eq python-virtualenv-management 'pet))
     eldoc
     evil-matchit
     flycheck
@@ -43,14 +41,16 @@
           :toggle (memq 'nose (flatten-list (list python-test-runner))))
     org
     pip-requirements
-    pipenv
-    poetry
-    pippel
+    (pipenv :toggle (memq 'pipenv python-enable-tools))
+    (poetry :toggle (memq 'poetry python-enable-tools))
+    (pippel :toggle (memq 'pip python-enable-tools))
+    (uv :toggle (memq 'uv python-enable-tools)
+        :location (recipe :fetcher github :repo "borgstad/uv.el" :files ("*.el")))
     py-isort
     pyenv-mode
     pydoc
     (pylookup :location (recipe :fetcher local))
-    (pytest :toggle (memq 'pytest (flatten-list (list python-test-runner))))
+    (python-pytest :toggle (memq 'pytest (flatten-list (list python-test-runner))))
     (python :location built-in)
     ;; Use the performance enhanced fork (https://github.com/jorgenschaefer/pyvenv/pull/128)
     (pyvenv :location (recipe :fetcher github :repo "sunlin7/pyvenv")
@@ -273,6 +273,24 @@
     (evilified-state-evilify-map pippel-package-menu-mode-map
       :mode pippel-package-menu-mode)))
 
+(defun python/init-uv ()
+  (use-package uv
+    :defer t
+    :init
+    (spacemacs/declare-prefix-for-mode 'python-mode
+      "u" "UV")
+    (spacemacs/set-leader-keys-for-major-mode 'python-mode
+      "uv" 'uv
+      "ua" 'uv-add
+      "ud" 'uv-remove
+      "ul" 'uv-lock
+      "ue" 'uv-edit-pyproject-toml
+      "ub" 'uv-build
+      "up" 'uv-publish
+      "un" 'uv-new
+      "ui" 'uv-init
+      "ur" 'uv-run)))
+
 (defun python/init-py-isort ()
   (use-package py-isort
     :defer t
@@ -339,18 +357,25 @@
             pylookup-db-file (concat pylookup-dir "pylookup.db")))
     (setq pylookup-completing-read 'completing-read)))
 
-(defun python/init-pytest ()
-  (use-package pytest
-    :commands (pytest-one
-               pytest-pdb-one
-               pytest-all
-               pytest-pdb-all
-               pytest-last-failed
-               pytest-pdb-last-failed
-               pytest-module
-               pytest-pdb-module)
-    :init (spacemacs//bind-python-testing-keys)
-    :config (add-to-list 'pytest-project-root-files "setup.cfg")))
+(defun python/init-python-pytest ()
+  (use-package python-pytest
+    :defer t
+    :commands (python-pytest
+               python-pytest-file
+               python-pytest-file-dwim
+               python-pytest-function
+               python-pytest-last-failed
+               python-pytest-repeat
+               python-pytest-dispatch)
+    :init
+    ;; Reuse the generic testing bindings for a consistent UX.
+    (spacemacs//bind-python-testing-keys)
+    ;; Make the override robust per-buffer, regardless of load order.
+    (add-hook 'python-mode-local-vars-hook
+              #'spacemacs//python-pytest-set-root-from-setup-cfg)
+
+    :config
+    (advice-add #'python-pytest--get-buffer :around #'spacemacs/around-python-pytest--get-buffer)))
 
 (defun python/init-python ()
   (use-package python
@@ -398,6 +423,7 @@
       "sN" 'spacemacs/python-shell-restart-switch
       "sR" 'spacemacs/python-shell-send-region-switch
       "sr" 'spacemacs/python-shell-send-region
+      "sL" 'spacemacs/python-shell-send-line-switch
       "sl" 'spacemacs/python-shell-send-line
       "ss" 'spacemacs/python-shell-send-with-output)
 
