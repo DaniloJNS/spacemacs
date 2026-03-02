@@ -238,14 +238,17 @@ of directories to file basenames."
   ;; Load the default theme.
   (spacemacs/load-default-theme)
   ;; Set the default font after display system is initialized.
+  ;; Skip when nil or empty (e.g. user relies on fontaine or other for fonts).
   (spacemacs|do-after-display-system-init
-    (unless (spacemacs/set-default-font dotspacemacs-default-font)
-      (spacemacs-buffer/warning
-       "Cannot find any of the specified fonts (%s)! Font settings may not be correct."
-       (if (listp (car dotspacemacs-default-font))
-           (mapconcat 'car dotspacemacs-default-font ", ")
-         (car dotspacemacs-default-font))))
-    (fontaine-set-preset 'medium))
+    (when (and dotspacemacs-default-font
+               (or (atom dotspacemacs-default-font)
+                   (car dotspacemacs-default-font)))
+      (unless (spacemacs/set-default-font dotspacemacs-default-font)
+        (spacemacs-buffer/warning
+         "Cannot find any of the specified fonts (%s)! Font settings may not be correct."
+         (if (listp (car dotspacemacs-default-font))
+             (mapconcat 'car dotspacemacs-default-font ", ")
+           (car dotspacemacs-default-font))))))
   ;; spacemacs init
   (setq inhibit-startup-screen t)
   ;; Go to the Spacemacs buffer on startup.
