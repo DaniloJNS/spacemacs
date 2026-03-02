@@ -209,6 +209,7 @@
     (doom-monokai-pro                 . doom-themes)
     (doom-moonlight                   . doom-themes)
     (doom-nord                        . doom-themes)
+    (doom-nord-aurora                 . doom-themes)
     (doom-nord-light                  . doom-themes)
     (doom-nova                        . doom-themes)
     (doom-oceanic-next                . doom-themes)
