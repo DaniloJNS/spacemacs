@@ -1,0 +1,12 @@
+# -*- mode: elixir-mode -*-
+# name: test with AAA format
+# key: taaa
+# --
+
+test "$1" do
+  # ARRANGE
+
+  # ACT
+
+  # ASSERT
+end

@@ -1,0 +1,8 @@
+# -*- mode: elixir-mode -*-
+# name: describe test block
+# key: desc
+# --
+
+describe "$1" do
+  $2
+end

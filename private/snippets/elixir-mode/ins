@@ -1,0 +1,6 @@
+# -*- mode: elixir-mode -*-
+# name: debug code IO.inspect
+# key: ins
+# --
+
+IO.inspect($1)
