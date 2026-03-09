@@ -24,7 +24,7 @@
 (defconst ruby-packages
   '(
     add-node-modules-path
-    bundler
+    ;; bundler
     (chruby :toggle (eq ruby-version-manager 'chruby))
     company
     dap-mode
@@ -50,19 +50,19 @@
     (rvm :toggle (eq ruby-version-manager 'rvm))
     smartparens))
 
-(defun ruby/init-bundler ()
-  (use-package bundler
-    :defer t
-    :init (dolist (mode '(ruby-mode enh-ruby-mode))
-            (spacemacs/declare-prefix-for-mode mode "mb"
-              (if (eq ruby-backend 'lsp) "build/bundle" "bundle"))
-            (spacemacs/set-leader-keys-for-major-mode mode
-              "bc" 'bundle-check
-              "bi" 'bundle-install
-              "bs" 'bundle-console
-              "bu" 'bundle-update
-              "bx" 'bundle-exec
-              "bo" 'bundle-open))))
+;; (defun ruby/init-bundler ()
+;;   (use-package bundler
+;;     :defer t
+;;     :init (dolist (mode '(ruby-mode enh-ruby-mode))
+;;             (spacemacs/declare-prefix-for-mode mode "mb"
+;;               (if (eq ruby-backend 'lsp) "build/bundle" "bundle"))
+;;             (spacemacs/set-leader-keys-for-major-mode mode
+;;               "bc" 'bundle-check
+;;               "bi" 'bundle-install
+;;               "bs" 'bundle-console
+;;               "bu" 'bundle-update
+;;               "bx" 'bundle-exec
+;;               "bo" 'bundle-open))))
 
 (defun ruby/init-chruby ()
   (use-package chruby
