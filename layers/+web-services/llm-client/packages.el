@@ -29,9 +29,26 @@
     (evedel :toggle llm-client-enable-gptel)
     (ai-org-chat :location (recipe :fetcher github :repo "ultronozm/ai-org-chat.el"))
     aidermacs
+    agent-shell
     ;; (gptel-quick :toggle llm-client-enable-gptel)
     org
     window-purpose))
+
+(defun llm-client/init-agent-shell ()
+  (use-package agent-shell
+    :defer t
+    :ensure t
+    :config
+    ;; Evil state-specific RET behavior: insert mode = newline, normal mode = send
+    (evil-define-key 'insert agent-shell-mode-map (kbd "RET") #'newline)
+    (evil-define-key 'normal agent-shell-mode-map (kbd "RET") #'comint-send-input)
+
+    ;; Configure *agent-shell-diff* buffers to start in Emacs state
+    (add-hook 'diff-mode-hook
+              (lambda ()
+                (when (string-match-p "\\*agent-shell-diff\\*" (buffer-name))
+                  (evil-emacs-state))))
+    ))
 
 ;; (defun llm-client/init-gptel-quick ()
 ;;   (use-package gptel-quick
@@ -70,7 +87,7 @@
     :config
 
     ;; (setenv "DEEPSEEK_API_BASE" "https://openrouter.ai/api/v1/chat/completions")
-    (setenv "OPENROUTER_API_KEY" "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")
+    (setenv "OPENROUTER_API_KEY" "")
     ;; (setenv "OPENAI_API_BASE" "https://llm.chutes.ai/v1")
     ;; (setenv "OPENAI_API_KEY" "cpk_b9a0034e78794e68b2660a4fdc81b04d.200768288fa15e29b2a6f7bc4dc510bd.d2Q7CuqL3dhF9yub5WPFvgC0aTxswV01")
     )
@@ -234,8 +251,6 @@
     (add-hook 'gptel-post-response-functions 'gptel-end-of-response)
     (setf (alist-get 'org-mode gptel-prompt-prefix-alist) "** Prompt\n"
           (alist-get 'org-mode gptel-response-prefix-alist) "=Response=\n")))
-
-;;
 
 (defun llm-client/post-init-org ()
   "Set up Org-mode keybindings for GPTel."
