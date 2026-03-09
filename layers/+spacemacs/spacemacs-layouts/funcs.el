@@ -41,6 +41,15 @@
       (ad-activate 'rename-buffer))
     (advice-add 'rename-buffer :around #'spacemacs//fixup-window-configs)))
 
+(defun spacemacs//perps-get (name &optional noerror)
+  "Return a perpse named NAME. Unless NOERROR is non-nil, this throws an
+error if NAME doesn't exist."
+  (cl-check-type name string)
+  (when-let (persp (persp-get-by-name name))
+    (cond ((perspective-p persp) persp)
+          ((not noerror)
+           (error "No workspace called '%s' was found" name)))))
+
 (defun spacemacs//layout-wait-for-modeline (&rest _)
   "Assure the mode-line is loaded before restoring the layouts."
   (advice-remove 'persp-load-state-from-file 'spacemacs//layout-wait-for-modeline)
