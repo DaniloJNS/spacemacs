@@ -45,8 +45,72 @@
     fontaine
     face-remap
     mixed-pitch
+    doom-themes
+    ligature
+    olivetti
+    (everforest-theme :location (recipe
+                                 :fetcher github
+                                 :repo "theorytoe/everforest-emacs"))
     modus-themes)
   "The list of Lisp packages required by the my-fonts layer.")
+
+(defun my-fonts/init-everforest-theme ()
+  (use-package everforest-theme
+    :ensure t
+    :defer t
+    :config
+    (load-theme 'everforest-hard-dark t)))
+
+(defun my-fonts/init-olivetti()
+  (use-package olivetti
+    :ensure t
+    :defer t
+    :custom
+    (olivetti-body-width 110)
+    ;; :config
+    ;; (defun my-setup-org-zen-mode ()
+    ;;   "Configurações de visual para Org-mode em monitores Ultrawide."
+    ;;   (interactive)
+
+    ;;   ;; 2. Ativa o Olivetti (centralização)
+    ;;   (olivetti-mode 1)
+
+    ;;   ;; 4. Esconde a linha de números (opcional, deixa mais limpo)
+    ;;   (display-line-numbers-mode -1))
+
+    ;; ;; Aplica a função sempre que abrir um arquivo Org
+    ;; (add-hook 'org-mode-hook 'my-setup-org-zen-mode)
+    )
+  )
+
+(defun my-fonts/init-ligature()
+  (use-package ligature
+    :config
+    ;; Habilita as ligaduras clássicas da MonoLisa para todos os modos de programação
+    (ligature-set-ligatures 'prog-mode
+                            '("-|" "-~" "---" "-<<" "-<" "--" "->" "->>" "-->" "///" "/=" "/=="
+                              "/>" "/*" "//" "::" ":::" "::=" ":=" ":>" ":<" "===" "==" "=>" "=>>"
+                              "=:=" "=/=" "!==" "!=" "!!" "!!." ">=" ">>=" ">>>" ">>" ">:" ">-"
+                              ">=>" ">->" "<=" "<==" "<=>" "<=<" "<->" "<--" "<-" "<-<" "<<="
+                              "<<<" "<<" "<~" "<~~" "<~>" "<*" "<*>" "<|" "<|>" "<||" "<|||"
+                              "<$" "<$>" "<+" "<+>" "</" "</>")))
+  (global-ligature-mode))
+
+(defun my-fonts/init-doom-themes()
+  (use-package doom-themes
+    :ensure t
+    :custom
+    (doom-themes-enable-bold nil)
+    (doom-themes-padded-modeline t)
+    :config
+    ;; Enable flashing mode-line on errors
+    (doom-themes-visual-bell-config)
+    ;; Enable custom neotree theme (nerd-icons must be installed!)
+    ;; (doom-themes-neotree-config)
+    ;; or for treemacs users
+    ;; (doom-themes-treemacs-config)
+    ;; Corrects (and improves) org-mode's native fontification.
+    (doom-themes-org-config)))
 
 (defun my-fonts/init-mixed-pitch ()
   (use-package mixed-pitch
@@ -71,7 +135,7 @@
     ;; This is defined in Emacs C code: it belongs to font settings.
     (x-underline-at-descent-line nil)
     ;; And this is for Emacs28.
-    ;; (text-scale-remap-header-line t)
+    (text-scale-remap-header-line t)
     ;; This is the default value.  Just including it here for completeness.
     (fontaine-latest-state-file (locate-user-emacs-file "fontaine-latest-state.eld"))
     (fontaine-faces
@@ -84,59 +148,52 @@
     (fontaine-presets
      '(
        (regular
-        :variable-pitch-text-height 1.0 ;; by defaults its height is 1.1x the value of variable-pitch. But text is very big
+        :variable-pitch-text-height 1.1 ;; by defaults its height is 1.1x the value of variable-pitch. But text is very big
 
         ;; Space Mono was the only font I found installed that contains all the special characters used by doom modeline
-        :mode-line-active-family "SpaceMono Nerd Font"
-        :mode-line-active-font "SpaceMono Nerd Font"
+        ;; :mode-line-active-family "SpaceMono Nerd Font"
+        ;; :mode-line-active-font "SpaceMono Nerd Font"
+        :mode-line-active-family "JetBrainsMono Nerd Font"
         :mode-line-active-weight regular
         :mode-line-active-slant normal
         :mode-line-active-width nil
-        :mode-line-active-height 115
+        :mode-line-active-height 120
 
-        :mode-line-inactive-family "SpaceMono Nerd Font"
-        :mode-line-inactive-font "SpaceMono Nerd Font"
+        :mode-line-inactive-family "JetBrainsMono Nerd Font"
         :mode-line-inactive-weight regular
         :mode-line-inactive-slant normal
         :mode-line-inactive-width nil
-        :mode-line-inactive-height 115) ; like this it uses all the fallback values and is named `regular'
-
+        :mode-line-inactive-height 120) ; like this it uses all the fallback values and is named `regular'
        (medium
-        :default-family "Monaspace Neon"
+        :default-family "MonoLisa"
         :default-height 115
         :default-weight regular
 
-        :fixed-pitch-family "Monaspace Neon"
+        :fixed-pitch-family "MonoLisa"
         :fixed-pitch-weight regular
         :fixed-pitch-height 115
 
-        :variable-pitch-family "Iosevka Comfy Wide Duo"
-        :variable-pitch-height 120
+        ;; :variable-pitch-text-height 1.1 ;; by defaults its height is 1.1x the value of variable-pitch. But text is very big
+        ;; :variable-pitch-family "Iosevka Comfy Wide Duo"
+        ;; :variable-pitch-family "IBM Plex Sans"
+        ;; :variable-pitch-family "Source Sans Pro"
+        :variable-pitch-family "Inter"
+        :variable-pitch-weight regular
+        :variable-pitch-height 125
 
         :inherit regular)
 
        (MonoLisa
-        :default-family "MonoLisa Nerd Font Mono"
+        :default-family "MonoLisa"
         :default-height 120
         :default-weight regular
 
-        :fixed-pitch-family "MonoLisa Nerd Font Mono"
+        :fixed-pitch-family "MonoLisa"
         :fixed-pitch-weight regular
         :fixed-pitch-height 120
 
         :variable-pitch-family "Iosevka Comfy Wide Duo"
-        :variable-pitch-height 120)
-
-       (DejavuSansMono
-        :default-family "Dejavu Sans Mono"
-        :default-height 120
-        :default-weight regular
-
-        :fixed-pitch-family "Dejavu Sans Mono"
-        :fixed-pitch-weight regular
-        :fixed-pitch-height 120
-
-        :variable-pitch-family "Iosevka Comfy Wide Duo"
+        :variable-pitch-weight "Iosevka Comfy Wide Duo"
         :variable-pitch-height 120)
 
        (JetBrainsMono
@@ -151,42 +208,6 @@
         :variable-pitch-family "Iosevka Comfy Wide Duo"
         :variable-pitch-height 120)
 
-       (SourceCode
-        :default-family "Source Code Pro"
-        :default-height 120
-        :default-weight regular
-
-        :fixed-pitch-family "Source Code Pro"
-        :fixed-pitch-weight regular
-        :fixed-pitch-height 120
-
-        :variable-pitch-family "Iosevka Comfy Wide Duo"
-        :variable-pitch-height 120)
-
-       (SourceCode
-        :default-family "Source Code Pro"
-        :default-height 120
-        :default-weight regular
-
-        :fixed-pitch-family "Source Code Pro"
-        :fixed-pitch-weight regular
-        :fixed-pitch-height 120
-
-        :variable-pitch-family "Iosevka Comfy Wide Duo"
-        :variable-pitch-height 120)
-
-       (FiraCode
-        :default-family "Fira Code"
-        :default-height 120
-        :default-weight regular
-
-        :fixed-pitch-family "Fira Code"
-        :fixed-pitch-weight regular
-        :fixed-pitch-height 120
-
-        :variable-pitch-family "Iosevka Comfy Wide Motion"
-        :variable-pitch-height 110)
-
        (MonaspaceNeon
         :default-family "Monaspace Neon"
         :default-height 120
@@ -197,30 +218,6 @@
         :fixed-pitch-height 120
 
         :variable-pitch-family "Iosevka Comfy Wide Motion"
-        :variable-pitch-height 120)
-
-       (NaruMonoDemo
-        :default-family "Naru Mono Demo"
-        :default-height 120
-        :default-weight bold
-
-        :fixed-pitch-family "Naru Mono Demo"
-        :fixed-pitch-weight bold
-        :fixed-pitch-height 120
-
-        :variable-pitch-family "Iosevka Comfy Wide Duo"
-        :variable-pitch-height 100)
-
-       (mode-line
-        :default-family "MonoLisa Nerd Font Mono"
-        :default-height 130
-        :default-weight regular
-
-        :fixed-pitch-family "MonoLisa Nerd Font Mono"
-        :fixed-pitch-weight regular
-        :fixed-pitch-height 130
-
-        :variable-pitch-family "Iosevka Comfy Wide Duo"
         :variable-pitch-height 120)
 
        (large
@@ -266,17 +263,13 @@
     ;; (add-hook 'enable-theme-functions #'fontaine-apply-current-preset)
     ;; (add-hook 'enable-theme-functions (lambda () (fontaine-set-preset 'medium)))
 
+    ;; Re-apply theming-modifications after fontaine runs (after-init), so
+    ;; vertical-border, window-divider, mode-line customizations etc. are not
+    ;; overwritten by fontaine's face application.
+
     ;; Makes comments text and keywords italics
     ;; This is working in emacsclient but not emacs.
     ;; Your font must have ana italic available.
-    (set-face-attribute 'font-lock-comment-face nil
-                        ;; :font "Iosevka Comfy Wide Motion-12"
-                        :font "Iosevka Comfy Wide Duo"
-                        :slant 'italic
-                        :weight 'regular
-                        ;; :foreground "#0ec9ea"
-                        ;; :background "#1A1B26"
-                        ) ;; Fundo claro para comentários (opcional)
     ))
 
 (defun my-fonts/init-face-remap()
@@ -328,7 +321,11 @@
           '((agenda-structure . (variable-pitch light 2.2))
             (agenda-date . (variable-pitch regular 1.3))
             (t . (regular 1.15))))
+    (setq modus-vivendi-tinted-palette-overrides
+          '((bg-main "#1e1e1e")     ; Eleva o fundo para evitar smearing profundo
+            (fg-main "#ffffff")     ; Garante contraste máximo para caracteres
+            (comment "#a0a0a0")     ; Torna comentários mais visíveis
+            (string "#70b900")))    ; Verde vibrante mas legível
     :config
     ;; (modus-themes-select 'modus-vivendi-tinted)
-
     ))

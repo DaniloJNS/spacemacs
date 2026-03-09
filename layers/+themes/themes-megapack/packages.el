@@ -53,7 +53,7 @@
         eziam-themes
         farmhouse-themes
         flatland-theme
-        flatui-theme
+        ;; flatui-theme
         gandalf-theme
         gotham-theme
         grandshell-theme
@@ -71,7 +71,7 @@
         lush-theme
         madhat2r-theme
         material-theme
-        minimal-theme
+        ;; minimal-theme
         ;; modus-themes
         moe-theme
         molokai-theme
@@ -123,6 +123,7 @@
         (zonokai-emacs :location (recipe
                                   :fetcher github
                                   :repo "ZehCnaS34/zonokai-emacs"))
+        doom-themes
         ))
 
 ;; define programmatically the init functions
@@ -137,6 +138,9 @@
     (doom-themes-enable-bold nil)
     (doom-themes-padded-modeline t)
     :config
+    (load-file "./local/everforest-theme/doom-everforest-theme.el")
+    (load-file "./local/everforest-theme/doom-everforest-light-theme.el")
+
     ;; Enable flashing mode-line on errors
     (doom-themes-visual-bell-config)
     ;; Enable custom neotree theme (nerd-icons must be installed!)

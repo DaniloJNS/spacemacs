@@ -55,4 +55,5 @@ theme."
 
 (defun spacemacs/update-theme (&rest args)
   (interactive)
-  (spacemacs//theming spacemacs--cur-theme))
+  (when spacemacs--cur-theme
+    (spacemacs//theming spacemacs--cur-theme)))
