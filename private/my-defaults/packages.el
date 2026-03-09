@@ -22,8 +22,10 @@
 (defconst my-defaults-packages
   '(
     org-roam
-    org
+    (org :location elpa :min-version "9.7.8")
     ts-fold
+    evil-textobj-tree-sitter
+    javelin
     ;; Mode used for eww config files
     yuck-mode
     zoom
@@ -35,6 +37,44 @@
     (so-long :location built-in)
     ultra-scroll
     diredfl))
+
+(defun my-defaults/init-javelin()
+  (use-package javelin
+    :ensure t
+    :config
+    (global-javelin-minor-mode 1)))
+
+(defun my-defaults/init-evil-textobj-tree-sitter()
+  (use-package evil-textobj-tree-sitter
+    :ensure t
+    :defer t
+    :config
+    ;; bind `function.outer`(entire function block) to `b` for use in things like `vaf`, `yaf`
+    (define-key evil-outer-text-objects-map "b"
+                (lambda ()
+                  (interactive)
+                  (evil-textobj-tree-sitter-get-textobj "block.outer")))
+
+    ;; bind `function.inner`(function block without name and args) to `b` for use in things like `vif`, `yif`
+    (define-key evil-inner-text-objects-map "b"
+                (lambda ()
+                  (interactive)
+                  (evil-textobj-tree-sitter-get-textobj "block.inner")))
+
+    ;; Goto start of previous function
+    (define-key evil-normal-state-map
+                (kbd "[[")
+                (lambda ()
+                  (interactive)
+                  (evil-textobj-tree-sitter-goto-textobj "block.outer" nil)))
+
+    (define-key evil-normal-state-map
+                (kbd "]]")
+                (lambda ()
+                  (interactive)
+                  (evil-textobj-tree-sitter-goto-textobj "block.inner" t)))
+    )
+  )
 
 (defun my-defaults/init-ultra-scroll()
   (use-package ultra-scroll
@@ -125,10 +165,6 @@
     ;; code.
     :load-path ("~/workspace/open-source-projects/combobulate")))
 
-;; (defun my-defaults/init-emacs-color-theme-solarized ()
-;;   (use-package emacs-color-theme-solarized
-;;     :ensure t))
-
 (defun my-defaults/init-dirvish ()
   (use-package dirvish
     :ensure t
@@ -148,9 +184,11 @@
           '(:left (sort file-time symlink) :right (omit yank index)))
     (setq dirvish-attributes           ; The order *MATTERS* for some attributes
           ;; '(file-time file-size vc-state subtree-state nerd-icons collapse git-msg)
-          '(vc-state subtree-state nerd-icons collapse git-msg file-size)
+          ;; '(vc-state subtree-state nerd-icons collapse git-msg file-size)
+          '(subtree-state nerd-icons collapse file-size)
           dirvish-side-attributes
-          '(vc-state nerd-icons collapse file-size))
+          ;; '(vc-state nerd-icons collapse file-size))
+          '(nerd-icons collapse file-size))
     (setq dirvish-subtree-state-style 'nerd)
     (setq delete-by-moving-to-trash t)
     (setq dirvish-path-separators (list
@@ -183,11 +221,12 @@
     (evil-define-key 'normal dirvish-mode-map (kbd "J") #'dirvish-fd)
     (evil-define-key 'normal dirvish-mode-map (kbd "C-f") #'dirvish-fd)
     :bind ; Bind `dirvish-fd|dirvish-side|dirvish-dwim' as you see fit
-    (("C-c f" . dirvish)
+    (("C-c d" . dirvish)
      :map dirvish-mode-map               ; Dirvish inherits `dired-mode-map'
      (";"   . dired-up-directory)        ; So you can adjust `dired' bindings here
      ("?"   . dirvish-dispatch)          ; [?] a helpful cheatsheet
-     ("a"   . dirvish-setup-menu)        ; [a]ttributes settings: press `a' + `t' toggles mtime, etc.
+     ("a"   . dirvish-setup-menu)        ; [a] attributes settings: press `a' + `t' toggles mtime, etc.
+     ("c"   . dired-create-empty-file)   ; [c] alias to create an empty file.
      ("f"   . dirvish-file-info-menu)    ; [f]ile info
      ("o"   . dirvish-quick-access)      ; [o]pen `dirvish-quick-access-entries'
      ("s"   . dirvish-quicksort)         ; [s]ort flie list
@@ -244,7 +283,8 @@
     (add-to-list 'zoom-ignored-buffer-name-regexps "^*[hH]elm.*")
     (add-to-list 'zoom-ignored-buffer-name-regexps "^*[tT]reemacs.*")
     (custom-set-variables
-     '(zoom-size (size-callback)))))
+     '(zoom-size (size-callback)))
+    ))
 
 (defun show-buffer-name()
   (interactive)
@@ -269,7 +309,7 @@
                                       :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
                                       :unnarrowed t))))
 
-(defun my-defaults/post-init-org ()
+(defun my-defaults/pre-init-org ()
   ;; ------------------------------------LATEX SETUP ---------------------------------------------------
   ;; Increase preview width
   ;; (plist-put org-latex-preview-appearance-options
@@ -354,6 +394,10 @@
   (add-hook 'org-mode-hook
             (lambda ()
               (setq-local fill-column 120)))
+  ;; Increase font size in 10% from default for org files
+  (add-hook 'org-mode-hook
+            (lambda ()
+              (variable-pitch-mode)))
   ;; Configure TODO behavior
   ;; When using a hierarchical TODO, that is, a task that is linked to several subtasks (children),
   ;; it prevents this task from being moved to completed until all of its children are completed.
@@ -560,7 +604,8 @@
                            (org-tags-match-list-sublevels nil))))
                    nil))))
     ;; Must do this so the agenda knows where to look for my files
-    (setq org-agenda-files '("~/org" "~/Documentos/org-roam" "~/.org-jira" "~/org/rebase/infleet" "~/org/personal"))
+    ;; reminder: change emacs custom settings in .spacemacs by changing the value of this variable
+    (setq org-agenda-files '("~/org" "~/Documents/org-roam" "~/org/infleet" "~/org/personal" "~/org/core-development"))
 
     (setq org-jira-custom-jqls '(
                                  (:jql "project = 'SFI' and assignee = currentUser() and status NOT IN ('CONCLUÍDO', 'Cancelado') ORDER BY created DESC"
