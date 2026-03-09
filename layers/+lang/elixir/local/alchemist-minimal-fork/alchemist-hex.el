@@ -171,7 +171,7 @@
                   (insert "     (")
                   (insert-button "docs"
                                  'face font-lock-constant-face
-                                 'action (lambda (x) (browse-url (button-get x 'url)))
+                                 'action (lambda (x) (eww-browse-url (button-get x 'url)))
                                  'url (format "%s/%s/%s" alchemist-hexdoc-url package-name version))
                   (insert ")\n"))) releases)
         (align-regexp (point-min) (point-max) (concat "\\(\\s-*\\)" "     (") 1 1 t)
