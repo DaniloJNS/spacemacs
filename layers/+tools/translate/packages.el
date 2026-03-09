@@ -23,7 +23,7 @@
 
 (defconst translate-packages
   '(translate-mode
-    go-translate
+    gt
     ;; treemacs-evil
     ))
 
@@ -33,8 +33,10 @@
     :defer t
     :hook (translate-mode . translate//set-translate-mode-paragraph-functions)))
 
-(defun translate/init-go-translate ()
-  (use-package go-translate
+(defun translate/init-gt ()
+  (use-package gt
+    :ensure t
+    :defer t
     ;; :commands (gts-translate)
     :config
     ;; (defclass translate//reference-paragraph-texter (gts-texter) ())
@@ -48,6 +50,7 @@
     ;;       (user-error "Make sure there is any word at point, or selection exists"))
     ;;     (let ((path (gts-path o text)))
     ;;       (cl-values text path))))
+
     ;; (defun translate//check-and-get-render (render)
     ;;   (if (equal render 'posframe)
     ;;       (if (featurep 'posframe)
@@ -55,12 +58,14 @@
     ;;         (display-warning 'translate "Missing package `posframe', back to use default `gts-buffer-render'.")
     ;;         (gts-buffer-render))
     ;;     (gts-buffer-render)))
+
     ;; (defconst translate//paragraph-translator
     ;;   (gts-translator
     ;;    :picker (translate//reference-paragraph-picker)
     ;;    :engines (list (gts-google-engine) (gts-google-rpc-engine) (gts-bing-engine))
     ;;    :render (translate//check-and-get-render translate/paragraph-render))
     ;;   "Paragraph translator for `go-translate'.")
+
     ;; (defconst translate//word-translator
     ;;   (gts-translator
     ;;    :picker (gts-noprompt-picker)

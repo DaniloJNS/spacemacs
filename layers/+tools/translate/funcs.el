@@ -21,7 +21,7 @@
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 (when (and (configuration-layer/package-used-p 'translate-mode)
-           (configuration-layer/package-used-p 'go-translate))
+           (configuration-layer/package-used-p 'gt))
 
   (defun translate/translate-current-reference-paragraph ()
     "Mostrar todas as traduções disponíveis do parágrafo de referência em um quadro pop-up."
