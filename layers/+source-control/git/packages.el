@@ -266,6 +266,8 @@
 
 (defun git/init-magit-delta ()
   (use-package magit-delta
+    :custom
+    (setq magit-delta-default-dark-theme "Monokai Extended")
     :hook (magit-mode . magit-delta-mode)))
 
 (defun git/init-magit-gitflow ()
