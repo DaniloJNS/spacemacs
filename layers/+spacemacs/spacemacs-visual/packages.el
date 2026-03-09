@@ -116,6 +116,7 @@
     (push '("^.*TODOs.org.*$" :regexp t  :dedicated nil :position bottom :stick t :noselect t   :height 0.4) popwin:special-display-config)
     (push '("^.*prodigy.*$" :regexp t  :dedicated nil :position bottom :stick t :noselect t   :height 0.4) popwin:special-display-config)
     (push '("^.*devdoc.*$" :regexp t  :dedicated nil :position bottom :stick t :noselect t   :height 0.4) popwin:special-display-config)
+    (push '("^.*scractch.*$" :regexp t  :dedicated nil :position bottom :stick t :noselect t   :height 0.4) popwin:special-display-config)
 
     (advice-add 'popwin:match-config :around #'spacemacs/advice-popwin)))
 

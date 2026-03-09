@@ -39,13 +39,14 @@
     :custom
     (centaur-tabs-set-icons tabs-icons)
     (centaur-tabs-gray-out-icons 'buffer)
-    (centaur-tabs-set-bar 'left)
+    (centaur-tabs-set-bar nil)
+    (x-underline-at-descent-line nil)
     (centaur-tabs-set-modified-marker t)
     (centaur-tabs-show-navigation-buttons t)
     (centaur-tabs-close-button "✕")
     (centaur-tabs-modified-marker "•")
     (centaur-tabs-cycle-scope 'tabs)
-    (centaur-tabs-style 'wave)
+    (centaur-tabs-style 'bar)
     :init
     (if (daemonp)
         (add-hook 'server-after-make-frame-hook #'centaur-tabs-mode)
