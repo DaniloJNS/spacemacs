@@ -85,11 +85,6 @@
     ;; (aidermacs-architect-model "openrouter/moonshotai/kimi-k2:free")
     ;; (aidermacs-editor-model "openai/moonshotai/kimi-k2:free")
     :config
-
-    ;; (setenv "DEEPSEEK_API_BASE" "https://openrouter.ai/api/v1/chat/completions")
-    (setenv "OPENROUTER_API_KEY" "")
-    ;; (setenv "OPENAI_API_BASE" "https://llm.chutes.ai/v1")
-    ;; (setenv "OPENAI_API_KEY" "cpk_b9a0034e78794e68b2660a4fdc81b04d.200768288fa15e29b2a6f7bc4dc510bd.d2Q7CuqL3dhF9yub5WPFvgC0aTxswV01")
     )
   )
 
