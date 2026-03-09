@@ -34,6 +34,8 @@
       "gr"  "evil-mc")
     (add-hook 'prog-mode-hook 'turn-on-evil-mc-mode)
     (add-hook 'text-mode-hook 'turn-on-evil-mc-mode)
+    :custom
+    (evil-mc-cursors-keymap-prefix "gw")
     :config
     (add-hook 'magit-mode-hook 'turn-off-evil-mc-mode)
     (setq-default evil-mc-one-cursor-show-mode-line-text nil)
@@ -44,6 +46,13 @@
     (evil-define-key 'normal evil-mc-key-map
       "p" #'spacemacs/evil-mc-paste-after
       "P" #'spacemacs/evil-mc-paste-before)
+
+    ;; Preventing keybinds already in use from being overwritten
+    (evil-define-key* '(normal visual) evil-mc-key-map
+      (kbd "C-n") 'evil-mc-make-and-goto-next-match
+      (kbd "C-S-n") 'evil-mc-make-and-goto-prev-match
+      (kbd "C-t") nil
+      (kbd "C-p") nil)
 
     (evil-define-key '(normal insert) evil-mc-key-map
       (kbd "C-M-j") #'evil-mc-make-cursor-move-next-line
