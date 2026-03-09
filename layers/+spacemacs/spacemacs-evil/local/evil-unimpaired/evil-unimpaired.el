@@ -82,16 +82,16 @@
 
 ;; from tpope's unimpaired
 (define-key evil-normal-state-map (kbd "[ SPC")
-  'evil-unimpaired/insert-space-above)
+            'evil-unimpaired/insert-space-above)
 (define-key evil-normal-state-map (kbd "] SPC")
-  'evil-unimpaired/insert-space-below)
+            'evil-unimpaired/insert-space-below)
 (define-key evil-normal-state-map (kbd "[ e") 'drag-stuff-up)
 (define-key evil-normal-state-map (kbd "] e") 'drag-stuff-down)
 (define-key evil-visual-state-map (kbd "[ e") 'drag-stuff-up)
 (define-key evil-visual-state-map (kbd "] e") 'drag-stuff-down)
 ;; navigation
-(define-key evil-motion-state-map (kbd "[ b") 'previous-buffer)
-(define-key evil-motion-state-map (kbd "] b") 'next-buffer)
+;; (define-key evil-motion-state-map (kbd "[ b") 'previous-buffer)
+;; (define-key evil-motion-state-map (kbd "] b") 'next-buffer)
 (define-key evil-motion-state-map (kbd "[ f") 'evil-unimpaired/previous-file)
 (define-key evil-motion-state-map (kbd "] f") 'evil-unimpaired/next-file)
 (define-key evil-motion-state-map (kbd "] l") 'spacemacs/next-error)

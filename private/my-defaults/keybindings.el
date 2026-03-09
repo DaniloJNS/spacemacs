@@ -28,7 +28,7 @@
                                           ;; This keybind is used by better jump to forward
                                           ;; ("C-o" . treemacs-select-window)
                                           ;; This keybind is used by better jump to forward
-                                          ("C-k" . ace-window)
+                                          ("C-=" . ace-window)
 
                                           ("M-l" . evil-window-increase-width)
                                           ("M-h" . evil-window-decrease-width)
@@ -37,8 +37,9 @@
                                           ("C-<->" . zoom)
 
                                           ;; Better search experience
-                                          ("gw" . spacemacs/symbol-overlay)
-                                          ("gW" . symbol-overlay-remove-all)
+                                          ;; This keybinds are usad by multi-cursors
+                                          ;; ("gw" . spacemacs/symbol-overlay)
+                                          ;; ("gW" . symbol-overlay-remove-all)
 
                                           ("C-f" . symbol-overlay-remove-all)
                                           ("gC"  . symbol-overlay-remove-all)
