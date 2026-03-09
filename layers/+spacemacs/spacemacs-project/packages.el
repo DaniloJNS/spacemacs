@@ -99,9 +99,6 @@
     ;; (define-key spacemacs/lsp-project-map (kbd "t") #'spacemacs/toggle-lsp-for-project)
     ;; (define-key spacemacs/lsp-project-map (kbd "e") #'spacemacs/enable-lsp-for-project)
     ;; (define-key spacemacs/lsp-project-map (kbd "d") #'spacemacs/disable-lsp-for-project)
-    :hook
-    ;; (lsp-completion-mode . spacemacs//lsp-mode-setup-completion)
-    (lsp-mode #'spacemacs/lsp-check-project-enabled)
     :config
     (projectile-mode)
     ;; Automatic tracking of known projects supercharges the scrolling of company completion suggestions

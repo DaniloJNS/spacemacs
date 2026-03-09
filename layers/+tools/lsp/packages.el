@@ -44,10 +44,7 @@
   (use-package lsp-mode
     :defer t
     :init
-    (spacemacs/set-leader-keys "pOl" 'spacemacs/toggle-lsp-for-project) ; Start aider contentx
-    (define-key spacemacs/lsp-project-map (kbd "t") #'spacemacs/toggle-lsp-for-project)
-    (define-key spacemacs/lsp-project-map (kbd "e") #'spacemacs/enable-lsp-for-project)
-    (define-key spacemacs/lsp-project-map (kbd "d") #'spacemacs/disable-lsp-for-project)
+    (spacemacs/set-leader-keys "pOl" 'spacemacs/toggle-lsp-for-project)
     (setq lsp-server-install-dir (concat spacemacs-cache-directory "lsp/")
           lsp-session-file (concat lsp-server-install-dir (file-name-nondirectory ".lsp-session-v1"))
           lsp-eslint-library-choices-file (concat lsp-server-install-dir ".lsp-eslint-choices")
@@ -64,9 +61,8 @@
                 #'spacemacs//lsp-booster--advice-json-parse)
     (advice-add 'lsp-resolve-final-command :around #'spacemacs//lsp-booster--advice-final-command)
     ;; If you find something else should be ignored, you could also set them here
-    :hook
+    ;; :hook
     ;; (lsp-completion-mode . spacemacs//lsp-mode-setup-completion)
-    (lsp-mode #'spacemacs/lsp-check-project-enabled)
     :config
     (if lsp-use-upstream-bindings
         (spacemacs/lsp-bind-upstream-keys)
@@ -121,14 +117,16 @@
     (setq lsp-modeline-code-action-icons-enable nil)
     ;; diagnostics
     (setq lsp-ui-sideline-show-diagnostics t)
-    (setq lsp-ui-sideline-show-hover nil)
+    (setq lsp-ui-sideline-show-hover t)
     ;; docs
-    (setq lsp-ui-doc-enable t)
-    (setq lsp-ui-doc-position "top")
-    (setq lsp-ui-doc-side "right")
+    (setq lsp-ui-doc-enable nil)
+    (setq lsp-ui-doc-position 'at-point)
+    (setq lsp-ui-doc-side 'right)
+    (setq lsp-ui-doc-alignment 'window)
     (setq lsp-ui-doc-delay 0.2)
-    (setq lsp-ui-doc-show-with-cursor nil)
+    (setq lsp-ui-doc-show-with-cursor t)
     (setq lsp-ui-doc-show-with-mouse t)
+    (setq lsp-ui-doc-use-childframe t)
     ;; imenu
     (setq lsp-ui-imenu-kind-position 'top)
     (setq lsp-ui-imenu-buffer-position "right")

@@ -129,45 +129,45 @@ variable."
 ;; Toggles
 
 ;; File to save project state
-(defvar my/lsp-projects-state-file
+(defvar spacemacs/lsp-projects-state-file
   (expand-file-name "lsp-disabled-projects" user-emacs-directory)
   "File where the state of projects with LSP disabled is saved.")
 
 ;; Variable to track projects with LSP disabled
-(defvar my/lsp-disabled-projects nil
+(defvar spacemacs/lsp-disabled-projects nil
   "List of project root directories where LSP is disabled.")
 
 ;; Load saved state
-(defun my/lsp-load-disabled-projects ()
+(defun spacemacs/lsp-load-disabled-projects ()
   "Load list of projects with LSP disabled from file."
-  (when (file-exists-p my/lsp-projects-state-file)
+  (when (file-exists-p spacemacs/lsp-projects-state-file)
     (with-temp-buffer
-      (insert-file-contents my/lsp-projects-state-file)
-      (setq my/lsp-disabled-projects
+      (insert-file-contents spacemacs/lsp-projects-state-file)
+      (setq spacemacs/lsp-disabled-projects
             (read (current-buffer))))))
 
 ;; Save current state
-(defun my/lsp-save-disabled-projects ()
+(defun spacemacs/lsp-save-disabled-projects ()
   "Save list of projects with LSP disabled to file."
-  (with-temp-file my/lsp-projects-state-file
-    (prin1 my/lsp-disabled-projects (current-buffer))))
+  (with-temp-file spacemacs/lsp-projects-state-file
+    (prin1 spacemacs/lsp-disabled-projects (current-buffer))))
 
 ;; Load state on startup
-(my/lsp-load-disabled-projects)
+(spacemacs/lsp-load-disabled-projects)
 
-(defun my/project-root ()
+(defun spacemacs/project-root ()
   "Return the root directory of the current project using projectile."
   (and (fboundp 'projectile-project-root)
        (projectile-project-root)))
 
-(defun my/lsp-enabled-for-project-p ()
+(defun spacemacs/lsp-enabled-for-project-p ()
   "Check if LSP is enabled for the current project."
-  (let ((root (my/project-root)))
-    (and root (not (member root my/lsp-disabled-projects)))))
+  (let ((root (spacemacs/project-root)))
+    (and root (not (member root spacemacs/lsp-disabled-projects)))))
 
-(defun my/get-project-buffers ()
+(defun spacemacs/get-project-buffers ()
   "Return list of buffers belonging to the current project."
-  (let ((root (my/project-root)))
+  (let ((root (spacemacs/project-root)))
     (when root
       (seq-filter
        (lambda (buf)
@@ -175,24 +175,23 @@ variable."
            (string-prefix-p root (expand-file-name file))))
        (buffer-list)))))
 
-(defun my/disable-lsp-for-project ()
+(defun spacemacs/disable-lsp-for-project ()
   "Disable LSP for the current project."
   (interactive)
-  (let ((root (my/project-root)))
+  (let ((root (spacemacs/project-root)))
     (unless root
       (user-error "Not in a projectile project"))
 
-    (add-to-list 'my/lsp-disabled-projects root)
-    (my/lsp-save-disabled-projects)
+    (add-to-list 'spacemacs/lsp-disabled-projects root)
+    (spacemacs/lsp-save-disabled-projects)
+
 
     ;; Turn off LSP in all project buffers
-    (dolist (buf (my/get-project-buffers))
+    (dolist (buf (spacemacs/get-project-buffers))
       (with-current-buffer buf
         (when (bound-and-true-p lsp-mode)
           (condition-case err
-              (progn
-                (lsp-disconnect)
-                (lsp-mode -1))
+              (lsp-disconnect)
             (error
              (lsp-mode -1)
              (message "Warning: %s" (error-message-string err)))))))
@@ -205,23 +204,23 @@ variable."
 
     (message "LSP disabled for project: %s" root)))
 
-(defun my/enable-lsp-for-project ()
+(defun spacemacs/enable-lsp-for-project ()
   "Enable LSP for the current project."
   (interactive)
-  (let ((root (my/project-root)))
+  (let ((root (spacemacs/project-root)))
     (unless root
       (user-error "Not in a projectile project"))
 
-    (setq my/lsp-disabled-projects
-          (delete root my/lsp-disabled-projects))
-    (my/lsp-save-disabled-projects)
+    (setq spacemacs/lsp-disabled-projects
+          (delete root spacemacs/lsp-disabled-projects))
+    (spacemacs/lsp-save-disabled-projects)
 
     ;; Add workspace folder if needed
     (when (fboundp 'lsp-workspace-folders-add)
       (lsp-workspace-folders-add root))
 
     ;; Activate LSP in all project buffers
-    (dolist (buf (my/get-project-buffers))
+    (dolist (buf (spacemacs/get-project-buffers))
       (with-current-buffer buf
         (when (and (buffer-file-name)
                    (not (bound-and-true-p lsp-mode)))
@@ -229,31 +228,31 @@ variable."
 
     (message "LSP enabled for project: %s" root)))
 
-(defun my/toggle-lsp-for-project ()
+(defun spacemacs/toggle-lsp-for-project ()
   "Toggle LSP on/off for the current project."
   (interactive)
-  (if (my/lsp-enabled-for-project-p)
-      (my/disable-lsp-for-project)
-    (my/enable-lsp-for-project)))
+  (if (spacemacs/lsp-enabled-for-project-p)
+      (spacemacs/disable-lsp-for-project)
+    (spacemacs/enable-lsp-for-project)))
 
 ;; Advice to prevent LSP from starting in disabled projects
-(defun my/lsp-check-project-enabled-advice (orig-fun &rest args)
+(defun spacemacs/lsp-check-project-enabled-advice (orig-fun &rest args)
   "Prevent LSP from starting if the project is disabled."
-  (if (and (my/project-root)
-           (not (my/lsp-enabled-for-project-p)))
+  (if (and (spacemacs/project-root)
+           (not (spacemacs/lsp-enabled-for-project-p)))
       (message "LSP is disabled for this project")
     (apply orig-fun args)))
 
-(advice-add 'lsp :around #'my/lsp-check-project-enabled-advice)
-(advice-add 'lsp-deferred :around #'my/lsp-check-project-enabled-advice)
+(advice-add 'lsp :around #'spacemacs/lsp-check-project-enabled-advice)
+(advice-add 'lsp-deferred :around #'spacemacs/lsp-check-project-enabled-advice)
 
 ;; Custom keymap
-; (defvar my/lsp-project-map (make-sparse-keymap)
-;   "Keymap for controlling LSP per project.")
-;
-; (define-key spacemacs/lsp-project-map (kbd "t") #'spacemacs/toggle-lsp-for-project)
-; (define-key spacemacs/lsp-project-map (kbd "e") #'spacemacs/enable-lsp-for-project)
-; (define-key spacemacs/lsp-project-map (kbd "d") #'spacemacs/disable-lsp-for-project)
+                                        ; (defvar my/lsp-project-map (make-sparse-keymap)
+                                        ;   "Keymap for controlling LSP per project.")
+                                        ;
+                                        ; (define-key spacemacs/lsp-project-map (kbd "t") #'spacemacs/toggle-lsp-for-project)
+                                        ; (define-key spacemacs/lsp-project-map (kbd "e") #'spacemacs/enable-lsp-for-project)
+                                        ; (define-key spacemacs/lsp-project-map (kbd "d") #'spacemacs/disable-lsp-for-project)
 
 ;; Alternativa: usar com projectile commander
 ;; (def-projectile-commander-method ?l
