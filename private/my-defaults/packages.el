@@ -478,7 +478,7 @@
              :clock-resume t
              :empty-lines 0)
             ("h" "Habit"
-             entry (file "~/git/org/refile.org")
+             entry (file "~/org/refile.org")
              "* NEXT %?\n%U\n%a\nSCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: NEXT\n:END:\n")
             )
           )
@@ -654,8 +654,10 @@
     (setq org-clock-history-length 23)
     ;; Resume clocking task on clock-in if the clock is open
     (setq org-clock-in-resume t)
-    ;; Change tasks to NEXT when clocking in
-    ;; (setq org-clock-in-switch-to-state 'bh/clock-in-to-next)
+    ;; Require org-id for punch-in/out (finding Organization task by ID)
+    (require 'org-id)
+    ;; Change tasks to NEXT when clocking in (Norang punch-in/out)
+    (setq org-clock-in-switch-to-state 'my-defaults/clock-in-to-next)
     ;; Separate drawers for clocking and logs
     (setq org-drawers (quote ("PROPERTIES" "LOGBOOK")))
     ;; Save clock data and state changes and notes in the LOGBOOK drawer
@@ -672,5 +674,34 @@
     (setq org-clock-auto-clock-resolution (quote when-no-clock-is-running))
     ;; Include current clocking task in clock reports
     (setq org-clock-report-include-clocking-task t)
+
+    ;; Round time stamps to nearest minute
+    (setq org-time-stamp-rounding-minutes (quote (1 1)))
+
+    ;; Clock consistency checks
+    (setq org-agenda-clock-consistency-checks
+          (quote (:max-duration "4:00"
+                  :min-duration 0
+                  :max-gap 0
+                  :gap-ok-around ("4:00"))))
+
+    ;; Agenda clock report format
+    (setq org-agenda-clockreport-parameter-plist
+          (quote (:link t :maxlevel 5 :fileskip0 t :compact t :narrow 80)))
+
+    ;; Log mode shows closed and state changes
+    (setq org-agenda-log-mode-items (quote (closed state)))
+
+    ;; Keep clock running on clock-out — go to parent or default task
+    (add-hook 'org-clock-out-hook 'my-defaults/clock-out-maybe 'append)
+    ;; Remove empty LOGBOOK drawers on clock out
+    (add-hook 'org-clock-out-hook 'my-defaults/remove-empty-drawer-on-clock-out 'append)
+
+    ;; Punch In/Out keybindings under SPC o c (org clock)
+    (spacemacs/declare-prefix "oc" "org-clock")
+    (spacemacs/set-leader-keys
+      "oci" 'my-defaults/punch-in
+      "oco" 'my-defaults/punch-out
+      "ocl" 'my-defaults/clock-in-last-task)
     )
   )

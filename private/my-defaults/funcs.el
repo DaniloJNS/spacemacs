@@ -504,6 +504,113 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
         nil
       next-headline)))
 
+;;------------------------------
+;; Punch In/Out — Continuous Clocking (Norang-style)
+;; Ref: https://doc.norang.ca/org-mode.html#Clocking
+
+(defvar my-defaults/keep-clock-running nil)
+(defvar my-defaults/organization-task-id "ccb4f129-6d21-4002-961b-c00770c03541"
+  "ID of the Organization task where idle time is clocked.")
+
+(defun my-defaults/clock-in-to-next (kw)
+  "Switch a task from TODO to NEXT when clocking in.
+Skips capture tasks, projects, and subprojects.
+Switch projects and subprojects from NEXT back to TODO."
+  (when (not (and (boundp 'org-capture-mode) org-capture-mode))
+    (cond
+     ((and (member (org-get-todo-state) (list "TODO"))
+           (my-defaults//is-task-p))
+      "NEXT")
+     ((and (member (org-get-todo-state) (list "NEXT"))
+           (my-defaults//is-project-p))
+      "TODO"))))
+
+(defun my-defaults/punch-in (arg)
+  "Start continuous clocking and set the default task to the
+selected task. If no task is selected set the Organization task
+as the default task."
+  (interactive "p")
+  (setq my-defaults/keep-clock-running t)
+  (if (equal major-mode 'org-agenda-mode)
+      (let* ((marker (org-get-at-bol 'org-hd-marker))
+             (tags (org-with-point-at marker (org-get-tags))))
+        (if (and (eq arg 4) tags)
+            (org-agenda-clock-in '(16))
+          (my-defaults/clock-in-organization-task-as-default)))
+    (save-restriction
+      (widen)
+      (if (and (equal major-mode 'org-mode) (not (org-before-first-heading-p)) (eq arg 4))
+          (org-clock-in '(16))
+        (my-defaults/clock-in-organization-task-as-default)))))
+
+(defun my-defaults/punch-out ()
+  "Stop continuous clocking."
+  (interactive)
+  (setq my-defaults/keep-clock-running nil)
+  (when (org-clock-is-active)
+    (org-clock-out))
+  (org-agenda-remove-restriction-lock))
+
+(defun my-defaults/clock-in-default-task ()
+  "Clock in the default task."
+  (save-excursion
+    (org-with-point-at org-clock-default-task
+      (org-clock-in))))
+
+(defun my-defaults/clock-in-parent-task ()
+  "Move point to the parent (project) task if any and clock in."
+  (let ((parent-task))
+    (save-excursion
+      (save-restriction
+        (widen)
+        (while (and (not parent-task) (org-up-heading-safe))
+          (when (member (nth 2 (org-heading-components)) org-todo-keywords-1)
+            (setq parent-task (point))))
+        (if parent-task
+            (org-with-point-at parent-task
+              (org-clock-in))
+          (when my-defaults/keep-clock-running
+            (my-defaults/clock-in-default-task)))))))
+
+(defun my-defaults/clock-in-organization-task-as-default ()
+  "Clock in the Organization task as the default task."
+  (interactive)
+  (org-with-point-at (org-id-find my-defaults/organization-task-id 'marker)
+    (org-clock-in '(16))))
+
+(defun my-defaults/clock-out-maybe ()
+  "When keep-clock-running, clock into parent task or default task."
+  (when (and my-defaults/keep-clock-running
+             (not org-clock-clocking-in)
+             (marker-buffer org-clock-default-task)
+             (not org-clock-resolving-clocks-due-to-idleness))
+    (my-defaults/clock-in-parent-task)))
+
+(defun my-defaults/clock-in-last-task (arg)
+  "Clock in the interrupted task if there is one.
+Skip the default task and get the next one.
+A prefix arg forces clock in of the default task."
+  (interactive "p")
+  (let ((clock-in-to-task
+         (cond
+          ((eq arg 4) org-clock-default-task)
+          ((and (org-clock-is-active)
+                (equal org-clock-default-task (cadr org-clock-history)))
+           (caddr org-clock-history))
+          ((org-clock-is-active) (cadr org-clock-history))
+          ((equal org-clock-default-task (car org-clock-history)) (cadr org-clock-history))
+          (t (car org-clock-history)))))
+    (widen)
+    (org-with-point-at clock-in-to-task
+      (org-clock-in nil))))
+
+(defun my-defaults/remove-empty-drawer-on-clock-out ()
+  "Remove empty LOGBOOK drawers on clock out."
+  (interactive)
+  (save-excursion
+    (beginning-of-line 0)
+    (org-remove-empty-drawer-at "LOGBOOK" (point))))
+
 ;; Recursively includes all .org files under each directory
 (defun my-defaults//refresh-org-agenda-files (&rest _)
   (setq org-agenda-files
