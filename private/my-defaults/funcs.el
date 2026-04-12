@@ -323,7 +323,7 @@ Callers of this function already widen the buffer view."
 
 (defun my-defaults//toggle-next-task-display ()
   (interactive)
-  (setq my-defaults//hide-scheduled-and-waiting-next-tasks (not bh/hide-scheduled-and-waiting-next-tasks))
+  (setq my-defaults//hide-scheduled-and-waiting-next-tasks (not my-defaults//hide-scheduled-and-waiting-next-tasks))
   (when  (equal major-mode 'org-agenda-mode)
     (org-agenda-redo))
   (message "%s WAITING and SCHEDULED NEXT Tasks" (if my-defaults//hide-scheduled-and-waiting-next-tasks "Hide" "Show")))
@@ -375,7 +375,7 @@ Callers of this function already widen the buffer view."
           (cond
            ((my-defaults//is-project-p)
             nil)
-           ((and (my-defaults//is-project-subtree-p) (not (bh/is-task-p)))
+           ((and (my-defaults//is-project-subtree-p) (not (my-defaults//is-task-p)))
             nil)
            (t
             subtree-end))))
@@ -419,7 +419,7 @@ Skip project and sub-project tasks, habits, and project related tasks."
         next-headline)
        ((my-defaults//is-project-p)
         next-headline)
-       ((and (my-defaults//is-task-p) (not (bh/is-project-subtree-p)))
+       ((and (my-defaults//is-task-p) (not (my-defaults//is-project-subtree-p)))
         next-headline)
        (t
         nil)))))
@@ -503,3 +503,11 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
     (if (my-defaults//is-subproject-p)
         nil
       next-headline)))
+
+;; Recursively includes all .org files under each directory
+(defun my-defaults//refresh-org-agenda-files (&rest _)
+  (setq org-agenda-files
+        (cl-remove-if (lambda (f) (string-match-p "/\\.#" f))
+                      (append
+                       (directory-files-recursively "~/org" "\\.org$")
+                       (directory-files-recursively "~/Documents/org-roam" "\\.org$")))))

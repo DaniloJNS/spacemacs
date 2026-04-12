@@ -411,22 +411,22 @@
   (setq org-log-done 'time)
   ;; Places all stamps and status change tracking notes for tasks in a drawer called "LOGBOOK"
   (setq org-log-into-drawer t)
-  ;; Setup TODO keyswords
+  ;; Norang-style TODO keywords
+  ;; Ref: https://doc.norang.ca/org-mode.html#TodoKeywords
   (setq org-todo-keyword-faces
-        '(
-          ("TODO" . (:foreground "GoldenRod" :weight bold))
-          ("PLANNING" . (:foreground "DeepPink" :weight bold))
-          ("IN-PROGRESS" . (:foreground "Cyan" :weight bold))
-          ("VERIFYING" . (:foreground "DarkOrange" :weight bold))
-          ("BLOCKED" . (:foreground "Red" :weight bold))
-          ("DONE" . (:foreground "LimeGreen" :weight bold))
-          ("OBE" . (:foreground "LimeGreen" :weight bold))
-          ("WONT-DO" . (:foreground "LimeGreen" :weight bold))
-          ))
-  ;; How to configure this variable -> https://orgmode.org/org.html#Tracking-TODO-state-changes
-  ;;                                -> https://orgmode.org/org.html#Setting-up-keywords-for-individual-files
+        (quote (("TODO" :foreground "red" :weight bold)
+                ("NEXT" :foreground "blue" :weight bold)
+                ("DONE" :foreground "forest green" :weight bold)
+                ("WAITING" :foreground "orange" :weight bold)
+                ("HOLD" :foreground "magenta" :weight bold)
+                ("CANCELLED" :foreground "forest green" :weight bold))))
+
   (setq org-todo-keywords
-        '((sequence "TODO(t)" "PLANNING(p)" "IN-PROGRESS(i@/!)" "VERIFYING(v!)" "BLOCKED(b@)"  "|" "DONE(d!)" "OBE(o@!)" "WONT-DO(w@/!)" )))
+        (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
+                (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@)"))))
+
+  (setq org-use-fast-todo-selection t)
+  (setq org-treat-S-cursor-todo-selection-as-state-change nil)
   (setq org-todo-state-tags-triggers
         (quote (("CANCELLED" ("CANCELLED" . t))
                 ("WAITING" ("WAITING" . t))
@@ -603,9 +603,8 @@
                            (org-agenda-skip-function 'my-defaults//skip-non-archivable-tasks)
                            (org-tags-match-list-sublevels nil))))
                    nil))))
-    ;; Must do this so the agenda knows where to look for my files
-    ;; reminder: change emacs custom settings in .spacemacs by changing the value of this variable
-    (setq org-agenda-files '("~/org" "~/Documents/org-roam" "~/org/infleet" "~/org/personal" "~/org/core-development"))
+    (my-defaults//refresh-org-agenda-files)
+    (advice-add 'org-agenda :before #'my-defaults//refresh-org-agenda-files)
 
     (setq org-jira-custom-jqls '(
                                  (:jql "project = 'SFI' and assignee = currentUser() and status NOT IN ('CONCLUÍDO', 'Cancelado') ORDER BY created DESC"
