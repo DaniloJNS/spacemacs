@@ -398,6 +398,18 @@
   (add-hook 'org-mode-hook
             (lambda ()
               (variable-pitch-mode)))
+  ;; Org-babel — enable code execution in org files
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((emacs-lisp . t)
+     (shell . t)
+     (python . t)
+     (plantuml . t)))
+  ;; Don't prompt before executing code blocks
+  (setq org-confirm-babel-evaluate nil)
+  ;; Use org-id for linking (more robust than file paths)
+  (setq org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
+
   ;; Configure TODO behavior
   ;; When using a hierarchical TODO, that is, a task that is linked to several subtasks (children),
   ;; it prevents this task from being moved to completed until all of its children are completed.

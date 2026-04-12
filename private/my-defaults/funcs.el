@@ -64,6 +64,24 @@ Usage from shell:
 
 ;;------------------------------
 ;; Org mode
+
+(defun my-defaults/org-todo (arg)
+  "Show TODO items for this subtree.
+With prefix ARG, show the entire buffer."
+  (interactive "p")
+  (if (equal arg 4)
+      (save-restriction
+        (widen)
+        (org-show-todo-tree nil))
+    (org-narrow-to-subtree)
+    (org-show-todo-tree nil)))
+
+(defun my-defaults/widen ()
+  "Widen and show all."
+  (interactive)
+  (widen)
+  (org-reveal))
+
 (defun my-defaults/text-scale-adjust-latex-previews ()
   "Adjust the size of latex preview fragments when changing the
 buffer's text scale."
