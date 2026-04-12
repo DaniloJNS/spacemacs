@@ -59,7 +59,8 @@
     :ensure t
     :defer t
     :config
-    (load-theme 'everforest-hard-dark t)))
+    (load-theme 'everforest-hard-dark t)
+    ))
 
 (defun my-fonts/init-olivetti()
   (use-package olivetti
@@ -141,7 +142,7 @@
     (fontaine-faces
      '( default fixed-pitch fixed-pitch-serif variable-pitch
         mode-line-active mode-line-inactive header-line
-        line-number tab-bar tab-line variable-pitch-text
+        line-number variable-pitch-text
         bold italic))
 
     ;; Set my custom font presets
@@ -153,18 +154,37 @@
         ;; Space Mono was the only font I found installed that contains all the special characters used by doom modeline
         ;; :mode-line-active-family "SpaceMono Nerd Font"
         ;; :mode-line-active-font "SpaceMono Nerd Font"
-        :mode-line-active-family "JetBrainsMono Nerd Font"
+        :mode-line-active-family "JetBrainsMonoNL"
         :mode-line-active-weight regular
         :mode-line-active-slant normal
         :mode-line-active-width nil
         :mode-line-active-height 120
 
-        :mode-line-inactive-family "JetBrainsMono Nerd Font"
+        :mode-line-inactive-family "JetBrainsMonoNL"
         :mode-line-inactive-weight regular
         :mode-line-inactive-slant normal
         :mode-line-inactive-width nil
         :mode-line-inactive-height 120) ; like this it uses all the fallback values and is named `regular'
        (medium
+        :default-family "Monaspace Neon"
+        :default-height 120
+        :default-weight regular
+
+        :fixed-pitch-family "Monaspace Neon"
+        :fixed-pitch-weight regular
+        :fixed-pitch-height 120
+
+        ;; :variable-pitch-text-height 1.1 ;; by defaults its height is 1.1x the value of variable-pitch. But text is very big
+        ;; :variable-pitch-family "Iosevka Comfy Wide Duo"
+        ;; :variable-pitch-family "IBM Plex Sans"
+        ;; :variable-pitch-family "Source Sans Pro"
+        :variable-pitch-family "Inter"
+        :variable-pitch-weight regular
+        :variable-pitch-height 125
+
+        :inherit regular)
+
+       (MonoLisa
         :default-family "MonoLisa"
         :default-height 115
         :default-weight regular
@@ -182,19 +202,6 @@
         :variable-pitch-height 125
 
         :inherit regular)
-
-       (MonoLisa
-        :default-family "MonoLisa"
-        :default-height 120
-        :default-weight regular
-
-        :fixed-pitch-family "MonoLisa"
-        :fixed-pitch-weight regular
-        :fixed-pitch-height 120
-
-        :variable-pitch-family "Iosevka Comfy Wide Duo"
-        :variable-pitch-weight "Iosevka Comfy Wide Duo"
-        :variable-pitch-height 120)
 
        (JetBrainsMono
         :default-family "JetBrainsMonoNL Nerd Font"
@@ -247,8 +254,13 @@
     ;; while switching between themes.
     ((after-init . fontaine-mode)
      (after-init . (lambda ()
-                     ;; Set last preset or fall back to desired style from `fontaine-presets'.
-                     (fontaine-set-preset (or (fontaine-restore-latest-preset) 'medium)))))
+                     ;; Wrap in with-eval-after-load to guarantee fontaine-presets has been
+                     ;; populated (via :custom) before calling fontaine-set-preset.  Without
+                     ;; this, the lambda can run before fontaine loads, leaving fontaine-presets
+                     ;; at its default value (which does not include the 'medium preset).
+                     (with-eval-after-load 'fontaine
+                       ;; Set last preset or fall back to desired style from `fontaine-presets'.
+                       (fontaine-set-preset (or (fontaine-restore-latest-preset) 'medium))))))
     :bind (("C-c f" . fontaine-set-preset)
            ("C-c F" . fontaine-toggle-preset))
     :config
