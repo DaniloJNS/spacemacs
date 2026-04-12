@@ -697,6 +697,18 @@
     ;; Remove empty LOGBOOK drawers on clock out
     (add-hook 'org-clock-out-hook 'my-defaults/remove-empty-drawer-on-clock-out 'append)
 
+    ;; Column view format: Task name | Effort estimate | Actual clocked time
+    ;; Use C-c C-x C-c (org-columns) on a heading to see the table
+    (setq org-columns-default-format "%80ITEM(Task) %10Effort(Effort){:} %10CLOCKSUM")
+
+    ;; Predefined effort values for quick selection (C-c C-x e)
+    (setq org-global-properties
+          (quote (("Effort_ALL" . "0:15 0:30 0:45 1:00 2:00 3:00 4:00 5:00 6:00 0:00")
+                  ("STYLE_ALL" . "habit"))))
+
+    ;; Set default effort for agenda effort filtering (/ + key)
+    (setq org-agenda-span 'day)
+
     ;; Punch In/Out keybindings under SPC o c (org clock)
     (spacemacs/declare-prefix "oc" "org-clock")
     (spacemacs/set-leader-keys
