@@ -264,6 +264,10 @@
     (ef-trio-light                    . ef-themes)
     (ef-tritanopia-dark               . ef-themes)
     (ef-tritanopia-light              . ef-themes)
+    (everforest-hard-dark             . everforest-theme)
+    (everforest-hard-light            . everforest-theme)
+    (everforest-hard-olddark          . everforest-theme)
+    (everforest-hard-oldlight         . everforest-theme)
     (ef-winter                        . ef-themes)
     (eziam-dark                       . eziam-themes)
     (eziam-dusk                       . eziam-themes)
@@ -482,9 +486,9 @@ When BACKWARD is non-nil, or with \\[universal-argument], cycle backwards."
 
 (define-advice enable-theme (:after (theme &rest _) spacemacs//run-post-theme-hooks)
   "Perform post load processing."
-
   (message "theme loaded by advice: %s" theme)
-  (setq spacemacs--cur-theme theme)
+  (unless (memq theme '(fontaine user spacious-padding use-package))
+    (setq spacemacs--cur-theme theme))
   (run-hooks 'spacemacs-post-theme-change-hook))
 
 (defun spacemacs/theme-loader ()
