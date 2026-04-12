@@ -112,6 +112,8 @@
     (push '("^\*alchemist.*\*$" :regexp t  :dedicated nil :position bottom :stick t :noselect t   :height 0.4) popwin:special-display-config)
     (push '("^\*aidermacs.*$" :regexp t  :dedicated nil :position right :stick t :noselect t   :width 0.4) popwin:special-display-config)
     (push '("^.*LLM.org*$" :regexp t  :dedicated nil :position right :stick t :noselect t   :width 0.4) popwin:special-display-config)
+    (push '("^.*Claude.*$" :regexp t  :dedicated nil :position right :stick t :noselect t   :width 0.4) popwin:special-display-config)
+    (push '("^.* @ .*$" :regexp t  :dedicated nil :position right :stick t :noselect t   :width 0.4) popwin:special-display-config)
     ;; (push '("^.*LLM.org*$" :regexp t  :dedicated nil :position bottom :stick t :noselect t   :height 0.4) popwin:special-display-config)
     (push '("^.*TODOs.org.*$" :regexp t  :dedicated nil :position bottom :stick t :noselect t   :height 0.4) popwin:special-display-config)
     (push '("^.*prodigy.*$" :regexp t  :dedicated nil :position bottom :stick t :noselect t   :height 0.4) popwin:special-display-config)
