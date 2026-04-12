@@ -435,53 +435,26 @@
                 ("TODO" ("WAITING") ("CANCELLED") ("HOLD"))
                 ("NEXT" ("WAITING") ("CANCELLED") ("HOLD"))
                 ("DONE" ("WAITING") ("CANCELLED") ("HOLD")))))
-  ;; (setq org-capture-templates
-  ;;       (quote (("t" "todo" entry (file "~/git/org/refile.org")
-  ;;                "* TODO %?\n%U\n%a\n" :clock-in t :clock-resume t)
-  ;;               ("r" "respond" entry (file "~/git/org/refile.org")
-  ;;                "* NEXT Respond to %:from on %:subject\nSCHEDULED: %t\n%U\n%a\n" :clock-in t :clock-resume t :immediate-finish t)
-  ;;               ("n" "note" entry (file "~/git/org/refile.org")
-  ;;                "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t)
-  ;;               ("j" "Journal" entry (file+datetree "~/git/org/diary.org")
-  ;;                "* %?\n%U\n" :clock-in t :clock-resume t)
-  ;;               ("w" "org-protocol" entry (file "~/git/org/refile.org")
-  ;;                "* TODO Review %c\n%U\n" :immediate-finish t)
-  ;;               ("m" "Meeting" entry (file "~/git/org/refile.org")
-  ;;                "* MEETING with %? :MEETING:\n%U" :clock-in t :clock-resume t)
-  ;;               ("p" "Phone call" entry (file "~/git/org/refile.org")
-  ;;                "* PHONE %? :PHONE:\n%U" :clock-in t :clock-resume t)
-  ;;               )))
-  ;; Setup captures
-  ;; TODO This loading model can be improved, to define org-capture-templates it is necessary that org-directory
-  ;; is configured
+  ;; Capture templates (configured in post-config to ensure org-directory is set)
   (spacemacs|use-package-add-hook org
     :post-config
+    ;; Norang-style capture templates
+    ;; All go to refile.org for quick capture, refile later
+    ;; All clock-in to integrate with punch-in/out
     (setq org-capture-templates
-          '(
-            ("c" "Code To-Do"
-             entry (file+headline "~/org/todos.org" "Code Related Tasks")
-             "* TODO [#B] %?\n:Created: %T\n%i\n%a\nProposed Solution: "
-             :empty-lines 0)
-            ("j" "Work Log Entry"
-             entry (file+datetree "~/org/work-todos.org" "Work entries")
-             "* %? "
-             :empty-lines 0)
-            ("g" "General To-Do"
-             entry (file+headline "~/org/todos.org" "General Tasks")
-             "* TODO [#B] %?\n:Created: %T\n"
-             :empty-lines 0)
-            ("m" "Meeting"
-             entry (file+datetree "~/org/meetings.org")
-             "* %? :meeting:%^g \n:Created: %T\n** Attendees\n*** \n** Notes\n** Action Items\n*** TODO [#A] "
-             :tree-type week
-             :clock-in t
-             :clock-resume t
-             :empty-lines 0)
-            ("h" "Habit"
-             entry (file "~/org/refile.org")
-             "* NEXT %?\n%U\n%a\nSCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: NEXT\n:END:\n")
-            )
-          )
+          (quote (("t" "todo" entry (file "~/org/refile.org")
+                   "* TODO %?\n%U\n%a\n" :clock-in t :clock-resume t)
+                  ("r" "respond" entry (file "~/org/refile.org")
+                   "* NEXT Respond to %:from on %:subject\nSCHEDULED: %t\n%U\n%a\n"
+                   :clock-in t :clock-resume t :immediate-finish t)
+                  ("n" "note" entry (file "~/org/refile.org")
+                   "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t)
+                  ("j" "journal" entry (file+datetree "~/org/diary.org")
+                   "* %?\n%U\n" :clock-in t :clock-resume t)
+                  ("m" "meeting" entry (file "~/org/refile.org")
+                   "* MEETING with %? :MEETING:\n%U" :clock-in t :clock-resume t)
+                  ("h" "habit" entry (file "~/org/refile.org")
+                   "* NEXT %?\n%U\n%a\nSCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: NEXT\n:END:\n"))))
 
     (setq org-tag-alist '(;; Ticket types
                           (:startgroup . nil)
