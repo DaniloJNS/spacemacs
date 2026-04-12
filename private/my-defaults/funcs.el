@@ -23,6 +23,35 @@
 ;; (defun my-defaults//my-evil-treemacs-binds()
 ;;   ((evil-define-key 'treemacs treemacs-mode-map (kbd "C-l") #'treemacs-RET-action)))
 
+(defun my-defaults/switch-theme (theme)
+  "Switch to THEME reliably, for use via emacsclient.
+THEME should be a symbol like `everforest-hard-dark'.
+This ensures the theme package is activated, disables the current
+theme, loads the new one, and forces redisplay on all frames.
+
+Usage from shell:
+  emacsclient -e '(my-defaults/switch-theme '\\''everforest-hard-dark)'"
+  (interactive
+   (list (intern (completing-read "Theme: "
+                                  (mapcar #'symbol-name (custom-available-themes))))))
+  ;; Ensure the theme's package is activated if managed by Spacemacs
+  (when-let* ((pkg (cdr (assq theme spacemacs-theme-name-to-package))))
+    (unless (package-installed-p pkg)
+      (error "Theme package `%s' is not installed" pkg))
+    (package-activate pkg))
+  ;; Disable current theme and load the new one
+  (mapc #'disable-theme custom-enabled-themes)
+  (load-theme theme t)
+  ;; Update Spacemacs state
+  (setq spacemacs--cur-theme theme)
+  ;; Force redisplay on all graphical frames
+  (dolist (frame (frame-list))
+    (when (display-graphic-p frame)
+      (with-selected-frame frame
+        (redraw-frame frame))))
+  (message "Switched to theme: %s" theme)
+  theme)
+
 (defun toggle-fold ()
   (interactive)
   (save-excursion
