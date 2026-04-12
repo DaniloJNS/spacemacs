@@ -28,7 +28,7 @@
     (elysium :toggle llm-client-enable-gptel)
     (evedel :toggle llm-client-enable-gptel)
     (ai-org-chat :location (recipe :fetcher github :repo "ultronozm/ai-org-chat.el"))
-    aidermacs
+    ;; aidermacs
     agent-shell
     ;; (gptel-quick :toggle llm-client-enable-gptel)
     org
@@ -38,55 +38,82 @@
   (use-package agent-shell
     :defer t
     :ensure t
+    :custom
+    (agent-shell-preferred-agent-config 'claude-code)
+    ;; the display buffer behavior is controlled by popwin in spacemacs-visual
+    (agent-shell-display-action nil)
+    (agent-shell-prefer-session-resume nil)
+    (agent-shell-session-strategy 'prompt)
+    :init
+    (require 'transient)
+    (transient-define-prefix llm-client/agent-shell-menu ()
+      "Agent Shell"
+      [["Session"
+        ("a" "Open/start"     agent-shell)
+        ("t" "Toggle"         agent-shell-toggle)
+        ("A" "New session"    agent-shell-new-shell)
+        ("r" "Resume session" agent-shell-resume-session)
+        ;; ("c" "Clear buffer" agent-shell-clear-buffer)
+        ("i" "Interrupt"      agent-shell-interrupt)]
+       ["Send"
+        ("p" "Compose prompt"     agent-shell-prompt-compose)
+        ("d" "Send dwim"          agent-shell-send-dwim)
+        ("R" "Send region"        agent-shell-send-region)
+        ("f" "Send file..."       agent-shell-send-file)
+        ("F" "Send current file"  agent-shell-send-current-file)]
+       ["View"
+        ("h" "Help menu"      agent-shell-help-menu)
+        ("T" "Transcript"     agent-shell-open-transcript)]])
+    (spacemacs/set-leader-keys
+      "aa" #'llm-client/agent-shell-menu)
     :config
-    ;; Evil state-specific RET behavior: insert mode = newline, normal mode = send
+    ;; Claude CLI login authentication
+    (require 'agent-shell-anthropic)
+    (setq agent-shell-anthropic-authentication
+          (agent-shell-anthropic-make-authentication :login t))
+
+    ;; Evil: insert mode = newline, normal mode = send
     (evil-define-key 'insert agent-shell-mode-map (kbd "RET") #'newline)
     (evil-define-key 'normal agent-shell-mode-map (kbd "RET") #'comint-send-input)
+
+    ;; Evil navigation: ]/[ instead of n/p (which conflict with evil search-next/prev)
+    (evil-define-key 'normal agent-shell-mode-map (kbd "n") nil)
+    (evil-define-key 'normal agent-shell-mode-map (kbd "p") nil)
+    (evil-define-key 'normal agent-shell-mode-map (kbd "]") #'agent-shell-next-item)
+    (evil-define-key 'normal agent-shell-mode-map (kbd "[") #'agent-shell-previous-item)
+    ;; Within-buffer bindings (normal-state)
+    (evil-define-key 'normal agent-shell-mode-map (kbd "C") #'agent-shell-clear-buffer)
+    (evil-define-key 'normal agent-shell-mode-map (kbd "gT") #'agent-shell-open-transcript)
+    (evil-define-key 'normal agent-shell-mode-map (kbd "gh") #'agent-shell-help-menu)
+
+    ;; Auto-approve read permissions (write and execute remain manual)
+    (setq agent-shell-permission-responder-function
+          (lambda (permission)
+            (when-let (((equal (map-elt (map-elt permission :tool-call) :kind) "read"))
+                       (choice (seq-find (lambda (option)
+                                           (equal (map-elt option :kind) "allow_once"))
+                                         (map-elt permission :options))))
+              (funcall (map-elt permission :respond) (map-elt choice :option-id))
+              t)))
 
     ;; Configure *agent-shell-diff* buffers to start in Emacs state
     (add-hook 'diff-mode-hook
               (lambda ()
                 (when (string-match-p "\\*agent-shell-diff\\*" (buffer-name))
-                  (evil-emacs-state))))
-    ))
+                  (evil-emacs-state))))))
 
-;; (defun llm-client/init-gptel-quick ()
-;;   (use-package gptel-quick
-;;     :defer t
-;;     :ensure t))
-
-
-(defun llm-client/init-aidermacs()
-  (use-package aidermacs
-    :bind (("C-c a" . aidermacs-transient-menu))
-    :init
-    (spacemacs/set-leader-keys "aa" 'aidermacs-transient-menu) ; Start aider contentx
-    :custom
-    ;; Chustes models config
-    ;; (aidermacs-default-chat-mode 'architect)
-    ;; (aidermacs-default-model "openai/nvidia/Llama-3_3-Nemotron-Super-49B-v1")
-    ;; (aidermacs-architect-model "openai/deepseek-ai/DeepSeek-R1-0528")
-    ;; (aidermacs-editor-model "openai/Qwen/Qwen2.5-Coder-32B-Instruct")
-
-    ;; Openrouter models config
-    ;; (setq aidermacs-architect-model "openrouter/deepseek/deepseek-r1-0528:free")
-    ;; (setq aidermacs-editor-model "openrouter/deepseek/deepseek-r1-0528:free")
-    ;; (setq aidermacs-default-model "openrouter/deepseek/deepseek-r1-0528:free")
-
-    ;; (setq aidermacs-default-model "openrouter/moonshotai/kimi-k2:free")
-    ;; (setq aidermacs-architect-model "openrouter/moonshotai/kimi-k2:free")
-    ;; (setq aidermacs-editor-model "openai/moonshotai/kimi-k2:free")
-
-    (aidermacs-default-model "openrouter/qwen/qwen3-coder:free")
-    (aidermacs-architect-model "openrouter/qwen/qwen3-coder:free")
-    (aidermacs-editor-model "openrouter/qwen/qwen3-coder:free")
-
-    ;; (aidermacs-default-model "openrouter/moonshotai/kimi-k2:free")
-    ;; (aidermacs-architect-model "openrouter/moonshotai/kimi-k2:free")
-    ;; (aidermacs-editor-model "openai/moonshotai/kimi-k2:free")
-    :config
-    )
-  )
+;; (defun llm-client/init-aidermacs()
+;;   (use-package aidermacs
+;;     :bind (("C-c a" . aidermacs-transient-menu))
+;;     :init
+;;     (spacemacs/set-leader-keys "aa" 'aidermacs-transient-menu)
+;;     :custom
+;;     (aidermacs-default-model "openrouter/qwen/qwen3-coder:free")
+;;     (aidermacs-architect-model "openrouter/qwen/qwen3-coder:free")
+;;     (aidermacs-editor-model "openrouter/qwen/qwen3-coder:free")
+;;     :config
+;;     )
+;;   )
 
 (defun llm-client/init-ai-org-chat ()
   (use-package ai-org-chat
