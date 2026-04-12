@@ -147,6 +147,10 @@
       "XI" 'alchemist-hex-info
       "Xs" 'alchemist-hex-search
 
+      "Xd" 'alchemist-hexdocs-open-at-point
+      "XD" 'alchemist-hexdocs-open
+      "Xm" 'alchemist-hexdocs-browse-module
+
       "ol" 'alchemist-macroexpand-once-current-line
       "oL" 'alchemist-macroexpand-once-print-current-line
       "ok" 'alchemist-macroexpand-current-line

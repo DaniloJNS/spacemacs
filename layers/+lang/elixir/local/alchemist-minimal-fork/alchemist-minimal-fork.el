@@ -69,6 +69,7 @@
 (require 'alchemist-report)
 (require 'alchemist-mix)
 (require 'alchemist-hex)
+(require 'alchemist-hexdocs)
 ;; (require 'alchemist-hooks)
 ;; (require 'alchemist-message)
 (require 'alchemist-iex)
