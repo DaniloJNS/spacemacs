@@ -456,47 +456,31 @@
                   ("h" "habit" entry (file "~/org/refile.org")
                    "* NEXT %?\n%U\n%a\nSCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: NEXT\n:END:\n"))))
 
-    (setq org-tag-alist '(;; Ticket types
-                          (:startgroup . nil)
-                          ("@bug" . ?b)
-                          ("@feature" . ?u)
-                          ("@spike" . ?j)
-                          (:endgroup . nil)
+    ;; Norang-style tags — context tags are mutually exclusive
+    (setq org-tag-alist (quote ((:startgroup)
+                                ("@work" . ?w)
+                                ("@college" . ?c)
+                                ("@home" . ?h)
+                                ("@errand" . ?e)
+                                (:endgroup)
+                                ("WAITING" . ?W)
+                                ("HOLD" . ?H)
+                                ("NOTE" . ?n)
+                                ("CANCELLED" . ?C)
+                                ("FLAGGED" . ??)
+                                ("MEETING" . ?m)
+                                ("REFILE" . ?r)
+                                ;; Academic
+                                ("exam" . ?x)
+                                ("assignment" . ?a)
+                                ("study" . ?s)
+                                ;; Personal
+                                ("financeiro" . ?f)
+                                ("saude" . ?d))))
 
-                          ;; Ticket flags
-                          ("@write_future_ticket" . ?w)
-                          ("@emergency" . ?e)
-                          ("@research" . ?r)
-
-                          ;; Meeting types
-                          (:startgroup . nil)
-                          ("big_sprint_review" . ?i)
-                          ("cents_sprint_retro" . ?n)
-                          ("dsu" . ?d)
-                          ("grooming" . ?g)
-                          ("sprint_retro" . ?s)
-                          (:endgroup . nil)
-
-                          ;; Code TODOs tags
-                          ("QA" . ?q)
-                          ("backend" . ?k)
-                          ("broken_code" . ?c)
-                          ("frontend" . ?f)
-
-                          ;; Special tags
-                          ("CRITICAL" . ?x)
-                          ("obstacle" . ?o)
-
-                          ;; Meeting tags
-                          ("HR" . ?h)
-                          ("general" . ?l)
-                          ("meeting" . ?m)
-                          ("misc" . ?z)
-                          ("planning" . ?p)
-
-                          ;; Work Log Tags
-                          ("accomplishment" . ?a)
-                          ))
+    ;; Expert tag selection — single key press without confirm
+    (setq org-fast-tag-selection-single-key (quote expert))
+    (setq org-agenda-tags-todo-honor-ignore-options t)
     ;; Do not dim blocked tasks
     (setq org-agenda-dim-blocked-tasks nil)
 
@@ -608,18 +592,23 @@
       (not (member (nth 2 (org-heading-components)) org-done-keywords)))
     (setq org-refile-target-verify-function 'my-defaults/verify-refile-target)
 
-    ;; TODO Define exclusive tags from agenda view (they should be tags that indicate tasks that are blocked) and add them to the function
+    ;; Auto-exclude context tags in agenda with / RET
     (defun my-defaults/org-auto-exclude-function (tag)
-      "Automatic task exclusion in the agenda views with org-agenda-filter-by-tag"
-      (message "Will be rececived tag %s" tag)
+      "Automatic task exclusion in the agenda with / RET.
+Excludes HOLD tasks and non-current context tags."
       (and (cond
-            ((string= tag "@bug")
-             t)
-            ((string= tag "farm")
-             t))
+            ((string= tag "HOLD") t))
            (concat "-" tag)))
 
     (setq org-agenda-auto-exclude-function 'my-defaults/org-auto-exclude-function)
+
+    ;; Speed commands — single key press at beginning of headline
+    (setq org-use-speed-commands t)
+
+    ;; Display settings
+    (setq org-startup-indented t)
+    (setq org-cycle-separator-lines 0)
+    (setq org-blank-before-new-entry (quote ((heading) (plain-list-item . auto))))
 
     ;; Resume clocking task when emacs is restarted
     (org-clock-persistence-insinuate)
