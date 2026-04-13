@@ -447,6 +447,10 @@
                 ("TODO" ("WAITING") ("CANCELLED") ("HOLD"))
                 ("NEXT" ("WAITING") ("CANCELLED") ("HOLD"))
                 ("DONE" ("WAITING") ("CANCELLED") ("HOLD")))))
+  ;; Archiving — done tasks go to <filename>_archive
+  (setq org-archive-mark-done nil)
+  (setq org-archive-location "%s_archive::* Archived Tasks")
+
   ;; Capture templates (configured in post-config to ensure org-directory is set)
   (spacemacs|use-package-add-hook org
     :post-config

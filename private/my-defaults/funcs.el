@@ -629,6 +629,27 @@ A prefix arg forces clock in of the default task."
     (beginning-of-line 0)
     (org-remove-empty-drawer-at "LOGBOOK" (point))))
 
+;;------------------------------
+;; Archiving
+
+(defun my-defaults//skip-non-archivable-tasks ()
+  "Skip trees that are not available for archiving.
+Only show DONE/CANCELLED tasks that were closed more than 30 days ago."
+  (save-restriction
+    (widen)
+    (let ((next-headline (save-excursion (or (outline-next-heading) (point-max))))
+          (subtree-end (save-excursion (org-end-of-subtree t))))
+      (if (member (org-get-todo-state) org-done-keywords)
+          (let* ((daynr (time-to-days (current-time)))
+                 (deadline-day
+                  (let ((ts (org-entry-get nil "CLOSED")))
+                    (when ts
+                      (time-to-days (org-time-string-to-time ts))))))
+            (if (and deadline-day (> (- daynr deadline-day) 30))
+                nil    ;; show it — archivable (closed > 30 days ago)
+              next-headline))  ;; skip — too recent
+        next-headline))))  ;; skip — not done
+
 ;; Recursively includes all .org files under each directory
 (defun my-defaults//refresh-org-agenda-files (&rest _)
   (setq org-agenda-files
