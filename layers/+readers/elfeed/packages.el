@@ -47,7 +47,7 @@
       '((t :foreground "#f77"))
       "Marks a starred Elfeed entry")
     (push '(starred elfeed-search-starred-title-face) elfeed-search-face-alist)
-    (setq rmh-elfeed-org-files (list "~/org/elfeed.org"))
+    (setq rmh-elfeed-org-files (list "~/org/elfeed-sources.org"))
     (evilified-state-evilify-map elfeed-search-mode-map
       :mode elfeed-search-mode
       :eval-after-load elfeed-search
