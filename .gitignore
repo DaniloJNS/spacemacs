@@ -101,3 +101,6 @@ gtags.files
 eln-cache/
 meghanada/
 vimish-fold/
+/.agent-shell/
+projects
+code-review-db-file.sqlite
