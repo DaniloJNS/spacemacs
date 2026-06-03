@@ -34,6 +34,7 @@ the [[file:CHANGELOG.org][CHANGELOG.org]] file.
 * Release 0.300.x
 ** 0.300.0
 *** Hot new feature
+- Fixed typos
 - Remove obsolete hack erc-sasl
 - Remove =spacemacs/counsel-gtags-define-keys-for-mode= warnings
 - Add configuration layer for gleam-lang (thanks to Qynn Schwaab)
@@ -496,6 +497,7 @@ both Racer and RLS not being maintained anymore.
 - cmake (thanks to Alexander Dalshov, Sylvain Benner and Jonas Jelten)
 - dap (thanks to Ivan Yonchovski)
 - debug (thanks to Hodge Shen, Troy Hinckley, and Sylvain Benner)
+- dirvish integration in ranger (thanks to Jaehyun Yeom)
 - dotnet (thanks to Jordan Kaye)
 - eaf (thanks to Daniel Nicolai)
 - import-js (thanks to Thanh Vuong and Seong Yong-ju)
@@ -806,6 +808,8 @@ Other:
     (thanks to mark30247)
   - Fixed evil undo in =spacemacs-base= (thanks to duianto)
   - Fix macOS GUI full screen button wreck caused by GUI setup in early-init.el
+  - Fixed installation of =solarized-selenized-*= themes by mapping them to
+    the =solarized-theme= package (thanks to Sven Koschnicke)
 - Other:
   - New function =configuration-layer/message= to display message in
     =*Messages*= buffer (thanks to Sylvain Benner)
@@ -3622,6 +3626,10 @@ files (thanks to Daniel Nicolai)
 - Added support for multi-vterm as default terminal option
 - Added ~M-l~ for =eshell= mode and ~SPC m H~ for both =shell= and =eshell=
   modes for =consult-history= (thanks to Jaehyun Yeom)
+- Fixed =shell-pop= popup toggling failing with void-variable errors
+  on =shell-pop= =20260510= and later, which moved last-buffer and
+  last-window tracking from globals to window parameters
+  (thanks to Mariusz Klochowicz)
 **** Shell Scripts
 - Added new company-shell environment variable backend
   (thanks to Alexander-Miller)
@@ -3792,6 +3800,9 @@ files (thanks to Daniel Nicolai)
   - ~SPC m s D~ is to set days for =transmission-turtle-mode= to be active.
   - ~SPC m s S~ is to set speed limits for =transmission-turtle-mode=.
   - ~SPC m s T~ is to set time range for =transmission-turtle-mode to be active.
+**** Translate
+- Update =go-translate= references to =gt= following upstream package rename
+  (thanks to klochowicz)
 **** Treemacs
 - =Treemacs= replaces =NeoTree= as the default sidebar
 - Added missing ~SPC p t~ to =readme.org= (thanks to oo6)
