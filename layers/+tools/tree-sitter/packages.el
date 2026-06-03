@@ -42,7 +42,9 @@
     (global-tree-sitter-mode)))
 
 (defun tree-sitter/init-tree-sitter-langs ()
-  (use-package tree-sitter-langs))
+  (use-package tree-sitter-langs
+    :config
+    (treesit-langs-major-mode-setup)))
 
 (defun tree-sitter/init-tree-sitter-indent ()
   (use-package tree-sitter-indent

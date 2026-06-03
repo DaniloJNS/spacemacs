@@ -1,22 +1,15 @@
 ;;; Elfeed score rule stats file DO NOT EDIT       -*- lisp -*-
 (:version 1 :stats
           #s(hash-table test equal data
-                        (#s(elfeed-score-title-or-content-rule "postgres" 150
-                                                               150 s nil nil nil)
-                           #s(elfeed-score-rule-stats 135 1754363081.6192923)
-                           #s(elfeed-score-authors-rule "Marc Brooker" 1000 s
-                                                        nil nil nil)
-                           #s(elfeed-score-rule-stats 48 1747820445.9030383)
-                           #s(elfeed-score-feed-rule
-                              "https://notes.eatonphil.com/rss.xml" 100 s u nil
-                              nil)
-                           #s(elfeed-score-rule-stats 69 1754363081.6191146)
-                           #s(elfeed-score-title-or-content-rule
-                              "software design" 150 150 w nil nil nil)
-                           #s(elfeed-score-rule-stats 6 1752456150.7813082)
-                           #s(elfeed-score-feed-rule
-                              "https://www.thecoder.cafe/feed" 500 s u nil nil)
-                           #s(elfeed-score-rule-stats 87 1754363077.4462173)
-                           #s(elfeed-score-feed-rule
-                              "https://eregon.me/blog/feed.xml" 1300 s u nil nil)
-                           #s(elfeed-score-rule-stats 6 1747276792.9451933))))
+                        (#s(elfeed-score-title-or-content-rule "postgres" 150 150 s nil nil nil)
+                           #s(elfeed-score-rule-stats 314 1780442280.4502704)
+                           #s(elfeed-score-authors-rule "Marc Brooker" 1000 s nil nil nil)
+                           #s(elfeed-score-rule-stats 360 1780442280.5138469)
+                           #s(elfeed-score-feed-rule "https://notes.eatonphil.com/rss.xml" 100 s u nil nil)
+                           #s(elfeed-score-rule-stats 437 1780442280.1473625)
+                           #s(elfeed-score-title-or-content-rule "software design" 150 150 w nil nil nil)
+                           #s(elfeed-score-rule-stats 14 1780442280.4493606)
+                           #s(elfeed-score-feed-rule "https://www.thecoder.cafe/feed" 500 s u nil nil)
+                           #s(elfeed-score-rule-stats 107 1772412293.3353188)
+                           #s(elfeed-score-feed-rule "https://eregon.me/blog/feed.xml" 1300 s u nil nil)
+                           #s(elfeed-score-rule-stats 26 1780442274.0867617))))
