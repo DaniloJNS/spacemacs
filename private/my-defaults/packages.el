@@ -278,6 +278,7 @@
                      "gdb-disassembly-mode"
                      "gdb-memory-mode"
                      "ranger-mode"
+                     "claude-code"
                      "speedbar-mode"))
       (add-to-list 'zoom-ignored-major-modes modes))
     (add-to-list 'zoom-ignored-buffer-name-regexps "^*[hH]elm.*")

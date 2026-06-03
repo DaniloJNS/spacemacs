@@ -119,6 +119,7 @@
     (push '("^.*prodigy.*$" :regexp t  :dedicated nil :position bottom :stick t :noselect t   :height 0.4) popwin:special-display-config)
     (push '("^.*devdoc.*$" :regexp t  :dedicated nil :position bottom :stick t :noselect t   :height 0.4) popwin:special-display-config)
     (push '("^.*scractch.*$" :regexp t  :dedicated nil :position bottom :stick t :noselect t   :height 0.4) popwin:special-display-config)
+    (push '("^.*claude-code.*$" :regexp t  :dedicated t :position right :stick t :noselect t   :width 0.4) popwin:special-display-config)
 
     (advice-add 'popwin:match-config :around #'spacemacs/advice-popwin)))
 

@@ -64,4 +64,6 @@
       "$ddm" 'claude-code-ide-show-mcp-sessions
       "$ddp" 'claude-code-ide-show-active-ports
       ;; Assistant functions
-      "$d*" 'spacemacs/claude-code-explain-symbol-at-point)))
+      "$d*" 'spacemacs/claude-code-explain-symbol-at-point))
+  :config
+  (claude-code-ide-emacs-tools-setup))

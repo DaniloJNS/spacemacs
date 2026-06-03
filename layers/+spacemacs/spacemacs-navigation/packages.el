@@ -309,7 +309,8 @@
     (dolist (n '("*NeoTree*"
                  "*LV*"
                  " *which-key*"
-                 "*Treemacs*"))
+                 "*Treemacs*"
+                 "*claude-code"))
       (add-to-list 'golden-ratio-exclude-buffer-names n))
 
     ;; golden-ratio-inhibit-functions
