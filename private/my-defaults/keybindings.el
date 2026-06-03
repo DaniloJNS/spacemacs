@@ -99,6 +99,8 @@
   ;; Custom Org Mode Commands
   (evil-define-key 'normal org-mode-map (kbd "C-=") 'org-fill-paragraph)
   (evil-define-key 'normal org-agenda-mode-map (kbd "\\") 'org-agenda-filter-by-tag)
+  (spacemacs/set-leader-keys-for-major-mode 'org-mode
+    "Ty" 'my-defaults/org-table-copy-column)
 
   ;; DevDocs
   (spacemacs/set-leader-keys "adp" 'devdocs-peruse)

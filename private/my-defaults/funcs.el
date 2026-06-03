@@ -82,6 +82,27 @@ With prefix ARG, show the entire buffer."
   (widen)
   (org-reveal))
 
+(defun my-defaults/org-table-copy-column (&optional skip-header)
+  "Copy values of the current org table column to the kill-ring.
+Values are separated by newlines, ready to paste with `C-y'.
+With prefix arg SKIP-HEADER, drop the first row (assumed to be a header).
+If the table has horizontal separators (hlines), rows before the first
+hline are treated as the header and always skipped."
+  (interactive "P")
+  (unless (org-at-table-p) (user-error "Not in an org table"))
+  (let* ((col (org-table-current-column))
+         (raw (org-table-to-lisp))
+         (has-hline (memq 'hline raw))
+         (rows (if has-hline
+                   (cdr (memq 'hline raw))
+                 (if skip-header (cdr raw) raw)))
+         (rows (remove 'hline rows))
+         (values (mapcar (lambda (row) (string-trim (nth (1- col) row))) rows)))
+    (kill-new (mapconcat #'identity values "\n"))
+    (message "Copied %d values from column %d%s"
+             (length values) col
+             (if (or skip-header has-hline) " (header skipped)" ""))))
+
 (defun my-defaults/text-scale-adjust-latex-previews ()
   "Adjust the size of latex preview fragments when changing the
 buffer's text scale."
