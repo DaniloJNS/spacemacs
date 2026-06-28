@@ -38,7 +38,8 @@
     htmlize
     ;; ob, org, org-agenda and org-contacts are installed by `org-contrib'
     (ob :location built-in)
-    (org :location elpa :min-version "9.7.8")
+    (ob-mermaid :toggle org-enable-mermaid-support)
+    (org :location elpa)
     (org-agenda :location built-in)
     (org-alert  :toggle org-enable-notifications)
     (org-contacts :toggle org-enable-org-contacts-support)
@@ -170,6 +171,13 @@
                      'org-babel-execute-src-block@load-lang))
     ;; Fix redisplay of inline images after a code block evaluation.
     (add-hook 'org-babel-after-execute-hook 'spacemacs/ob-fix-inline-images)))
+
+(defun org/init-ob-mermaid ()
+  (use-package ob-mermaid
+    :defer t
+    :init
+    (spacemacs|use-package-add-hook org
+      :post-config (add-to-list 'org-babel-load-languages '(mermaid . t)))))
 
 (defun org/init-org ()
   (use-package org
@@ -683,9 +691,18 @@ Headline^^            Visit entry^^               Filter^^                    Da
     :defer t
     :init
     (when org-start-notification-daemon-on-startup
+<<<<<<< HEAD
       (org-alert-enable))
     :commands (org-alert-check org-alert-enable org-alert-disable)
     ))
+||||||| 8358ec3e5
+        (org-alert-enable))
+    :commands (org-alert-check org-alert-enable org-alert-disable)
+    ))
+=======
+      (spacemacs/defer-until-after-user-config #'org-alert-enable))
+    :commands (org-alert-check org-alert-enable org-alert-disable)))
+>>>>>>> 8e2a7d3ecff83606a24432b2163c80f77ad377b5
 
 (defun org/init-org-brain ()
   (use-package org-brain
@@ -799,13 +816,12 @@ Headline^^            Visit entry^^               Filter^^                    Da
 
 (defun org/init-org-modern ()
   (use-package org-modern
-    :defer t
-    :init
-    (add-hook 'org-mode-hook 'org-modern-mode)
-    (add-hook 'org-agenda-finalize-hook #'org-modern-agenda)
-
+    :after org
+    :config
+    (global-org-modern-mode)
     (spacemacs/set-leader-keys-for-major-mode 'org-mode
-      "Tm" 'org-modern-mode)))
+      "Tm" 'org-modern-mode
+      "TM" 'global-org-modern-mode)))
 
 (defun org/init-org-pomodoro ()
   (use-package org-pomodoro
@@ -857,11 +873,8 @@ Headline^^            Visit entry^^               Filter^^                    Da
 
 (defun org/init-org-rich-yank ()
   (use-package org-rich-yank
-    :ensure t
-    :demand t
     :init
     (spacemacs/set-leader-keys-for-major-mode 'org-mode
-      ;; yank is a misnomer for this function which actually puts/pastes
       ;; ir = "insert rich"
       "ir" 'org-rich-yank)))
 

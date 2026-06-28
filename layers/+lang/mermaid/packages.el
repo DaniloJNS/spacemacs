@@ -1,10 +1,13 @@
-;;; packages.el --- pocket Layer packages File for Spacemacs  -*- lexical-binding: nil; -*-
-;;
+;;; packages.el --- mermaid layer packages file for Spacemacs.  -*- lexical-binding: t; -*-
+
 ;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
-;; Author: Sylvain Benner <sylvain.benner@gmail.com>
-;; URL: https://github.com/syl20bnr/spacemacs
+;; Author: Lin Sun <lin.sun AT hotmail.com>
+;; URL: https://github.com/syl20bnr/spacemacs/
 ;;
+;;; Commentary:
+;;
+;; Adds Mermaid support to Spacemacs using mermaid-mode.
 ;; This file is not part of GNU Emacs.
 ;;
 ;; This program is free software; you can redistribute it and/or modify
@@ -20,16 +23,24 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-(defconst pocket-packages
-  '(pocket-reader))
+;;; Code:
 
-(defun pocket/init-pocket-reader ()
-  (use-package pocket-reader
+(defconst mermaid-packages
+  '(mermaid-mode))
+
+(defun mermaid/init-mermaid-mode ()
+  (use-package mermaid-mode
     :defer t
-    :init (spacemacs/set-leader-keys "awp" 'pocket-reader)
     :config
-    (evilified-state-evilify-map pocket-reader-mode-map
-      :mode pocket-reader-mode
-      :bindings
-      "gr" 'pocket-reader-resort
-      "gR" 'pocket-reader-refresh)))
+    ;; Set up key bindings
+    (spacemacs/declare-prefix-for-mode 'mermaid-mode
+      "mc" "compile")
+    (spacemacs/set-leader-keys-for-major-mode 'mermaid-mode
+      "cc" 'mermaid-compile
+      "cf" 'mermaid-compile-file
+      "cb" 'mermaid-compile-buffer
+      "cr" 'mermaid-compile-region
+      "co" 'mermaid-open-browser
+      "cd" 'mermaid-open-doc)))
+
+;;; packages.el ends here

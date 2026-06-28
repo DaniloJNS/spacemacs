@@ -504,6 +504,10 @@
     ;; Compact the block agenda view
     (setq org-agenda-compact-blocks t)
 
+    ;; Tags que marcam o heading-raiz não devem ser herdadas pelos filhos
+    ;; (senão sub-tarefas apareceriam no Portfólio / busca por :area:)
+    (setq org-tags-exclude-from-inheritance '("projeto" "area" "crypt"))
+
     ;; Custom agenda command definitions
     (setq org-agenda-custom-commands
           (quote (("N" "Notes" tags "NOTE"
@@ -513,6 +517,20 @@
                    ((org-agenda-overriding-header "Habits")
                     (org-agenda-sorting-strategy
                      '(todo-state-down effort-up category-keep))))
+                  ("P" "Portfólio de Projetos (por ciclo de vida)"
+                   ((tags-todo "projeto/NEXT"
+                               ((org-agenda-overriding-header "Em andamento (NEXT)")
+                                (org-agenda-sorting-strategy '(category-keep))))
+                    (tags-todo "projeto/TODO"
+                               ((org-agenda-overriding-header "Futuro / Backlog (TODO)")
+                                (org-agenda-sorting-strategy '(category-keep))))
+                    (tags-todo "projeto/HOLD"
+                               ((org-agenda-overriding-header "Pausados (HOLD)")
+                                (org-agenda-sorting-strategy '(category-keep))))
+                    (tags "projeto/DONE|CANCELLED"
+                          ((org-agenda-overriding-header "Entregues / Encerrados")
+                           (org-agenda-sorting-strategy '(timestamp-down)))))
+                   nil)
                   ("b" "Agenda"
                    ((agenda "" nil)
                     (tags "REFILE"

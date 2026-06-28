@@ -86,9 +86,8 @@ A COUNT argument matches the indentation to the next COUNT lines."
   :type '(repeat symbol)
   :group 'spacemacs)
 
-(defcustom spacemacs-yank-indent-modes '(latex-mode)
-  "Modes in which to indent regions that are yanked (or yank-popped).
-Only modes that don't derive from `prog-mode' should be listed here."
+(defcustom spacemacs-yank-indent-modes '(prog-mode latex-mode)
+  "Modes in which to indent regions that are yanked (or yank-popped)."
   :type '(repeat symbol)
   :group 'spacemacs)
 
@@ -356,46 +355,47 @@ Dedicated (locked) windows are left untouched."
   (interactive "p")
   (spacemacs/rotate-windows-forward (* -1 count)))
 
-(if (configuration-layer/package-used-p 'winum)
-    (progn
-      (defun spacemacs/move-buffer-to-window (windownum follow-focus-p)
-        "Moves a buffer to a window, using the spacemacs numbering. follow-focus-p
-  controls whether focus moves to new window (with buffer), or stays on current"
-        (interactive)
-        (if (> windownum (length (window-list-1 nil nil t)))
-            (message "No window numbered %s" windownum)
-          (let ((b (current-buffer))
-                (w1 (selected-window))
-                (w2 (winum-get-window-by-number windownum)))
-            (unless (eq w1 w2)
-              (set-window-buffer w2 b)
-              (switch-to-prev-buffer)
-              (unrecord-window-buffer w1 b))
-            (when follow-focus-p
-              (select-window (winum-get-window-by-number windownum))))))
+(defun spacemacs//error-if-winum-missing ()
+  (unless (require 'winum nil t)
+    (user-error (concat "This command requires the winum package," "\n"
+                        "winum is part of the spacemacs-navigation layer."))))
 
-      (defun spacemacs/swap-buffers-to-window (windownum follow-focus-p)
-        "Swaps visible buffers between active window and selected window.
-  follow-focus-p controls whether focus moves to new window (with buffer), or
-  stays on current"
-        (interactive)
-        (if (> windownum (length (window-list-1 nil nil t)))
-            (message "No window numbered %s" windownum)
-          (let* ((b1 (current-buffer))
-                 (w1 (selected-window))
-                 (w2 (winum-get-window-by-number windownum))
-                 (b2 (window-buffer w2)))
-            (unless (eq w1 w2)
-              (set-window-buffer w1 b2)
-              (set-window-buffer w2 b1)
-              (unrecord-window-buffer w1 b1)
-              (unrecord-window-buffer w2 b2)))
-          (when follow-focus-p (winum-select-window-by-number windownum)))))
-  ;; when the winum package isn't used
-  (defun spacemacs//message-winum-package-required ()
-    (interactive)
-    (message (concat "This command requires the winum package," "\n"
-                     "winum is part of the spacemacs-navigation layer."))))
+(defun spacemacs/move-buffer-to-window (windownum follow-focus-p)
+  "Moves a buffer to a window, using the spacemacs numbering.
+
+FOLLOW-FOCUS-P controls whether focus moves to new window (with buffer),
+or stays on current."
+  (spacemacs//error-if-winum-missing)
+  (if (> windownum (length (window-list-1 nil nil t)))
+      (message "No window numbered %s" windownum)
+    (let ((b (current-buffer))
+          (w1 (selected-window))
+          (w2 (winum-get-window-by-number windownum)))
+      (unless (eq w1 w2)
+        (set-window-buffer w2 b)
+        (switch-to-prev-buffer)
+        (unrecord-window-buffer w1 b))
+      (when follow-focus-p
+        (select-window (winum-get-window-by-number windownum))))))
+
+(defun spacemacs/swap-buffers-to-window (windownum follow-focus-p)
+  "Swaps visible buffers between active window and selected window.
+
+FOLLOW-FOCUS-P controls whether focus moves to new window (with buffer),
+or stays on current"
+  (spacemacs//error-if-winum-missing)
+  (if (> windownum (length (window-list-1 nil nil t)))
+      (message "No window numbered %s" windownum)
+    (let* ((b1 (current-buffer))
+           (w1 (selected-window))
+           (w2 (winum-get-window-by-number windownum))
+           (b2 (window-buffer w2)))
+      (unless (eq w1 w2)
+        (set-window-buffer w1 b2)
+        (set-window-buffer w2 b1)
+        (unrecord-window-buffer w1 b1)
+        (unrecord-window-buffer w2 b2)))
+    (when follow-focus-p (winum-select-window-by-number windownum))))
 
 ;; define and evaluate numbered functions:
 ;; spacemacs/winum-select-window-0 to 9
@@ -407,9 +407,8 @@ Dedicated (locked) windows are left untouched."
                     "Show a message stating that the winum package,"
                     "is part of the spacemacs-navigation layer.\n")
            (interactive "P")
-           (if (configuration-layer/package-used-p 'winum)
-               (funcall ',(intern (format "winum-select-window-%s" i)) arg)
-             (spacemacs//message-winum-package-required)))))
+           (spacemacs//error-if-winum-missing)
+           (funcall ',(intern (format "winum-select-window-%s" i)) arg))))
 
 ;; define and evaluate three numbered functions:
 ;; buffer-to-window-1 to 9
@@ -420,21 +419,15 @@ Dedicated (locked) windows are left untouched."
     (eval `(defun ,(intern (format "buffer-to-window-%s" n)) (&optional arg)
              ,(format "Move buffer to the window with number %i." n)
              (interactive "P")
-             (if (configuration-layer/package-used-p 'winum)
-                 (if arg
-                     (spacemacs/swap-buffers-to-window ,n t)
-                   (spacemacs/move-buffer-to-window ,n t))
-               (spacemacs//message-winum-package-required))))
+             (if arg
+                 (spacemacs/swap-buffers-to-window ,n t)
+               (spacemacs/move-buffer-to-window ,n t))))
     (eval `(defun ,(intern (format "move-buffer-window-no-follow-%s" n)) ()
              (interactive)
-             (if (configuration-layer/package-used-p 'winum)
-                 (spacemacs/move-buffer-to-window ,n nil)
-               (spacemacs//message-winum-package-required))))
+             (spacemacs/move-buffer-to-window ,n nil)))
     (eval `(defun ,(intern (format "swap-buffer-window-no-follow-%s" n)) ()
              (interactive)
-             (if (configuration-layer/package-used-p 'winum)
-                 (spacemacs/swap-buffers-to-window ,n nil)
-               (spacemacs//message-winum-package-required))))))
+             (spacemacs/swap-buffers-to-window ,n nil)))))
 
 (defun spacemacs/rename-file (filename &optional new-filename)
   "Rename FILENAME to NEW-FILENAME.
@@ -1078,7 +1071,7 @@ Possible values:
   "Return a list of buffers to display automatically when splitting windows.
 
 This excludes ephemeral buffers (those whose names begin with a
-space), unless they are visitin a file, just as `list-buffers' does."
+space), unless they are visiting a file, just as `list-buffers' does."
   (seq-remove
    (lambda (b)
      (and (string= (substring (buffer-name b) 0 1) " ")
@@ -1671,26 +1664,34 @@ Compare them on count first,and in case of tie sort them alphabetically."
   (if (<= (- end beg) spacemacs-yank-indent-threshold)
       (indent-region beg end nil)))
 
+;; This advice assumes that the advised function interactive spec passes
+;; `current-prefix-arg' as its first argument.
 (defun spacemacs//yank-indent-region (yank-func &rest args)
-  "Indent yanked text, unless `major-mode' is in `spacemacs-indent-sensitive-modes'.
+  "Indent text yanked by YANK-FUNC.
 
-With prefix \\[universal-argument], don't indent."
-  (evil-start-undo-step)
-  (prog1
-      (let ((prefix (car args))
-            (enable (and (not (member major-mode spacemacs-indent-sensitive-modes))
-                         (or (derived-mode-p 'prog-mode)
-                             (member major-mode spacemacs-yank-indent-modes)))))
-        (when (and enable (equal '(4) prefix))
-          (setq args (cdr args)))
-        (prog1
-            (apply yank-func args)
-          (when (and enable (not (equal '(4) prefix)))
-            (let ((transient-mark-mode nil)
-                  (save-undo buffer-undo-list))
-              (spacemacs/yank-advised-indent-function (region-beginning)
-                                                      (region-end))))))
-    (evil-end-undo-step)))
+Indentation is only applied if the major mode is derived from a mode in
+`spacemacs-yank-indent-modes' and not derived from a mode in
+`spacemacs-indent-sensitive-modes'.
+
+With prefix \\[universal-argument], never indent.
+
+ARGS is passed through unchanged to YANK-FUNC, except if the first
+argument is \\='(4) (a single prefix argument), in which case the first
+argument is changed to nil.  If the indentation would not be enabled
+based on the major mode, ARGS (including the prefix argument) is passed
+through unchanged."
+  (evil-with-single-undo
+    (let ((enable (and (not (derived-mode-p spacemacs-indent-sensitive-modes))
+                       (derived-mode-p spacemacs-yank-indent-modes))))
+      (when (and enable (equal '(4) (car args)))
+        (setf (car args) nil
+              enable nil))
+      (prog1
+          (apply yank-func args)
+        (when enable
+          (let ((transient-mark-mode nil))
+            (spacemacs/yank-advised-indent-function (region-beginning)
+                                                    (region-end))))))))
 
 (dolist (func '(yank yank-pop evil-paste-before evil-paste-after))
   (advice-add func :around #'spacemacs//yank-indent-region))

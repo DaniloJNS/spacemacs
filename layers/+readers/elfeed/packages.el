@@ -97,13 +97,3 @@
   (use-package elfeed-org
     :defer t
     :if (boundp 'rmh-elfeed-org-files)))
-
-(defun elfeed/init-elfeed-web ()
-  (use-package elfeed-web
-    :defer t
-    :commands elfeed-web-stop
-    :init
-    ;; TODO check if the port is already in use
-    ;; hack to force elfeed feature to be required before elfeed-search
-    (require 'elfeed)
-    (elfeed-web-start)))

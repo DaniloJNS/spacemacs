@@ -24,6 +24,7 @@
 (setq spacemacs-modeline-packages
       '(
         (doom-modeline :toggle (eq (spacemacs/get-mode-line-theme-name) 'doom))
+        evil
         fancy-battery
         (spaceline :toggle (spacemacs//enable-spaceline-p))
         (spaceline-all-the-icons :toggle (eq (spacemacs/get-mode-line-theme-name) 'all-the-icons))
@@ -104,6 +105,9 @@
     ;;    :overline nil))
     ))
 
+(defun spacemacs-modeline/post-init-evil ()
+  (advice-add 'evil-generate-mode-line-tag :around #'spacemacs//colorize-evil-mode-line-tag))
+
 (defun spacemacs-modeline/init-fancy-battery ()
   (use-package fancy-battery
     :defer t
@@ -115,8 +119,7 @@
     (setq-default fancy-battery-show-percentage t)))
 
 (defun spacemacs-modeline/init-spaceline ()
-  (use-package spaceline
-    :commands (spaceline-compile spaceline-define-segment)
+  (use-package spaceline-config
     :init
     (add-hook 'spacemacs-post-user-config-hook
               'spacemacs/spaceline-config-startup-hook)
@@ -161,7 +164,7 @@
     :config
     (spacemacs/customize-powerline-faces)
     (setq spaceline-org-clock-p nil
-          spaceline-highlight-face-func 'spacemacs//evil-state-face)
+          spaceline-highlight-face-func 'spacemacs/current-state-face)
     ;; unicode
     (let ((unicodep (dotspacemacs|symbol-value
                      dotspacemacs-mode-line-unicode-symbols)))

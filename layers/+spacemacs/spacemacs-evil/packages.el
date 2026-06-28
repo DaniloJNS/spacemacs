@@ -45,7 +45,7 @@
         (evil-unimpaired :location (recipe :fetcher local))
         evil-visual-mark-mode
         evil-visualstar
-        (hs-minor-mode :location built-in)
+        (hideshow :location built-in)
         vi-tilde-fringe
         eldoc))
 
@@ -247,49 +247,6 @@
   (use-package evil-nerd-commenter
     :commands evilnc-comment-operator
     :init
-    ;; double all the commenting functions so that the inverse operations
-    ;; can be called without setting a flag
-    (defun spacemacs/comment-or-uncomment-lines-inverse (&optional arg)
-      (interactive "p")
-      (let ((evilnc-invert-comment-line-by-line t))
-        (evilnc-comment-or-uncomment-lines arg)))
-
-    (defun spacemacs/comment-or-uncomment-lines (&optional arg)
-      (interactive "p")
-      (let ((evilnc-invert-comment-line-by-line nil))
-        (evilnc-comment-or-uncomment-lines arg)))
-
-    (defun spacemacs/copy-and-comment-lines-inverse (&optional arg)
-      (interactive "p")
-      (let ((evilnc-invert-comment-line-by-line t))
-        (evilnc-copy-and-comment-lines arg)))
-
-    (defun spacemacs/copy-and-comment-lines (&optional arg)
-      (interactive "p")
-      (let ((evilnc-invert-comment-line-by-line nil))
-        (evilnc-copy-and-comment-lines arg)))
-
-    (defun spacemacs/quick-comment-or-uncomment-to-the-line-inverse
-        (&optional arg)
-      (interactive "p")
-      (let ((evilnc-invert-comment-line-by-line t))
-        (evilnc-comment-or-uncomment-to-the-line arg)))
-
-    (defun spacemacs/quick-comment-or-uncomment-to-the-line (&optional arg)
-      (interactive "p")
-      (let ((evilnc-invert-comment-line-by-line nil))
-        (evilnc-comment-or-uncomment-to-the-line arg)))
-
-    (defun spacemacs/comment-or-uncomment-paragraphs-inverse (&optional arg)
-      (interactive "p")
-      (let ((evilnc-invert-comment-line-by-line t))
-        (evilnc-comment-or-uncomment-paragraphs arg)))
-
-    (defun spacemacs/comment-or-uncomment-paragraphs (&optional arg)
-      (interactive "p")
-      (let ((evilnc-invert-comment-line-by-line nil))
-        (evilnc-comment-or-uncomment-paragraphs arg)))
-
     (define-key evil-normal-state-map "gc" 'evilnc-comment-operator)
     (define-key evil-normal-state-map "gy" 'spacemacs/copy-and-comment-lines)
 
@@ -385,8 +342,10 @@
     (define-key evil-visual-state-map (kbd "#")
                 'evil-visualstar/begin-search-backward)))
 
-(defun spacemacs-evil/init-hs-minor-mode ()
-  (add-hook 'prog-mode-hook 'spacemacs//enable-hs-minor-mode))
+(defun spacemacs-evil/init-hideshow ()
+  (add-hook 'prog-mode-hook 'spacemacs//enable-hs-minor-mode)
+  (with-eval-after-load 'hideshow
+    (spacemacs|hide-lighter hs-minor-mode)))
 
 (defun spacemacs-evil/init-vi-tilde-fringe ()
   (spacemacs|do-after-display-system-init

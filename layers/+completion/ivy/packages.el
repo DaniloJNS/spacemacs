@@ -135,13 +135,7 @@
       "srf" 'spacemacs/search-rg
       "srF" 'spacemacs/search-rg-region-or-symbol
       "srp" 'spacemacs/search-project-rg
-      "srP" 'spacemacs/search-project-rg-region-or-symbol
-      "std" 'spacemacs/search-dir-pt
-      "stD" 'spacemacs/search-dir-pt-region-or-symbol
-      "stf" 'spacemacs/search-pt
-      "stF" 'spacemacs/search-pt-region-or-symbol
-      "stp" 'spacemacs/search-project-pt
-      "stP" 'spacemacs/search-project-pt-region-or-symbol)
+      "srP" 'spacemacs/search-project-rg-region-or-symbol)
     :config
     ;; Temporarily handle older versions of ivy
     ;; https://github.com/abo-abo/swiper/pull/1863/files
@@ -419,7 +413,11 @@
       "sS" 'swiper-thing-at-point
       "sb" 'swiper-all
       "sB" 'swiper-all-thing-at-point)
-    (global-set-key "\C-s" 'swiper)))
+    (global-set-key (kbd "C-s") 'swiper)
+    ;; isearch has special functionality to search a manual's full text, in
+    ;; Info-mode.
+    (with-eval-after-load 'info
+      (define-key Info-mode-map (kbd "C-s") 'isearch-forward))))
 
 (defun ivy/post-init-wgrep ()
   (spacemacs/set-leader-keys-for-major-mode 'ivy-occur-grep-mode

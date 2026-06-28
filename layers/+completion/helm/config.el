@@ -32,16 +32,10 @@
 ;;       0.400 or later
 (defvar helm-no-header nil
   "if non nil, the helm header is hidden when there is only one source.")
-(define-obsolete-variable-alias
-  'dotspacemacs-helm-no-header 'helm-no-header "20180608")
 
 (defvar helm-position 'bottom
   "Position in which to show the `helm' mini-buffer.")
-(define-obsolete-variable-alias
-  'dotspacemacs-helm-position 'helm-position "20180608")
 
-(defvar helm-use-posframe nil
-  "Use helm-posframe to display completions in a separate frame")
 
 (defvar spacemacs-helm-rg-max-column-number 512
   "Controls the maximum number of columns to display with ripgrep (otherwise

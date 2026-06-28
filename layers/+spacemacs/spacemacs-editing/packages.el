@@ -117,7 +117,7 @@
         (dired-quick-sort-setup))
       (advice-remove 'dired-noselect 'dired-noselect@quick-sort-setup))
     :config
-    (evil-define-key 'normal dired-mode-map "s" 'hydra-dired-quick-sort/body)))
+    (evil-define-key 'normal dired-mode-map "s" 'dired-quick-sort-transient)))
 
 (defun spacemacs-editing/init-drag-stuff ()
   (use-package drag-stuff
@@ -314,12 +314,10 @@
 
 (defun spacemacs-editing/init-vimish-fold ()
   (use-package vimish-fold
-    :ensure
     :after evil))
 
 (defun spacemacs-editing/init-evil-vimish-fold ()
   (use-package evil-vimish-fold
-    :ensure
     :after vimish-fold
     :init
     (setq evil-vimish-fold-target-modes '(prog-mode conf-mode text-mode))

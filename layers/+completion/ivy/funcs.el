@@ -246,7 +246,6 @@ that directory."
  for (tools tool-name) in '((dotspacemacs-search-tools "auto")
                             ((list "rg") "rg")
                             ((list "ag") "ag")
-                            ((list "pt") "pt")
                             ((list "ack") "ack")
                             ((list "grep") "grep"))
  do
@@ -347,7 +346,7 @@ that directory."
   "This function should be kept in sync with `counsel-git-grep-action'.
 
 We copy exactly that function and modify it a bit which allows us
-to programatically add extra actions to counsel git-grep based
+to programmatically add extra actions to counsel git-grep based
 commands."
   (when (string-match "\\`\\(.*?\\):\\([0-9]+\\):\\(.*\\)\\'" x)
     (let ((file-name (match-string-no-properties 1 x))
