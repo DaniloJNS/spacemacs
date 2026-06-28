@@ -712,5 +712,8 @@ Excludes HOLD tasks and non-current context tags."
       "oci" 'my-defaults/punch-in
       "oco" 'my-defaults/punch-out
       "ocl" 'my-defaults/clock-in-last-task)
+    ;; Atalho direto para o Portfolio de Projetos (SPC o p)
+    (spacemacs/set-leader-keys
+      "op" 'my-defaults/org-agenda-portfolio)
     )
   )

@@ -650,6 +650,11 @@ A prefix arg forces clock in of the default task."
     (beginning-of-line 0)
     (org-remove-empty-drawer-at "LOGBOOK" (point))))
 
+(defun my-defaults/org-agenda-portfolio ()
+  "Abre direto a view de Portfolio de Projetos (comando de agenda \"P\")."
+  (interactive)
+  (org-agenda nil "P"))
+
 ;;------------------------------
 ;; Archiving
 
