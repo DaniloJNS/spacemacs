@@ -478,6 +478,7 @@
                                 ("@work" . ?w)
                                 ("@college" . ?c)
                                 ("@home" . ?h)
+                                ("@study" . ?y)
                                 ("@errand" . ?e)
                                 (:endgroup)
                                 ("WAITING" . ?W)
@@ -595,6 +596,80 @@
                            (org-agenda-skip-function 'my-defaults//skip-non-archivable-tasks)
                            (org-tags-match-list-sublevels nil))))
                    nil))))
+
+    ;; Blocos reusados nas visoes por contexto (mesma estrutura da agenda "b")
+    (defvar my-defaults--agenda-blocks
+      '((agenda "" nil)
+        (tags "REFILE"
+              ((org-agenda-overriding-header "Tasks to Refile")
+               (org-tags-match-list-sublevels nil)))
+        (tags-todo "-CANCELLED/!"
+                   ((org-agenda-overriding-header "Stuck Projects")
+                    (org-agenda-skip-function 'my-defaults//skip-non-stuck-projects)
+                    (org-agenda-sorting-strategy '(category-keep))))
+        (tags-todo "-HOLD-CANCELLED/!"
+                   ((org-agenda-overriding-header "Projects")
+                    (org-agenda-skip-function 'my-defaults//skip-non-projects)
+                    (org-tags-match-list-sublevels 'indented)
+                    (org-agenda-sorting-strategy '(category-keep))))
+        (tags-todo "-CANCELLED/!NEXT"
+                   ((org-agenda-overriding-header (concat "Project Next Tasks"
+                                                          (if my-defaults//hide-scheduled-and-waiting-next-tasks
+                                                              ""
+                                                            " (including WAITING and SCHEDULED tasks)")))
+                    (org-agenda-skip-function 'my-defaults//skip-projects-and-habits-and-single-tasks)
+                    (org-tags-match-list-sublevels t)
+                    (org-agenda-todo-ignore-scheduled my-defaults//hide-scheduled-and-waiting-next-tasks)
+                    (org-agenda-todo-ignore-deadlines my-defaults//hide-scheduled-and-waiting-next-tasks)
+                    (org-agenda-todo-ignore-with-date my-defaults//hide-scheduled-and-waiting-next-tasks)
+                    (org-agenda-sorting-strategy '(todo-state-down effort-up category-keep))))
+        (tags-todo "-REFILE-CANCELLED-WAITING-HOLD/!"
+                   ((org-agenda-overriding-header (concat "Project Subtasks"
+                                                          (if my-defaults//hide-scheduled-and-waiting-next-tasks
+                                                              ""
+                                                            " (including WAITING and SCHEDULED tasks)")))
+                    (org-agenda-skip-function 'my-defaults//skip-non-project-tasks)
+                    (org-agenda-todo-ignore-scheduled my-defaults//hide-scheduled-and-waiting-next-tasks)
+                    (org-agenda-todo-ignore-deadlines my-defaults//hide-scheduled-and-waiting-next-tasks)
+                    (org-agenda-todo-ignore-with-date my-defaults//hide-scheduled-and-waiting-next-tasks)
+                    (org-agenda-sorting-strategy '(category-keep))))
+        (tags-todo "-REFILE-CANCELLED-WAITING-HOLD/!"
+                   ((org-agenda-overriding-header (concat "Standalone Tasks"
+                                                          (if my-defaults//hide-scheduled-and-waiting-next-tasks
+                                                              ""
+                                                            " (including WAITING and SCHEDULED tasks)")))
+                    (org-agenda-skip-function 'my-defaults//skip-project-tasks)
+                    (org-agenda-todo-ignore-scheduled my-defaults//hide-scheduled-and-waiting-next-tasks)
+                    (org-agenda-todo-ignore-deadlines my-defaults//hide-scheduled-and-waiting-next-tasks)
+                    (org-agenda-todo-ignore-with-date my-defaults//hide-scheduled-and-waiting-next-tasks)
+                    (org-agenda-sorting-strategy '(category-keep))))
+        (tags-todo "-CANCELLED+WAITING|HOLD/!"
+                   ((org-agenda-overriding-header (concat "Waiting and Postponed Tasks"
+                                                          (if my-defaults//hide-scheduled-and-waiting-next-tasks
+                                                              ""
+                                                            " (including WAITING and SCHEDULED tasks)")))
+                    (org-agenda-skip-function 'my-defaults//skip-non-tasks)
+                    (org-tags-match-list-sublevels nil)
+                    (org-agenda-todo-ignore-scheduled my-defaults//hide-scheduled-and-waiting-next-tasks)
+                    (org-agenda-todo-ignore-deadlines my-defaults//hide-scheduled-and-waiting-next-tasks)))
+        (tags "-REFILE/"
+              ((org-agenda-overriding-header "Tasks to Archive")
+               (org-agenda-skip-function 'my-defaults//skip-non-archivable-tasks)
+               (org-tags-match-list-sublevels nil))))
+      "Blocos da agenda bloco (Norang), reusados nas visoes por contexto.")
+
+    ;; Visoes por contexto: mesma agenda bloco, filtrada por @contexto
+    (setq org-agenda-custom-commands
+          (append org-agenda-custom-commands
+                  `(("w" "Agenda — Trabalho" ,my-defaults--agenda-blocks
+                     ((org-agenda-tag-filter-preset '("+@work"))))
+                    ("e" "Agenda — Estudo" ,my-defaults--agenda-blocks
+                     ((org-agenda-tag-filter-preset '("+@study"))))
+                    ("p" "Agenda — Pessoal" ,my-defaults--agenda-blocks
+                     ((org-agenda-tag-filter-preset '("+@home"))))
+                    ("f" "Agenda — Faculdade" ,my-defaults--agenda-blocks
+                     ((org-agenda-tag-filter-preset '("+@college")))))))
+
     (my-defaults//refresh-org-agenda-files)
     (advice-add 'org-agenda :before #'my-defaults//refresh-org-agenda-files)
 
@@ -715,5 +790,11 @@ Excludes HOLD tasks and non-current context tags."
     ;; Atalho direto para o Portfolio de Projetos (SPC o p)
     (spacemacs/set-leader-keys
       "op" 'my-defaults/org-agenda-portfolio)
+    ;; Agendas por contexto (SPC a o w/e/p/f)
+    (spacemacs/set-leader-keys
+      "aow" 'my-defaults/agenda-trabalho
+      "aoe" 'my-defaults/agenda-estudo
+      "aop" 'my-defaults/agenda-pessoal
+      "aof" 'my-defaults/agenda-faculdade)
     )
   )

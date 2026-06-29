@@ -655,6 +655,26 @@ A prefix arg forces clock in of the default task."
   (interactive)
   (org-agenda nil "P"))
 
+(defun my-defaults/agenda-trabalho ()
+  "Agenda bloco filtrada pelo contexto @work."
+  (interactive)
+  (org-agenda nil "w"))
+
+(defun my-defaults/agenda-estudo ()
+  "Agenda bloco filtrada pelo contexto @study."
+  (interactive)
+  (org-agenda nil "e"))
+
+(defun my-defaults/agenda-pessoal ()
+  "Agenda bloco filtrada pelo contexto @home."
+  (interactive)
+  (org-agenda nil "p"))
+
+(defun my-defaults/agenda-faculdade ()
+  "Agenda bloco filtrada pelo contexto @college."
+  (interactive)
+  (org-agenda nil "f"))
+
 ;;------------------------------
 ;; Archiving
 
