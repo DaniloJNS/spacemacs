@@ -488,6 +488,9 @@
                                 ("FLAGGED" . ??)
                                 ("MEETING" . ?m)
                                 ("REFILE" . ?r)
+                                ;; Projeto
+                                ("bug" . ?b)
+                                ("debt" . ?D)
                                 ;; Academic
                                 ("exam" . ?x)
                                 ("assignment" . ?a)
