@@ -461,9 +461,9 @@
     (setq org-capture-templates
           (quote (("t" "todo" entry (file "~/org/refile.org")
                    "* TODO %?\n%U\n%a\n" :clock-in t :clock-resume t)
-                  ("r" "respond" entry (file "~/org/refile.org")
-                   "* NEXT Respond to %:from on %:subject\nSCHEDULED: %t\n%U\n%a\n"
-                   :clock-in t :clock-resume t :immediate-finish t)
+                  ("v" "revisar PR" entry (file "~/org/refile.org")
+                   "* NEXT Revisar PR %? :@work:review:\n%U\n%a\n"
+                   :clock-in t :clock-resume t)
                   ("n" "note" entry (file "~/org/refile.org")
                    "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t)
                   ("j" "journal" entry (file+datetree "~/org/diary.org")
@@ -494,7 +494,6 @@
                                 ;; Academic
                                 ("exam" . ?x)
                                 ("assignment" . ?a)
-                                ("study" . ?s)
                                 ;; Personal
                                 ("financeiro" . ?f)
                                 ("saude" . ?d))))
@@ -675,15 +674,6 @@
 
     (my-defaults//refresh-org-agenda-files)
     (advice-add 'org-agenda :before #'my-defaults//refresh-org-agenda-files)
-
-    (setq org-jira-custom-jqls '(
-                                 (:jql "project = 'SFI' and assignee = currentUser() and status NOT IN ('CONCLUÍDO', 'Cancelado') ORDER BY created DESC"
-                                       :limit 10
-                                       :filename "squad-tasks")
-                                 (:jql "project = 'Chapter Backend' AND assignee = currentUser() AND status NOT IN (CONCLUÍDO, Cancelado, '✅ DONE', '❌ CANCELED') ORDER BY created DESC"
-                                       :limit 10
-                                       :filename "chapter-backend-tasks")
-                                 ))
 
     ;; Allow refile to create parent tasks with confirmation
     (setq org-refile-allow-creating-parent-nodes (quote confirm))

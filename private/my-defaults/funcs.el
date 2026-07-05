@@ -699,10 +699,16 @@ Only show DONE/CANCELLED tasks that were closed more than 30 days ago."
 ;; Recursively includes all .org files under each directory
 ;; Excludes lock files (.#) and documentation files (workflow.org)
 (defun my-defaults//refresh-org-agenda-files (&rest _)
+  "Reconstrói `org-agenda-files' a partir de ~/org + org-roam.
+Exclui locks (.#), o próprio workflow.org, arquivos _archive e o
+diretório tmp/ (rascunho) — sem tarefas acionáveis e que poluem os
+alvos de refile."
   (setq org-agenda-files
         (cl-remove-if (lambda (f)
                         (or (string-match-p "/\\.#" f)
-                            (string-match-p "/workflow\\.org$" f)))
+                            (string-match-p "/workflow\\.org$" f)
+                            (string-match-p "_archive\\.org$" f)
+                            (string-match-p "/tmp/" f)))
                       (append
                        (directory-files-recursively "~/org" "\\.org$")
                        (directory-files-recursively "~/Documentos/org-roam" "\\.org$")))))
