@@ -448,9 +448,13 @@
                 ("TODO" ("WAITING") ("CANCELLED") ("HOLD"))
                 ("NEXT" ("WAITING") ("CANCELLED") ("HOLD"))
                 ("DONE" ("WAITING") ("CANCELLED") ("HOLD")))))
-  ;; Archiving — done tasks go to <filename>_archive
+  ;; Archiving — done tasks vão para a seção "** Arquivo :ARCHIVE:" DO PRÓPRIO
+  ;; arquivo (modelo Layout A: um arquivo = um projeto, autocontido).
+  ;; O nível 2 (::**) casa com o "** Arquivo" aninhado sob o "* Projeto".
+  ;; Ressalva: _area.org (Arquivo em nível 1) e arquivos planos não casam —
+  ;; nesses o org cria um "** Arquivo" novo. Alinhar depois (ver workflow.org).
   (setq org-archive-mark-done nil)
-  (setq org-archive-location "%s_archive::* Archived Tasks")
+  (setq org-archive-location "::** Arquivo")
 
   ;; Capture templates (configured in post-config to ensure org-directory is set)
   (spacemacs|use-package-add-hook org
