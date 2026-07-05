@@ -468,6 +468,9 @@
                   ("v" "revisar PR" entry (file "~/org/refile.org")
                    "* NEXT Revisar PR %? :@work:review:\n%U\n%a\n"
                    :clock-in t :clock-resume t)
+                  ("u" "tarefa ClickUp" entry (file "~/org/refile.org")
+                   "* TODO %? :@work:\n:PROPERTIES:\n:CLICKUP:  %^{Link do card ClickUp}\n:END:\n%U\n"
+                   :clock-in t :clock-resume t)
                   ("n" "note" entry (file "~/org/refile.org")
                    "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t)
                   ("j" "journal" entry (file+datetree "~/org/diary.org")
