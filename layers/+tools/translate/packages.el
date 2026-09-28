@@ -23,15 +23,7 @@
 
 (defconst translate-packages
   '(translate-mode
-<<<<<<< HEAD
-    gt
-    ;; treemacs-evil
-    ))
-||||||| 8358ec3e5
-    go-translate))
-=======
     gt))
->>>>>>> 8e2a7d3ecff83606a24432b2163c80f77ad377b5
 
 (defun translate/init-translate-mode ()
   "Initialize required packages."
@@ -39,21 +31,9 @@
     :defer t
     :hook (translate-mode . translate//set-translate-mode-paragraph-functions)))
 
-<<<<<<< HEAD
-(defun translate/init-gt ()
-  (use-package gt
-    :ensure t
-    :defer t
-    ;; :commands (gts-translate)
-||||||| 8358ec3e5
-(defun translate/init-go-translate ()
-  (use-package go-translate
-    :commands (gt-start)
-=======
 (defun translate/init-gt ()
   (use-package gt
     :commands (gt-start)
->>>>>>> 8e2a7d3ecff83606a24432b2163c80f77ad377b5
     :config
     ;; (defclass translate//reference-paragraph-texter (gts-texter) ())
     ;; (cl-defmethod gts-text ((_ translate//reference-paragraph-texter))
@@ -104,70 +84,17 @@
                       :render (gt-overlay-render :type 'help-echo)))))
     (defconst translate//replace-selection-translator
       (gt-translator
-<<<<<<< HEAD
-       :taker (gt-taker :text 'word :pick nil :langs '(pt en))
-       :engines (gt-google-engine)
-       :render (gt-insert-render :type 'replace)))
-    (defconst translate//replace-selection-translator-inverse
-||||||| 8358ec3e5
-       :taker (gt-taker :text (lambda () (translate//reference-paragraph-texter)))
-       :engines (list (gt-google-engine) (gt-bing-engine))
-       :render (translate//check-and-get-render translate/paragraph-render))
-      "Paragraph translator for `go-translate'.")
-    (defconst translate//word-translator
-=======
        :taker (gt-taker :text (lambda () (translate//reference-paragraph-texter)))
        :engines (list (gt-google-engine) (gt-bing-engine))
        :render (translate//check-and-get-render translate/paragraph-render))
       "Paragraph translator for `gt'.")
     (defconst translate//word-translator
->>>>>>> 8e2a7d3ecff83606a24432b2163c80f77ad377b5
       (gt-translator
-<<<<<<< HEAD
-       :taker (gt-taker :text 'word :pick nil :langs '(en pt))
-       :engines (gt-google-engine)
-       :render (gt-insert-render :type 'replace)))
-    (setq gt-langs '(en pt))
-    (setq gt-ignore-target-history-p t)
-    (setq gt-default-translator
-          (gt-translator
-           :taker   (list (gt-taker :pick nil :if 'selection)
-                          (gt-taker :text 'paragraph :if '(help-mode org-mode))
-                          (gt-taker :text 'buffer :pick 'paragraph :if 'Info-mode)
-                          (gt-taker :text 'buffer :pick 'fresh-word :if 'read-only)
-                          (gt-taker :text 'word))
-           :engines (list (gt-google-engine :if 'word)
-                          (gt-google-engine :if 'no-word))
-           :render  (list (gt-posframe-pop-render :if 'selection)
-                          (gt-overlay-render :if '(read-only Info-mode org-mode))
-                          (gt-insert-render :if (lambda (translator) (member (buffer-name) '("COMMIT_EDITMSG"))))
-                          (gt-alert-render :if '(and xxx-mode (or not-selection (and read-only parts))))
-                          (gt-buffer-render))))
-    )
-  )
-||||||| 8358ec3e5
-       :taker (gt-taker :text 'word)
-       :engines (list (gt-google-engine) (gt-bing-engine))
-       :render (translate//check-and-get-render translate/word-render))
-      "Word translator for `go-translate'.")))
-=======
        :taker (gt-taker :text 'word)
        :engines (list (gt-google-engine) (gt-bing-engine))
        :render (translate//check-and-get-render translate/word-render))
       "Word translator for `gt'.")))
->>>>>>> 8e2a7d3ecff83606a24432b2163c80f77ad377b5
 
 (defun translate/pre-init-posframe ()
   (spacemacs|use-package-add-hook posframe
-<<<<<<< HEAD
-    :post-config (translate/init-go-translate)))
-
-;; (defun translate/pre-init-treemacs-evil ()
-;;   (spacemacs|use-package-add-hook treemacs-evil
-;;     :post-config
-;;     (evil-define-key 'treemacs treemacs-mode-map (kbd "C-l") #'evil-window-right)))
-||||||| 8358ec3e5
-    :post-config (translate/init-go-translate)))
-=======
     :post-config (translate/init-gt)))
->>>>>>> 8e2a7d3ecff83606a24432b2163c80f77ad377b5

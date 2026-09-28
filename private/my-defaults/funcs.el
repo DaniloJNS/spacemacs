@@ -1,4 +1,4 @@
-;;; funcs.el --- my-defaults layer functions file for Spacemacs.
+;;; funcs.el --- my-defaults layer functions file for Spacemacs. -*- lexical-binding: t; -*-
 ;;
 ;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
 ;;
@@ -86,8 +86,7 @@ With prefix ARG, show the entire buffer."
   "Copy values of the current org table column to the kill-ring.
 Values are separated by newlines, ready to paste with `C-y'.
 With prefix arg SKIP-HEADER, drop the first row (assumed to be a header).
-If the table has horizontal separators (hlines), rows before the first
-hline are treated as the header and always skipped."
+If the table has horizontal separators (hhe header and always skipped."
   (interactive "P")
   (unless (org-at-table-p) (user-error "Not in an org table"))
   (let* ((col (org-table-current-column))
@@ -132,9 +131,26 @@ buffer's text scale."
 ;; --------------------------------
 ;; Window purpose layout to Coding
 
+;; Declared so the `let' below binds dynamically even when this file is
+;; byte-compiled before shell-pop is loaded.
+(defvar shell-pop-autocd-to-working-dir)
+
 (defun my-defaults//toggle-vterm-terminal ()
+  "Toggle the vterm popup, preserving the terminal's state between toggles.
+`shell-pop-autocd-to-working-dir' is let-bound to nil so that re-opening
+an existing terminal does not send `cd <dir>' + `clear' to it (see
+`shell-pop--cd-to-cwd-vterm'), which would wipe the scrollback and reset
+the shell to the project root.  A freshly created terminal still starts
+at the right place: `shell-pop-up' picks up the dynamically bound
+`default-directory', which `spacemacs/projectile-shell-pop' sets to the
+project root."
   (interactive)
-  (if (projectile-project-p) (call-interactively 'spacemacs/projectile-shell-pop) (spacemacs/shell-pop-vterm)))
+  ;; Loaded up-front so the binding below is dynamic and not lexical.
+  (require 'shell-pop)
+  (let ((shell-pop-autocd-to-working-dir nil))
+    (if (projectile-project-p)
+        (call-interactively 'spacemacs/projectile-shell-pop)
+      (call-interactively 'spacemacs/shell-pop-vterm))))
 
 (with-eval-after-load 'window-purpose
   (defvar my-defaults-x-code1--window-layout
@@ -711,4 +727,110 @@ alvos de refile."
                             (string-match-p "/tmp/" f)))
                       (append
                        (directory-files-recursively "~/org" "\\.org$")
-                       (directory-files-recursively "~/Documentos/org-roam" "\\.org$")))))
+                       ;; Inclui as notas do org-roam apenas se o diretório existir
+                       ;; e não estiver já sob ~/org (evita erro e duplicatas).
+                       (when (and (boundp 'org-roam-directory)
+                                  org-roam-directory
+                                  (file-directory-p org-roam-directory)
+                                  (not (file-in-directory-p
+                                        (expand-file-name org-roam-directory)
+                                        (expand-file-name "~/org"))))
+                         (directory-files-recursively org-roam-directory "\\.org$"))))))
+
+
+;; --------------------------------
+;; Single-file C/C++ programs
+
+;; Declared so the `let' in `my-defaults//c-run-in-vterm' binds dynamically
+;; even when this file is byte-compiled before vterm is loaded.
+(defvar vterm-shell)
+(defvar vterm-kill-buffer-on-exit)
+
+(defun my-defaults//c-source-and-toolchain ()
+  "Return (SOURCE . TOOLCHAIN) for the current buffer, or signal a `user-error'.
+TOOLCHAIN is the plist `my-defaults-c-family-toolchains' associates with the
+file's extension."
+  (let* ((file (or (buffer-file-name)
+                   (user-error "Este buffer não está associado a um arquivo")))
+         (extension (file-name-extension file))
+         (toolchain (cdr (seq-find (lambda (entry)
+                                     (member extension (car entry)))
+                                   my-defaults-c-family-toolchains))))
+    (unless toolchain
+      (user-error "Sem toolchain para .%s (veja `my-defaults-c-family-toolchains')"
+                  (or extension "")))
+    (cons file toolchain)))
+
+(defun my-defaults//c-compile (source toolchain &optional show-warnings)
+  "Compile SOURCE with TOOLCHAIN and return the executable path.
+The compiler output lands in a `compilation-mode' buffer, so the errors stay
+navigable with `next-error'.  That buffer is shown whenever compilation
+fails, and, when SHOW-WARNINGS is non-nil, also when it merely warns.
+Signal a `user-error' on failure so callers never run a stale binary."
+  (let* ((compiler (plist-get toolchain :compiler))
+         (binary (file-name-sans-extension source))
+         (args (append (plist-get toolchain :flags)
+                       (list "-o" binary source)
+                       (plist-get toolchain :libs)))
+         (buffer (get-buffer-create "*c-compile*"))
+         status output-p)
+    (unless (executable-find compiler)
+      (user-error "Compilador não encontrado: %s" compiler))
+    (with-current-buffer buffer
+      (let ((inhibit-read-only t)
+            (output-start nil))
+        (erase-buffer)
+        (setq default-directory (file-name-directory source))
+        (insert (combine-and-quote-strings (cons compiler args)) "\n\n")
+        (setq output-start (point))
+        (setq status (apply #'call-process compiler nil t nil args))
+        (setq output-p (> (point-max) output-start)))
+      (compilation-mode))
+    (unless (eq status 0)
+      (display-buffer buffer)
+      (user-error "Falha ao compilar %s" (file-name-nondirectory source)))
+    (cond
+     ((and output-p show-warnings) (display-buffer buffer))
+     (output-p (message "Compilado com avisos (SPC m c c mostra o relatório)"))
+     (t (message "Compilado: %s" (file-name-nondirectory binary))))
+    binary))
+
+(defun my-defaults//c-run-in-vterm (binary)
+  "Run BINARY in a dedicated vterm buffer and pop to it.
+vterm hands the program a real pty, so a `printf' prompt without a trailing
+newline shows up before the matching `scanf' blocks -- under `compile' or
+`shell-command' stdout is block-buffered and the prompt stays invisible
+until the program exits."
+  (require 'vterm)
+  (let ((previous (get-buffer my-defaults-c-run-buffer-name)))
+    (when (buffer-live-p previous)
+      ;; A live process would otherwise ask for confirmation on every run.
+      (let ((kill-buffer-query-functions nil))
+        (kill-buffer previous))))
+  (let ((default-directory (file-name-directory binary))
+        ;; With this nil vterm installs no sentinel, so the buffer outlives the
+        ;; program and keeps its final output on screen.
+        (vterm-kill-buffer-on-exit nil)
+        ;; vterm splices this into `sh -c "... && exec %s"'; wrapping the
+        ;; program in its own `sh -c' is what leaves a shell alive after the
+        ;; `exec' to report the exit status (139 on a segfault, and so on).
+        (vterm-shell (format "sh -c %s"
+                             (shell-quote-argument
+                              (format "%s; printf '\\n[exit %%s]\\n' $?"
+                                      (shell-quote-argument binary))))))
+    (vterm-other-window my-defaults-c-run-buffer-name)))
+
+(defun my-defaults/c-compile ()
+  "Compile the C/C++ file in the current buffer without running it."
+  (interactive)
+  (let ((source (my-defaults//c-source-and-toolchain)))
+    (save-buffer)
+    (my-defaults//c-compile (car source) (cdr source) t)))
+
+(defun my-defaults/c-compile-and-run ()
+  "Compile the C/C++ file in the current buffer and run it in an interactive vterm."
+  (interactive)
+  (let ((source (my-defaults//c-source-and-toolchain)))
+    (save-buffer)
+    (my-defaults//c-run-in-vterm
+     (my-defaults//c-compile (car source) (cdr source)))))

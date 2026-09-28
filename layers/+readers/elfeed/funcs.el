@@ -1,4 +1,4 @@
-;;; funcs.el --- Elfeed Layer functions File for Spacemacs
+;;; funcs.el --- Elfeed Layer functions File for Spacemacs -*- lexical-binding: t; -*-
 ;;
 ;; This file is not part of GNU Emacs.
 ;;

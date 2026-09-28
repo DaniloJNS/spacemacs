@@ -1,4 +1,4 @@
-;;; packages.el --- my-navigation layer packages file for Spacemacs.
+;;; packages.el --- my-navigation layer packages file for Spacemacs. -*- lexical-binding: t; -*-
 ;;
 ;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
@@ -54,6 +54,8 @@
 
 (require 'lookup)    ; autoloads
 (require 'online)    ; autoloads
+
+(add-hook 'prog-mode-hook #'spacemacs//dumb-jump-before-etags-h)
 
 (defun my-navigation/init-powerthesaurus ()
   (use-package powerthesaurus

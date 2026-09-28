@@ -159,14 +159,14 @@ inaccurate)."
                      prop))
          (result
           (if arg
-              (if-let
-                  (handler
-                   (intern-soft
-                    (completing-read "Select lookup handler: "
-                                     (delete-dups
-                                      (remq t (append (symbol-value handlers)
-                                                      (default-value handlers))))
-                                     nil t)))
+              (if-let*
+                  ((handler
+                    (intern-soft
+                     (completing-read "Select lookup handler: "
+                                      (delete-dups
+                                       (remq t (append (symbol-value handlers)
+                                                       (default-value handlers))))
+                                      nil t))))
                   (spacemacs/lookup--run-handlers handler identifier origin)
                 (user-error "No lookup handler selected"))
             (run-hook-wrapped handlers #'spacemacs/lookup--run-handlers identifier origin))))
@@ -332,7 +332,7 @@ framework (ivy, helm, vertico, etc), otherwise falling back to
                 ;; Only do this with paths that contain segments, to reduce
                 ;; false positives.
                 (string-match-p "/" guess)
-                (when-let ((dir (locate-dominating-file default-directory guess)))
+                (when-let* ((dir (locate-dominating-file default-directory guess)))
                   (when (file-in-directory-p dir (spacemacs/projectile-project-root))
                     (find-file (spacemacs/file-path dir guess))
                     t))))
@@ -363,7 +363,7 @@ the browser."
               (bug-reference-fontify (line-beginning-position) (line-end-position))
               (dolist (o (overlays-at (point)))
                 ;; It should only be possible to have one URL overlay.
-                (when-let (url (overlay-get o 'bug-reference-url))
+                (when-let* ((url (overlay-get o 'bug-reference-url)))
                   (browse-url url)
 
                   (throw 'found t)))))

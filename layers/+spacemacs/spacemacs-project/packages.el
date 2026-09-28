@@ -70,6 +70,7 @@
       "fyL" 'spacemacs/projectile-copy-file-path-with-line
       "fyY" 'spacemacs/projectile-copy-file-path
       ;; Project
+      "pw" 'projectile-switch-worktree
       "p!" 'projectile-run-shell-command-in-root
       "p&" 'projectile-run-async-shell-command-in-root
       "p%" 'projectile-replace-regexp

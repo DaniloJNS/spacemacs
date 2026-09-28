@@ -1,4 +1,4 @@
-;;; alchemist-project.el --- API to identify Elixir mix projects.
+;;; alchemist-project.el --- API to identify Elixir mix projects. -*- lexical-binding: t; -*-
 
 ;; Copyright © 2014-2017 Samuel Tonini
 

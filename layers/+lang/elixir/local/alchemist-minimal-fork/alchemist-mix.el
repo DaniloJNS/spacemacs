@@ -1,4 +1,4 @@
-;;; alchemist-mix.el --- Interface to run Elixir mix tasks inside Emacs
+;;; alchemist-mix.el --- Interface to run Elixir mix tasks inside Emacs -*- lexical-binding: t; -*-
 
 ;; Copyright © 2014-2017 Samuel Tonini
 

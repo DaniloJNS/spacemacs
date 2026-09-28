@@ -1,4 +1,4 @@
-;;; alchemist-test-mode.el --- Minor mode for Elixir test files.
+;;; alchemist-test-mode.el --- Minor mode for Elixir test files. -*- lexical-binding: t; -*-
 
 ;; Copyright © 2015 Samuel Tonini
 

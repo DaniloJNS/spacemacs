@@ -51,16 +51,51 @@
     (everforest-theme :location (recipe
                                  :fetcher github
                                  :repo "theorytoe/everforest-emacs"))
-    modus-themes)
+    catppuccin-theme
+    modus-themes
+    ef-themes)
   "The list of Lisp packages required by the my-fonts layer.")
 
-(defun my-fonts/init-everforest-theme ()
+(defun my-fonts/init-everforest-theme()
   (use-package everforest-theme
     :ensure t
     :defer t
     :config
     (load-theme 'everforest-hard-dark t)
     ))
+
+(defun my-fonts/init-catppuccin-theme()
+  (use-package catppuccin-theme
+    :ensure t
+    :config
+    (setq catppuccin-flavor 'mocha)))
+
+(defun my-fonts/init-ef-themes()
+  (use-package ef-themes
+    :ensure t
+    :init
+    ;; This makes the Modus commands listed below consider only the Ef
+    ;; themes.  For an alternative that includes Modus and all
+    ;; derivative themes (like Ef), enable the
+    ;; `modus-themes-include-derivatives-mode' instead.  The manual of
+    ;; the Ef themes has a section that explains all the possibilities:
+    ;;
+    ;; - Evaluate `(info "(ef-themes) Working with other Modus themes or taking over Modus")'
+    ;; - Visit <https://protesilaos.com/emacs/ef-themes#h:6585235a-5219-4f78-9dd5-6a64d87d1b6e>
+    (ef-themes-take-over-modus-themes-mode 1)
+    :bind
+    (("<f5>" . modus-themes-rotate)
+     ("C-<f5>" . modus-themes-select)
+     ("M-<f5>" . modus-themes-load-random))
+    :config
+    ;; All customisations here.
+    (setq modus-themes-mixed-fonts t)
+    (setq modus-themes-italic-constructs t)
+
+    ;; Finally, load your theme of choice (or a random one with
+    ;; `modus-themes-load-random', `modus-themes-load-random-dark',
+    ;; `modus-themes-load-random-light').
+    (modus-themes-load-theme 'ef-dark)) )
 
 (defun my-fonts/init-olivetti()
   (use-package olivetti
@@ -154,25 +189,25 @@
         ;; Space Mono was the only font I found installed that contains all the special characters used by doom modeline
         ;; :mode-line-active-family "SpaceMono Nerd Font"
         ;; :mode-line-active-font "SpaceMono Nerd Font"
-        :mode-line-active-family "JetBrainsMonoNL"
+        :mode-line-active-family "JetBrainsMono Nerd Font"
         :mode-line-active-weight regular
         :mode-line-active-slant normal
         :mode-line-active-width nil
         :mode-line-active-height 120
 
-        :mode-line-inactive-family "JetBrainsMonoNL"
+        :mode-line-inactive-family "JetBrainsMono Nerd Font"
         :mode-line-inactive-weight regular
         :mode-line-inactive-slant normal
         :mode-line-inactive-width nil
         :mode-line-inactive-height 120) ; like this it uses all the fallback values and is named `regular'
        (medium
-        :default-family "Monaspace Neon"
-        :default-height 120
+        :default-family "Monolisa"
+        :default-height 125
         :default-weight regular
 
-        :fixed-pitch-family "Monaspace Neon"
+        :fixed-pitch-family "Monolisa"
         :fixed-pitch-weight regular
-        :fixed-pitch-height 120
+        :fixed-pitch-height 125
 
         ;; :variable-pitch-text-height 1.1 ;; by defaults its height is 1.1x the value of variable-pitch. But text is very big
         ;; :variable-pitch-family "Iosevka Comfy Wide Duo"
@@ -186,12 +221,12 @@
 
        (MonoLisa
         :default-family "MonoLisa"
-        :default-height 115
+        :default-height 120
         :default-weight regular
 
         :fixed-pitch-family "MonoLisa"
         :fixed-pitch-weight regular
-        :fixed-pitch-height 115
+        :fixed-pitch-height 120
 
         ;; :variable-pitch-text-height 1.1 ;; by defaults its height is 1.1x the value of variable-pitch. But text is very big
         ;; :variable-pitch-family "Iosevka Comfy Wide Duo"
@@ -217,14 +252,15 @@
 
        (MonaspaceNeon
         :default-family "Monaspace Neon"
-        :default-height 120
+        :default-height 115
         :default-weight regular
 
         :fixed-pitch-family "Monaspace Neon"
         :fixed-pitch-weight regular
-        :fixed-pitch-height 120
+        :fixed-pitch-height 115
 
-        :variable-pitch-family "Iosevka Comfy Wide Motion"
+        :variable-pitch-family "Inter"
+        :variable-pitch-weight regular
         :variable-pitch-height 120)
 
        (large

@@ -1,4 +1,4 @@
-;;; config.el --- My Navigation Layer config File for Spacemacs
+;;; config.el --- My Navigation Layer config File for Spacemacs -*- lexical-binding: t; -*-
 ;;
 ;; Copyright (c) 2012-2024 Danilo Nascimento
 ;;

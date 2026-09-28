@@ -1,4 +1,4 @@
-;;; alchemist-key.el --- Key prefix setup for Alchemist related key commands
+;;; alchemist-key.el --- Key prefix setup for Alchemist related key commands -*- lexical-binding: t; -*-
 
 ;; Copyright © 2014-2017 Samuel Tonini
 

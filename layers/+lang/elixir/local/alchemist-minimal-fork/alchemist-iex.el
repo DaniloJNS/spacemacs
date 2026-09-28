@@ -1,4 +1,4 @@
-;;; alchemist-help.el --- Interaction with an Elixir IEx process
+;;; alchemist-help.el --- Interaction with an Elixir IEx process -*- lexical-binding: t; -*-
 
 ;; Copyright © 2014-2017 Samuel Tonini
 

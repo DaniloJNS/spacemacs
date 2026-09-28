@@ -1,4 +1,4 @@
-;;; packages.el --- my-defaults layer packages file for Spacemacs.
+;;; packages.el --- my-defaults layer packages file for Spacemacs. -*- lexical-binding: t; -*-
 ;;
 ;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
 ;;
@@ -21,6 +21,10 @@
 
 (defconst my-defaults-packages
   '(
+    ;; Kept first so it activates as early as possible in this layer's
+    ;; package init sequence (compile-angel needs to hook `load'/`require'
+    ;; before the packages that follow get loaded to catch them too).
+    compile-angel
     org-roam
     (org :location elpa :min-version "9.7.8")
     ts-fold
@@ -30,6 +34,12 @@
     yuck-mode
     zoom
     (combobulate :location local)
+    ;; Not on MELPA yet: https://github.com/cfclrk/markdown-xwidget
+    (markdown-xwidget :location (recipe
+                                  :fetcher github
+                                  :repo "cfclrk/markdown-xwidget"
+                                  :files (:defaults "resources")))
+    (xwidget :location built-in)
     xclip
     gcmh
     spacious-padding
@@ -37,6 +47,25 @@
     (so-long :location built-in)
     ultra-scroll
     diredfl))
+
+(defun my-defaults/init-compile-angel ()
+  (use-package compile-angel
+    :ensure t
+    :demand t
+    :custom
+    (compile-angel-verbose t)
+    :config
+    ;; NOTE: deliberately NOT using `compile-angel-on-load-mode' here. It
+    ;; compiles any .el the moment Emacs `load's it, with no guarantee that
+    ;; files providing macros it depends on (e.g. `evil') are already loaded
+    ;; in this process. That silently miscompiled `evil-evilified-state.elc'
+    ;; (calls to the `evil-define-key' macro got left as plain, unexpanded
+    ;; function calls), breaking init.el with "Invalid function:
+    ;; evil-define-key" on the next startup. `compile-angel-on-save-local-mode'
+    ;; only recompiles a file when *you* save it, i.e. mid-session, when
+    ;; everything it depends on is already loaded — so it doesn't have this
+    ;; failure mode. Keep private/my-* layer files compiled as they're edited.
+    (add-hook 'emacs-lisp-mode-hook #'compile-angel-on-save-local-mode)))
 
 (defun my-defaults/init-javelin()
   (use-package javelin
@@ -149,6 +178,102 @@
           gchm-high-cons-thresold (* 256 1024 1024)) ;; use 256 MB when idle
     :config
     (gcmh-mode 1)))
+
+(defun my-defaults/init-xwidget ()
+  (use-package xwidget
+    :defer t
+    :config
+    ;; `xwidget-webkit-mode' derives from `special-mode', so Evil defaults it
+    ;; to motion state — whose map claims almost every single-letter key the
+    ;; mode itself binds: SPC (scroll), H (history), e (edit-mode), +/- (zoom),
+    ;; w (current url), RET (insert string), f/b (forward/back), and g (whole
+    ;; g-prefix keymap, so it never even reaches xwidget-webkit-browse-url).
+    ;; Rather than patch keys one by one, evilify the mode properly: this
+    ;; keeps basic vim navigation (j/k, gg/G, /) while letting the mode's own
+    ;; keymap win for everything else, as documented in `xwidget-webkit-mode'.
+    (evilified-state-evilify-map xwidget-webkit-mode-map
+      :mode xwidget-webkit-mode)))
+
+(defconst my-defaults--svg-pan-zoom-js
+  (expand-file-name "resources/svg-pan-zoom.min.js"
+                     (file-name-directory
+                      (or load-file-name buffer-file-name)))
+  "Local copy of https://github.com/bumbu/svg-pan-zoom.
+mermaid.js has no per-diagram pan/zoom of its own, and
+`xwidget-webkit-zoom-in'/-out' only scale the whole page, so this gets
+wired into the markdown-xwidget preview to zoom/pan individual diagrams.")
+
+(defun my-defaults//markdown-xwidget-inject-svg-pan-zoom (html)
+  "Append pan/zoom wiring for mermaid SVGs to HTML.
+Meant as `:filter-return' advice on `markdown-xwidget-header-html'."
+  (concat
+   html
+   (format "<script type=\"text/javascript\" src=\"file://%s\"></script>\n"
+           my-defaults--svg-pan-zoom-js)
+   "<script type=\"text/javascript\">
+document.addEventListener(\"DOMContentLoaded\", () => {
+  // Only the final diagram: mermaid also creates throwaway <svg>s to measure
+  // text, and the final one has no size until its parent is marked processed.
+  // svg-pan-zoom throws (non-finite SVGMatrix) on those, so skip them and only
+  // mark an svg as done once attaching actually succeeded.
+  const scan = () => {
+    document.querySelectorAll(
+      '.mermaid[data-processed=\"true\"] > svg:not([data-pan-zoom-attached])'
+    ).forEach((svg) => {
+      const r = svg.getBoundingClientRect();
+      if (!r.width || !r.height) return;
+      // svg-pan-zoom drops the viewBox, which would collapse the height.
+      svg.style.maxWidth = \"none\";
+      svg.style.width = \"100%\";
+      svg.style.height = r.height + \"px\";
+      try {
+        svgPanZoom(svg, {
+          zoomEnabled: true,
+          controlIconsEnabled: true,
+          fit: true,
+          center: true,
+          minZoom: 0.2,
+          maxZoom: 20,
+        });
+        svg.dataset.panZoomAttached = \"1\";
+      } catch (e) {
+        console.error(\"svg-pan-zoom:\", svg.id, e);
+      }
+    });
+  };
+  new MutationObserver(() => requestAnimationFrame(scan)).observe(
+    document.body,
+    { childList: true, subtree: true, attributes: true,
+      attributeFilter: [\"data-processed\"] }
+  );
+  window.addEventListener(\"load\", () => requestAnimationFrame(scan));
+});
+</script>"))
+
+(defun my-defaults/init-markdown-xwidget ()
+  (use-package markdown-xwidget
+    :after markdown-mode
+    :defer t
+    :custom
+    (markdown-xwidget-github-theme "light")
+    (markdown-xwidget-mermaid-theme "default")
+    (markdown-xwidget-code-block-theme "github")
+    ;; pandoc supports GFM tables but emits `<pre class="mermaid">` (class on
+    ;; the wrong element for mermaid.js to find), and the plain "markdown"
+    ;; binary (the default) has neither tables nor fenced code blocks.
+    ;; multimarkdown gets both right. See:
+    ;; https://github.com/cfclrk/markdown-xwidget/issues/7
+    (markdown-xwidget-command "multimarkdown")
+    ;; With the default 'any, markdown-mode hands the preview to
+    ;; `display-buffer' whenever `display-buffer-alist' is set (always, under
+    ;; Spacemacs' popwin/purpose), which lands it in a small popup at the
+    ;; bottom. Forcing a side-by-side split skips `display-buffer' entirely.
+    (markdown-split-window-direction 'right)
+    :config
+    (advice-add 'markdown-xwidget-header-html :filter-return
+                #'my-defaults//markdown-xwidget-inject-svg-pan-zoom)
+    :bind (:map markdown-mode-command-map
+                ("x" . markdown-xwidget-preview-mode))))
 
 (defun my-defaults/init-yuck-mode ()
   (use-package yuck-mode

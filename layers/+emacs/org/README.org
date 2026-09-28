@@ -736,19 +736,9 @@ In evil insert-state, use the introspection functions under =M-m
 h d= and =M-RET= to discover key bindings. The following table shows keybindings
 for some of the most frequently used commands
 
-<<<<<<< HEAD
-| Key binding | Description                                       |
-|-------------+---------------------------------------------------|
-| ~M-RET M-RET~ | org-meta-return (dwim retrun)                     |
-||||||| 8358ec3e5
-| Key binding   | Description                                       |
-|---------------+---------------------------------------------------|
-| ~M-RET M-RET~ | org-meta-return (dwim retrun)                     |
-=======
 | Key binding   | Description                                       |
 |---------------+---------------------------------------------------|
 | ~M-RET M-RET~ | org-meta-return (dwim return)                     |
->>>>>>> 8e2a7d3ecff83606a24432b2163c80f77ad377b5
 | ~M-h/l~       | org-meta-left/right (e.g. promote/demote heading) |
 
 *Normal state*

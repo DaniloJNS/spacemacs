@@ -45,3 +45,10 @@ Will work on both org-mode and any mode that accepts plain html."
         (kbd "M-j") 'markdown-move-down
         (kbd "M-k") 'markdown-move-up
         (kbd "M-l") 'markdown-demote))))
+
+(defun spacemacs//markdown-compile ()
+  "Compiles the currently loaded markdown file using pandoc into a PDF"
+  (interactive)
+  (save-buffer)
+  (shell-command (concat "pandoc " (buffer-file-name) " -o "
+                         (replace-regexp-in-string "md" "pdf" (buffer-file-name)))))

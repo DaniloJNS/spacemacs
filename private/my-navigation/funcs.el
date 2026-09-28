@@ -19,3 +19,9 @@
 ;;
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+(defun spacemacs//dumb-jump-before-etags-h ()
+  "Add dumb-jump locally before etags in xref-backend-functions.
+Workaround for spacemacs commit 77d37e87d which moved dumb-jump to depth 90,
+same as etags, causing etags to win since it was registered first at startup."
+  (add-hook 'xref-backend-functions #'dumb-jump-xref-activate -10 t))

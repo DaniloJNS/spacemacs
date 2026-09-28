@@ -121,8 +121,8 @@ with the same name where it was stored in the libreoffice repository. Example ad
   mkdir -p ~/Library/Spelling
   cd ~/Library/Spelling
   mkdir pt_BR && cd pt_BR
-  wget -O pt_BR.aff https://cgit.freedesktop.org/libreoffice/dictionaries/plain/pt_BR/pt_BR.aff
-  wget -O pt_BR.dic https://cgit.freedesktop.org/libreoffice/dictionaries/plain/pt_BR/pt_BR.dic
+  wget -O pt_BR.aff https://github.com/LibreOffice/dictionaries/blob/master/pt_BR/pt_BR.aff
+  wget -O pt_BR.dic https://github.com/LibreOffice/dictionaries/blob/master/pt_BR/pt_BR.dic
 #+end_src
 
 OR try install via AUR for Arch Linux, by example, the grammar via freedesktop for pt BR is broken. In this case, was used ~hunspell-pt-br~.

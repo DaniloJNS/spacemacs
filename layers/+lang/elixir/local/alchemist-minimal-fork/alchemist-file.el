@@ -1,4 +1,4 @@
-;;; alchemist-file.el --- Functionality to work with directory content
+;;; alchemist-file.el --- Functionality to work with directory content -*- lexical-binding: t; -*-
 
 ;; Copyright © 2014-2017 Samuel Tonini
 

@@ -1,4 +1,4 @@
-;; keybindings.el --- Semantic Layer functions File for Spacemacs;
+;; keybindings.el --- Semantic Layer functions File for Spacemacs; -*- lexical-binding: t; -*-
 ;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
 ;;
 ;; Author: Ray Wang <rayw.public@gmail.com>
@@ -101,6 +101,12 @@
   (evil-define-key 'normal org-agenda-mode-map (kbd "\\") 'org-agenda-filter-by-tag)
   (spacemacs/set-leader-keys-for-major-mode 'org-mode
     "Ty" 'my-defaults/org-table-copy-column)
+
+  ;; Single-file C/C++ programs
+  (dolist (mode '(c-mode c++-mode c-ts-mode c++-ts-mode))
+    (spacemacs/set-leader-keys-for-major-mode mode
+      "cc" 'my-defaults/c-compile
+      "cr" 'my-defaults/c-compile-and-run))
 
   ;; DevDocs
   (spacemacs/set-leader-keys "adp" 'devdocs-peruse)

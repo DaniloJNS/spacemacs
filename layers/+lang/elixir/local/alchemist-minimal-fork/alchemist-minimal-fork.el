@@ -1,4 +1,4 @@
-;;; alchemist.el --- Elixir tooling integration into Emacs
+;;; alchemist.el --- Elixir tooling integration into Emacs -*- lexical-binding: t; -*-
 
 ;; Copyright © 2014-2017 Samuel Tonini
 ;;

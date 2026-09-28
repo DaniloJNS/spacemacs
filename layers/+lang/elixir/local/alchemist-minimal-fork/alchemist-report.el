@@ -1,4 +1,4 @@
-;;; alchemist-report.el --- Run command in a process and handles buffer of it
+;;; alchemist-report.el --- Run command in a process and handles buffer of it -*- lexical-binding: t; -*-
 
 ;; Copyright © 2015 Samuel Tonini
 

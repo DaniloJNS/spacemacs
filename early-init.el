@@ -55,3 +55,65 @@
 ;;
 ;; (add-hook 'window-setup-hook 'spacemacs/toggle-gui-elements-off)
 ;; (add-hook 'tty-setup-hook 'spacemacs/toggle-gui-elements-off)
+
+
+;; Native compilation tuning
+;;
+;; Author: James Cherti
+;; URL: https://www.jamescherti.com/compiling-emacs/
+;; License: MIT
+;;
+;; `native-comp-compiler-options' are the flags passed directly to the C
+;; compiler (via libgccjit) when it turns the Lisp-to-C output of the native
+;; compiler into machine code for every .eln file, on top of whatever CFLAGS
+;; the Emacs binary itself was built with.
+;;
+;; Deliberately avoid the literal "native" keyword for -march/-mtune here:
+;; libgccjit is loaded in-process (not spawned as the gcc driver), and its
+;; embedded host-detection logic doesn't always resolve "native" the same
+;; way the standalone gcc binary does. So we ask gcc directly what "native"
+;; resolves to on this machine and pass that concrete architecture instead.
+(defun my-get-cpu-architecture ()
+  "Return the CPU architecture GCC resolves `-march=native' to on this host.
+The value is obtained by parsing the output of GCC's `--help=target'.
+Return nil if GCC is unavailable or the architecture can't be parsed."
+  (when (executable-find "gcc")
+    (with-temp-buffer
+      (let ((exit-code (call-process "gcc" nil t nil "-march=native"
+                                      "-Q" "--help=target")))
+        (when (zerop exit-code)
+          (goto-char (point-min))
+          (when (re-search-forward
+                 "^[[:space:]]*-march=[[:space:]]+\\([^[:space:]]+\\)" nil t)
+            (match-string 1)))))))
+
+;; Auto-detect the CPU architecture so this keeps working if this config
+;; moves to a different machine. x86 only: on aarch64 GCC reports an ISA
+;; string (e.g. armv8.2-a+crypto) that `-mtune' rejects, which would make
+;; every native compilation fail.
+(when-let* (((string-prefix-p "x86_64" system-configuration))
+            (cpu-architecture (my-get-cpu-architecture)))
+  (setq native-comp-compiler-options
+        `(;; The most meaningful optimizations.
+          "-O2"
+          ,(format "-mtune=%s" cpu-architecture)
+          ,(format "-march=%s" cpu-architecture)
+          ;; Reduce .eln size and compilation overhead.
+          "-g0"
+          ;; Good defensive choice for Emacs stability (see bug#76180).
+          "-fno-omit-frame-pointer"
+          "-fno-finite-math-only")))
+
+(setq native-comp-driver-options
+      '(;; Compresses relocation tables to reduce file size and slightly
+        ;; improve load times.
+        "-Wl,-z,pack-relative-relocs"
+        ;; Standard linker-level optimizations (e.g. string merging) applied
+        ;; to the generated shared object.
+        "-Wl,-O2"
+        ;; Don't record dependencies on libraries the .eln doesn't actually
+        ;; use.
+        "-Wl,--as-needed"))
+
+;; NEXT STEP: bring in `compile-angel' to force byte+native compilation of
+;; everything in `load-path', including the private/ layers.

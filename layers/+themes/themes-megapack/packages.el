@@ -47,7 +47,7 @@
         darktooth-theme
         django-theme
         dracula-theme
-        ef-themes
+        ;; ef-themes
         espresso-theme
         exotica-theme
         eziam-themes
@@ -123,7 +123,7 @@
         (zonokai-emacs :location (recipe
                                   :fetcher github
                                   :repo "ZehCnaS34/zonokai-emacs"))
-        doom-themes
+        ;; doom-themes  ; owned by my-fonts layer (avoid double-init)
         ))
 
 ;; define programmatically the init functions

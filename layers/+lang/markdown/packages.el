@@ -119,6 +119,7 @@
         "cp"  'markdown-preview
         "cv"  'markdown-export-and-preview
         "cw"  'markdown-kill-ring-save
+        "cc"  'spacemacs//markdown-compile
         ;; headings
         "hi"  'markdown-insert-header-dwim
         "hI"  'markdown-insert-header-setext-dwim

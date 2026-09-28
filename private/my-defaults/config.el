@@ -1,4 +1,4 @@
-;;; config.el --- MyDefaults Layer config File for Spacemacs
+;;; config.el --- MyDefaults Layer config File for Spacemacs -*- lexical-binding: t; -*-
 ;;
 ;; Copyright (c) 2012-2024 Danilo Nascimento
 ;;
@@ -89,3 +89,35 @@
 ;;   native-symbol-name
 ;;   (tsc--load-language full-path native-symbol-name lang-symbol)
 ;;   )
+
+
+;; --------------------------------
+;; Single-file C/C++ programs
+
+(defvar my-defaults-c-family-toolchains
+  '((("c")
+     :compiler "gcc"
+     :flags ("-std=c17" "-Wall" "-Wextra" "-g" "-pthread")
+     ;; Libraries come last so the linker resolves them against the object
+     ;; file it just produced.  g++ links libm on its own, gcc does not.
+     :libs ("-lm"))
+    (("cpp" "cc" "cxx" "c++")
+     :compiler "g++"
+     :flags ("-std=c++20" "-Wall" "-Wextra" "-g")
+     :libs ()))
+  "How `my-defaults/c-compile-and-run' builds each file extension.
+Each entry maps a list of extensions to a plist with `:compiler', `:flags'
+\(passed before the source file) and `:libs' (passed after it).
+Extensions are matched case-sensitively, so the legacy `.C' spelling for
+C++ is deliberately absent: on a case-sensitive filesystem it is far more
+likely to be a shouted C file than a C++ one.")
+
+(defvar my-defaults-c-run-buffer-name "*c-run*"
+  "Name of the vterm buffer that runs the compiled program.")
+
+;; Keep the run buffer as a short window under the source instead of letting
+;; it take over the frame.
+(add-to-list 'display-buffer-alist
+             `(,(regexp-quote my-defaults-c-run-buffer-name)
+               (display-buffer-reuse-window display-buffer-below-selected)
+               (window-height . 0.35)))
