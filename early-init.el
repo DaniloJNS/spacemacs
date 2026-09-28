@@ -115,5 +115,11 @@ Return nil if GCC is unavailable or the architecture can't be parsed."
         ;; use.
         "-Wl,--as-needed"))
 
+;; On single-core machines (e.g. the college EC2), background JIT compilation
+;; of every package would keep the only CPU busy for a long time. Byte code
+;; is good enough there.
+(when (<= (num-processors) 1)
+  (setq native-comp-jit-compilation nil))
+
 ;; NEXT STEP: bring in `compile-angel' to force byte+native compilation of
 ;; everything in `load-path', including the private/ layers.
