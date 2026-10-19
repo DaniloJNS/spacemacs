@@ -146,11 +146,6 @@
            ("M-s e" . consult-isearch-history)       ;; orig. isearch-edit-string
            ("M-s l" . consult-line))                 ;; needed by consult-line to detect isearch
 
-    ;; Enable automatic preview at point in the *Completions* buffer.
-    ;; This is relevant when you use the default completion UI,
-    ;; and not necessary for Vertico etc.
-    :hook (completion-list-mode . consult-preview-at-point-mode)
-
     ;; The :init configuration is always executed (Not lazy)
     :init
     ;; disable automatic preview by default
@@ -358,12 +353,7 @@
 
 (defun compleseus/init-embark-consult ()
   (use-package embark-consult
-    :after (embark consult)
-    :demand t ; only necessary if you have the hook below
-    ;; if you want to have consult previews as you move around an
-    ;; auto-updating embark collect buffer
-    :hook
-    (embark-collect-mode . consult-preview-at-point-mode)))
+    :after (embark consult)))
 
 
 (defun compleseus/init-orderless ()
@@ -399,20 +389,34 @@
     ;; the available styles are registered in `completion-styles-alist`.
     ;; (setq completion-styles '(orderless partial-completion basic)
     (setq completion-styles '(orderless basic)
-          completion-category-defaults nil
           ;; we need to have 'basic here first in order to support tramp connections...
           ;; see `completion-styles`.
           completion-category-overrides '((file (styles basic partial-completion))))
+    ;; Only override built-in categories, from the default value of
+    ;; `completion-category-defaults'.  Do not second-guess site- or
+    ;; package-specific categories.
+    (dolist (category '(buffer
+                        unicode-name
+                        project-file
+                        xref-location
+                        info-menu
+                        symbol-help))
+      (add-to-list 'completion-category-overrides
+                   (list category '(styles))))
     :config
     (add-to-list 'orderless-style-dispatchers #'orderless-kwd-dispatch)))
 
 (defun compleseus/init-vertico ()
   (use-package vertico
     :init
-    ;; Add prompt indicator to `completing-read-multiple'.
+    ;; In Emacs <31, add prompt indicator to `completing-read-multiple'.  In
+    ;; Emacs 31+, `crm-prompt' already suffices to inform the user that the
+    ;; prompt is a `completing-read-multiple'.
     (defun crm-indicator (args)
       (cons (concat "[CRM] " (car args)) (cdr args)))
-    (advice-add #'completing-read-multiple :filter-args #'crm-indicator)
+    (with-eval-after-load 'crm
+      (unless (boundp 'crm-prompt)
+        (advice-add #'completing-read-multiple :filter-args #'crm-indicator)))
     ;; Grow and shrink minibuffer
     ;;(setq resize-mini-windows t)
     ;; Do not allow the cursor in the minibuffer prompt
@@ -473,7 +477,6 @@
         (define-key vertico-reverse-map (kbd "C-M-k")
                     #'spacemacs/next-candidate-preview))
       (define-key vertico-map (kbd "C-l") #'vertico-insert)
-      (define-key vertico-map (kbd "M-RET") #'vertico-exit-input)
       (define-key vertico-map (kbd "C-SPC") #'spacemacs/embark-preview)
       (define-key vertico-map (kbd "C-r") #'consult-history)
       (define-key vertico-map (kbd "M-P") #'spacemacs/consult-toggle-preview)))
@@ -481,8 +484,10 @@
   (use-package vertico-directory
     :after vertico
     ;; More convenient directory navigation commands
-    :init (bind-key "C-h" 'vertico-directory-up vertico-map
-                    (spacemacs//support-hjkl-navigation-p))
+    :init
+    (define-key vertico-map (kbd "M-DEL") #'vertico-directory-delete-word)
+    (bind-key "C-h" 'vertico-directory-up vertico-map
+              (spacemacs//support-hjkl-navigation-p))
     ;; tidy shadowed file names
     :hook (rfn-eshadow-update-overlay . vertico-directory-tidy))
 

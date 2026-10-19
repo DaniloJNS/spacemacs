@@ -41,10 +41,11 @@
     (shell :location built-in)
     shell-pop
     (term :location built-in)
-    (xterm-color :toggle (version< emacs-version "29.0.50"))
     terminal-here
     vi-tilde-fringe
     window-purpose
+    (ghostel :toggle shell-enable-ghostel-support)
+    (evil-ghostel :toggle shell-enable-ghostel-support)
     (multi-vterm
      :toggle (and shell-enable-vterm-support
                   module-file-suffix
@@ -132,6 +133,7 @@
       (add-hook 'eshell-output-filter-functions #'eshell-truncate-buffer))))
 
 (defun shell/pre-init-evil-collection ()
+  (add-to-list 'spacemacs-evil-collection-allowed-list 'evil-ghostel)
   (add-to-list 'spacemacs-evil-collection-allowed-list 'vterm))
 
 (defun shell/init-eshell-prompt-extras ()
@@ -299,31 +301,6 @@
   (with-eval-after-load 'centered-cursor-mode
     (add-hook 'term-mode-hook 'spacemacs//inhibit-global-centered-cursor-mode)))
 
-(defun shell/init-xterm-color ()
-  (use-package xterm-color
-    :init
-    ;; Comint and Shell
-    (add-hook 'comint-preoutput-filter-functions 'xterm-color-filter)
-    (setq comint-output-filter-functions
-          (remove 'ansi-color-process-output comint-output-filter-functions))
-    (add-hook 'eshell-mode-hook 'spacemacs/init-eshell-xterm-color)
-    (with-eval-after-load 'eshell
-      ;; Work around bug in eshell's preoutput-filter code.
-      ;; Eshell doesn't call preoutput-filter functions in the context of the eshell
-      ;; buffer. This breaks the xterm color filtering when the eshell buffer is updated
-      ;; when it's not currently focused.
-      ;; To remove if/when fixed upstream.
-      (defun eshell-output-filter@spacemacs-with-buffer (fn process string)
-        (let ((proc-buf (if process (process-buffer process)
-                          (current-buffer))))
-          (when proc-buf
-            (with-current-buffer proc-buf
-              (funcall fn process string)))))
-      (advice-add
-       #'eshell-output-filter
-       :around
-       #'eshell-output-filter@spacemacs-with-buffer))))
-
 (defun shell/init-terminal-here ()
   (use-package terminal-here
     :defer t
@@ -353,6 +330,31 @@
     :config
     (setq eat-shell shell-default-term-shell)
     (add-hook 'eat-mode-hook 'spacemacs/disable-hl-line-mode)))
+
+(defun shell/init-ghostel ()
+  (use-package ghostel
+    :defer t
+    :commands (ghostel ghostel-other-window)
+    :init
+    (make-shell-pop-command "ghostel" ghostel)
+    (spacemacs/set-leader-keys "atsg" 'spacemacs/shell-pop-ghostel)
+    (spacemacs/register-repl 'ghostel 'ghostel)
+    :config
+    (setq ghostel-shell shell-default-term-shell)
+    (add-hook 'ghostel-mode-hook 'spacemacs/disable-hl-line-mode)
+    (with-eval-after-load 'centered-cursor-mode
+      (add-hook 'ghostel-mode-hook 'spacemacs//inhibit-global-centered-cursor-mode))
+    (spacemacs/set-leader-keys-for-major-mode 'ghostel-mode
+      "c" 'multighostel
+      "n" 'ghostel-next
+      "N" 'ghostel-previous
+      "p" 'ghostel-previous)))
+
+(defun shell/init-evil-ghostel ()
+  (use-package evil-ghostel
+    :defer t
+    :after (ghostel evil)
+    :hook (ghostel-mode . evil-ghostel-mode)))
 
 (defun shell/init-vterm ()
   (use-package vterm
@@ -396,12 +398,14 @@
       "n" 'multi-vterm-next
       "N" 'multi-vterm-prev
       "p" 'multi-vterm-prev
-      "r" 'multi-vterm-rename-buffer)))
+      "r" 'multi-vterm-rename-buffer
+      "s" 'spacemacs/multi-vterm-switch-buffer)))
 
 (defun shell/post-init-window-purpose ()
   (purpose-set-extension-configuration
    :shell-layer
    (purpose-conf :mode-purposes '((vterm-mode . terminal)
                                   (eshell-mode . terminal)
+                                  (ghostel-mode . terminal)
                                   (shell-mode . terminal)
                                   (term-mode . terminal)))))

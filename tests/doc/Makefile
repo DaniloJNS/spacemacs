@@ -20,9 +20,10 @@
 ## You should have received a copy of the GNU General Public License
 ## along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-TEST_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
+TEST_DIR := $(shell dirname "$(realpath $(lastword $(MAKEFILE_LIST)))" \
+	| sed 's/ /\\ /g')
 
-LOAD_FILES = init.el
+LOAD_FILES = early-init.el init.el
 UNIT_TEST_FILES =
 FUNC_TEST_FILES = $(wildcard *-ftest.el)
 

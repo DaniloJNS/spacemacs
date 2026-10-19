@@ -37,6 +37,7 @@ the [[file:CHANGELOG.org][CHANGELOG.org]] file.
 - Fixed typos
 - Remove obsolete hack erc-sasl
 - Remove =spacemacs/counsel-gtags-define-keys-for-mode= warnings
+- Add configuration layer for just (thanks to Dietrich Daroch)
 - Add configuration layer for gleam-lang (thanks to Qynn Schwaab)
 - Highlight ruby debugger lines appropriately
 - Add support for Android emacs.
@@ -1223,6 +1224,8 @@ Other:
   - Added ~s~ =hydra-dired-quick-sort/body= (thanks to duianto)
   - Added ~SPC p E~ for =projectile-find-references= (thanks to Alfonso Montero)
   - Evilify =proced= (thanks to Jaehyun Yeom)
+  - Removed ~SPC p g~ and ~SPC p G~ for tags-related commands, which
+    have been deleted (thanks to Aaron Zeng)
 - Improvements:
   - Inhibited golden-ratio mode from interfering with ediff windows
   - Rewrote window layout functions for ~SPC w 1~, ~SPC w 2~, ~SPC w 3~, and
@@ -1984,6 +1987,9 @@ Other:
     - ~SPC m d s n~ Create a new dotnet solution
     - ~SPC m d s r~ Remove from the current dotnet solution
     - ~SPC m d t~   Run tests for the current dotnet project
+**** Eglot
+- Key bindings:
+  - Added basic key bindings and jump handler for =eglot= (thanks to kenkangxgwe)
 **** Elfeed
 - Fixed selection bindings in visual state (thanks to Jeremy Symon)
 - Fixed not saving on quit (thanks to Andrew Stevanus)
@@ -3673,6 +3679,10 @@ files (thanks to Daniel Nicolai)
 **** Spacemacs-defaults
 - Updated spacemacs/save-as function, see github #8974 and #14754 (thanks to
   Daniel Nicolai and Lebensterben)
+**** Spacemacs-evil
+- Fixed ~g r~ (=revert-buffer=) being unbound in =special-mode= buffers after
+  =evil-collection= 3.0, which binds it in normal state only (thanks
+  to Jonathan Lipworth)
 **** Spotify
 - Replaced helm-spotify package with helm-spotify-plus
   (thanks to Leonard Lausen)
@@ -3703,6 +3713,8 @@ files (thanks to Daniel Nicolai)
 - Added ~SPC m g~ prefix: =goto= (thanks to duianto)
 - Added regional ~sqlfmt~ invocation, error handling, and formatting bindings
   (thanks to 0x6362)
+**** Python
+- Added ty support (thanks to ClarityStorm)
 **** Spell-checking
 - Added spell checking transient state (thanks to Francesc Elies Henar)
 - Update to flyspell-correct v0.5 (thanks to Boris Buliga)
@@ -3805,6 +3817,9 @@ files (thanks to Daniel Nicolai)
   (thanks to klochowicz)
 **** Treemacs
 - =Treemacs= replaces =NeoTree= as the default sidebar
+- Added layer variable =treemacs-auto-hide-min-width= to automatically
+  hide treemacs when the frame is resized below the minimum width and
+  restores it when space becomes available (thanks to ClarityStorm)
 - Added missing ~SPC p t~ to =readme.org= (thanks to oo6)
 - Remapped =winum-select-window-0-or-10= to =treemacs-select-window= so that
   ~C-x w 0~, ~SPC 0~ and ~M-0~ call the same command (thanks to duianto, Miciah)
@@ -4005,6 +4020,7 @@ files (thanks to Daniel Nicolai)
   Holla, Vlad Bokov, Vladimir Kochnev, weihua-lu, wenpin, Wieland Hoffmann,
   Witoslaw Koczewski, Xiang Ji, Yi Liu, Zach Latta, Zane Sterling, zer09, Zhige
   Xin)
+- Fixed install when username contains space (thanks to ClarityStorm)
 **** Documentation and website
   - DOCUMENTATION.org:
     - Fixed the example for how to change the separator style

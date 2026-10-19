@@ -106,8 +106,6 @@
 
 ;; instantly display current keystrokes in mini buffer
 (setq echo-keystrokes 0.02)
-;; auto-indent on RET
-(define-key global-map (kbd "RET") 'newline-and-indent)
 
 ;; improve delete-other-windows
 (define-key global-map (kbd "C-x 1") 'spacemacs/toggle-maximize-window)
@@ -469,7 +467,10 @@
 (with-eval-after-load 'compile
   (evil-define-key 'motion compilation-mode-map (kbd "gf") 'find-file-at-point)
   (define-key compilation-mode-map "r" 'recompile)
-  (define-key compilation-mode-map "g" nil))
+  (define-key compilation-mode-map "g" nil)
+  (evil-define-key 'motion compilation-minor-mode-map (kbd "gf") 'find-file-at-point)
+  (define-key compilation-minor-mode-map "r" 'recompile)
+  (define-key compilation-minor-mode-map "g" nil))
 ;; narrow & widen -------------------------------------------------------------
 (spacemacs/set-leader-keys
   "nr" 'narrow-to-region

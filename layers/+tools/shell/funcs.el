@@ -51,15 +51,6 @@ view; to pop-up a full width buffer, use
   (interactive)
   (setq-local global-hl-line-mode nil))
 
-(defun spacemacs/init-eshell-xterm-color ()
-  "Initialize xterm coloring for eshell"
-  (setq-local xterm-color-preserve-properties t)
-  (make-local-variable 'eshell-preoutput-filter-functions)
-  (add-hook 'eshell-preoutput-filter-functions 'xterm-color-filter)
-  (setq-local eshell-output-filter-functions
-              (remove 'eshell-handle-ansi-color
-                      eshell-output-filter-functions)))
-
 (defun ansi-term-handle-close ()
   "Close current term buffer when `exit' from term buffer."
   (when (ignore-errors (get-buffer-process (current-buffer)))
@@ -276,6 +267,11 @@ is achieved by adding the relevant text properties."
   (interactive)
   (multi-vterm))
 
+(defun multighostel (&optional _)
+  "Wrapper to call ghostel with `t' to create a new ghostel frame"
+  (interactive)
+  (ghostel t))
+
 (defun inferior-shell (&optional ARG)
   "Wrapper to open shell in current window"
   (interactive)
@@ -297,6 +293,15 @@ is achieved by adding the relevant text properties."
     (reverse
      (delete-dups
       (split-string (buffer-string) "\n")))))
+
+(defun spacemacs/multi-vterm-switch-buffer ()
+  "Switch between the multi-vterm buffers."
+  (interactive)
+  (pop-to-buffer-same-window
+   (completing-read "Vterm buffer: "
+                    (mapcar 'buffer-name
+                            (remq (current-buffer) multi-vterm-buffer-list))
+                    nil t)))
 
 (defun spacemacs/helm-vterm-search-history ()
   "Narrow down bash history with helm."
